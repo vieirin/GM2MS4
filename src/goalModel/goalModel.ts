@@ -1,25 +1,56 @@
 declare module GoalModel {
-    export interface Model extends Node {
-        nodes: Node
+    export type id = string
+
+    export interface Model {
+        actors: Actor[]
         orpahans: never[]
         dependencies: never[]
+        links: Link[]
+        display: Display
+        tool: string
+        istar: string
+        saveDate: Date
+        diagram: Diagram
     }
 
-    export interface Node {
-        id: string
+    export interface Actor extends Node {
+        nodes: Node
+    }
+
+    export interface Node extends CustomProperties {
+        id: id
         text: string
-        type: 'Actor'
+        type: 'istar.Task' | 'istar.Goal' | 'istar.Actor'
         x: number
         y: number
-        customProperties: {
-            Description: string
-        }
     }
 
     export interface Link {
-        id: string
+        id: id
         type: string
         source: string
         target: string
+    }
+
+    export interface Display {
+        [K: string]: DisplayItem
+    }
+
+    export interface DisplayItem {
+        backgroundColor: string
+        width?: number
+        height?: number
+    }
+
+    export interface Diagram extends CustomProperties {
+        width: number
+        height: number
+    }
+
+    export interface CustomProperties {
+        customProperties: {
+            Description: ''
+            selected?: boolean
+        }
     }
 }
