@@ -14,7 +14,8 @@
         "test": "jest",
         "start": "tsc && node dist/index.js",
         "dev": "ts-node src/index.ts",
-        "postversion": "git push --tags"
+        "postversion": "git push --tags",
+        "prepare": "husky install"
     },
     "dependencies": {
         "@types/node": "^12.11.5",
@@ -35,7 +36,8 @@
         "babel-jest": "^27.0.6",
         "jest": "^27.0.6",
         "prettier": "^2.3.2",
-        "ts-jest": "^27.0.5"
+        "ts-jest": "^27.0.5",
+        "husky": "^7.0.0"
     },
     "repository": {
         "type": "git",
