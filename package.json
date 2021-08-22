@@ -1,60 +1,61 @@
 {
-  "name": "gm2ms4",
-  "description": "",
-  "version": "1.0.4",
-  "license": "MIT",
-  "author": {
-    "name": "Piotr Kowalski",
-    "email": "piecioshka@gmail.com",
-    "url": "https://piecioshka.pl/"
-  },
-  "scripts": {
-    "clear": "rm -rf dist/",
-    "clear:all": "rm -rf node_modules/ && npm run clear",
-    "test": "jest",
-    "start": "tsc && node dist/index.js",
-    "dev": "ts-node src/index.ts",
-    "postversion": "git push --tags"
-  },
-  "dependencies": {
-    "@types/node": "^12.11.5",
-    "ora": "^4.0.2",
-    "replace-in-files": "^2.0.3",
-    "ts-node": "^8.4.1",
-    "typescript": "^4.3.5",
-    "yargs": "^14.2.0"
-  },
-  "maintainers": [
-    "Vieira Neto <vieiranetoc@gmail.com> https://vieirinha.dev"
-  ],
-  "devDependencies": {
-    "@babel/core": "^7.15.0",
-    "@babel/preset-env": "^7.15.0",
-    "@babel/preset-typescript": "^7.15.0",
-    "@types/jest": "^27.0.1",
-    "babel-jest": "^27.0.6",
-    "jest": "27.0.0",
-    "prettier": "^2.3.2"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:piecioshka/gm2ms4.git"
-  },
-  "files": [
-    "bin",
-    "src",
-    "LICENSE",
-    "package.json",
-    "README.md",
-    "tsconfig.json"
-  ],
-  "keywords": [
-    "typescript",
-    "playground",
-    "create",
-    "simple",
-    "project",
-    "seed"
-  ],
-  "bin": "./bin/cli.js"
+    "name": "gm2ms4",
+    "description": "",
+    "version": "1.0.4",
+    "license": "MIT",
+    "author": {
+        "name": "Piotr Kowalski",
+        "email": "piecioshka@gmail.com",
+        "url": "https://piecioshka.pl/"
+    },
+    "scripts": {
+        "clear": "rm -rf dist/",
+        "clear:all": "rm -rf node_modules/ && npm run clear",
+        "test": "jest",
+        "start": "tsc && node dist/index.js",
+        "dev": "ts-node src/index.ts",
+        "postversion": "git push --tags"
+    },
+    "dependencies": {
+        "@types/node": "^12.11.5",
+        "ora": "^4.0.2",
+        "replace-in-files": "^2.0.3",
+        "ts-node": "^8.4.1",
+        "typescript": "^4.3.5",
+        "yargs": "^14.2.0"
+    },
+    "maintainers": [
+        "Vieira Neto <vieiranetoc@gmail.com> https://vieirinha.dev"
+    ],
+    "devDependencies": {
+        "@babel/core": "^7.15.0",
+        "@babel/preset-env": "^7.15.0",
+        "@babel/preset-typescript": "^7.15.0",
+        "@types/jest": "^27.0.1",
+        "babel-jest": "^27.0.6",
+        "jest": "^27.0.6",
+        "prettier": "^2.3.2",
+        "ts-jest": "^27.0.5"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git@github.com:vieirin/GM2MS4.git"
+    },
+    "files": [
+        "bin",
+        "src",
+        "LICENSE",
+        "package.json",
+        "README.md",
+        "tsconfig.json"
+    ],
+    "keywords": [
+        "typescript",
+        "playground",
+        "create",
+        "simple",
+        "project",
+        "seed"
+    ],
+    "bin": "./bin/cli.js"
 }

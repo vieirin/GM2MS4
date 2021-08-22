@@ -14,7 +14,7 @@ declare module GoalModel {
     }
 
     export interface Actor extends Node {
-        nodes: Node
+        nodes: Node[]
     }
 
     export interface Node extends CustomProperties {
