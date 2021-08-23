@@ -1,4 +1,4 @@
-declare module GoalModel {
+export declare module GoalModel {
     export type id = string
 
     export interface Model {
@@ -27,7 +27,7 @@ declare module GoalModel {
 
     export interface Link {
         id: id
-        type: string
+        type: 'istar.AndRefinementLink' | 'istar.OrRefinementLink'
         source: string
         target: string
     }

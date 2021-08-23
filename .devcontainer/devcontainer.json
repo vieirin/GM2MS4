@@ -15,12 +15,13 @@
 
     // Add the IDs of extensions you want installed when the container is created.
     "extensions": [
-        "dbaeumer.vscode-eslint",
-        "quicktype.quicktype",
-        "eamodio.gitlens",
-        "visualstudioexptteam.vscodeintellicode",
-        "esbenp.prettier-vscode"
-    ],
+		"dbaeumer.vscode-eslint",
+		"quicktype.quicktype",
+		"eamodio.gitlens",
+		"visualstudioexptteam.vscodeintellicode",
+		"esbenp.prettier-vscode",
+		"firsttris.vscode-jest-runner"
+	],
 
     // Use 'forwardPorts' to make a list of ports inside the container available locally.
     // "forwardPorts": [],

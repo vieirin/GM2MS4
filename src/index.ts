@@ -1,3 +1,5 @@
-import { loadModel } from './ObjectiveTree'
+import { convertToTree, loadModel } from './ObjectiveTree'
+import { TraverseTree } from './ObjectiveTree/types'
 
-console.log(loadModel)
+const validModel = loadModel('models/txregister.txt')
+convertToTree(validModel).forEach((tree) => TraverseTree(tree))
