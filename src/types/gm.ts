@@ -1,4 +1,4 @@
-export declare module GoalModel {
+declare module 'GoalModel' {
     export type id = string
 
     export interface Model {
@@ -51,6 +51,8 @@ export declare module GoalModel {
         customProperties: {
             Description: ''
             selected?: boolean
+            component?: string
+            receives?: string
         }
     }
 }
