@@ -1,6 +1,14 @@
 import { readFileSync } from 'fs'
-import { Actor, Model, Node } from 'GoalModel'
-import { LeveledGoalComponent, ObjectiveTree, relationship } from './types'
+import { Actor, Model, Node, NodeType } from 'GoalModel'
+import { nameText } from '../ms4Builder/namer'
+import {
+    component,
+    ComponentGoals,
+    leafType,
+    LeveledGoalComponent,
+    ObjectiveTree,
+    relationship
+} from './types'
 
 export const validateModel = (model: Model) => {
     const root = model.actors
@@ -27,6 +35,17 @@ export const loadModel = (filename: string) => {
     validateModel(model)
 
     return model
+}
+
+export const convertIstarType = (type: NodeType) => {
+    switch (type) {
+        case 'istar.Goal':
+            return 'goal'
+        case 'istar.Task':
+            return 'task'
+        default:
+            throw new Error('Invalid node type: ' + type)
+    }
 }
 
 export const convertToTree = (model: Model) => {
@@ -74,8 +93,15 @@ export const convertToTree = (model: Model) => {
                     return undefined
                 }
 
+                node.text = nameText(node.text)
+
                 const [granChildren, relation] = nodeChildren(actor, node?.id)
-                return { ...node, children: granChildren, relation }
+                return {
+                    ...node,
+                    children: granChildren,
+                    relation,
+                    type: convertIstarType(node.type)
+                }
             })
             // clean undefined children from the tree
             .filter((child) => child !== undefined) as ObjectiveTree[]
@@ -88,7 +114,8 @@ export const convertToTree = (model: Model) => {
         return {
             ...node,
             relation,
-            children: children
+            children: children,
+            type: convertIstarType(node.type)
         }
     }
 
@@ -105,15 +132,31 @@ export const convertToTree = (model: Model) => {
             // calc tree
             return nodeToTree(actor, rootNode)
         })
-        // filter undefined trees (those without a root npde)
+        // filter undefined trees (those without a root node)
         .filter((tree) => tree) as ObjectiveTree[]
 
     return trees
 }
 
-export const getGoals = (
+const findComponents = (tree: ObjectiveTree): component[] => {
+    if (!tree.children || tree.children.length === 0) {
+        return []
+    }
+
+    return [
+        tree.customProperties.component || '',
+        ...tree.children.map((child) => findComponents(child)).flat()
+    ].filter((item) => item)
+}
+
+const getComponents = (tree: ObjectiveTree) => {
+    return [...new Set(findComponents(tree))]
+}
+
+export const getNodes = (
     tree: ObjectiveTree,
     component: string,
+    type: leafType,
     level = 0
 ): LeveledGoalComponent[] => {
     const { children, ...node } = tree
@@ -122,17 +165,22 @@ export const getGoals = (
     // find for requested component on the tree
     // there are case where the component is under some child of
     // another component type
-    if (!nodeComponent && nodeComponent !== component && children) {
+    if (!nodeComponent && nodeComponent === component && children) {
         const treeLevel = node.customProperties.selected ? level : level + 1
         return [
             ...children
-                .map((child) => getGoals(child, component, treeLevel))
+                .map((child) => getNodes(child, component, type, treeLevel))
                 .flat()
         ]
     }
 
-    if (node.type === 'istar.Task') {
-        return []
+    if (node.type !== type && children?.length) {
+        return [
+            ...children
+                .map((child) => getNodes(child, component, type, level))
+                .flat()
+                .filter((item) => item.type === type)
+        ]
     }
 
     if (!children || !children.length) {
@@ -140,7 +188,32 @@ export const getGoals = (
     }
 
     return [
-        { ...node, level },
-        ...children.map((child) => getGoals(child, component, level + 1)).flat()
+        { ...tree, level },
+        ...children
+            .map((child) => getNodes(child, component, type, level + 1))
+            .flat()
     ]
+}
+
+const lowestGoalLevel = (goals: LeveledGoalComponent[]) => {
+    return Math.min(...goals.map((item) => item.level))
+}
+
+export const getTreeNodeByComponent = (type: leafType, tree: ObjectiveTree) => {
+    type keyedComponent = [string, LeveledGoalComponent[]]
+
+    const componentsGoals = getComponents(tree)
+        .map(
+            (component) =>
+                [component, getNodes(tree, component, type)] as keyedComponent
+        )
+        .map(
+            ([component, goals]) =>
+                [
+                    component,
+                    { lowestLevel: lowestGoalLevel(goals), goals }
+                ] as ComponentGoals
+        )
+
+    return componentsGoals
 }

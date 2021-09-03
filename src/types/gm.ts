@@ -3,7 +3,7 @@ declare module 'GoalModel' {
 
     export interface Model {
         actors: Actor[]
-        orpahans: never[]
+        orphans: never[]
         dependencies: never[]
         links: Link[]
         display: Display
@@ -17,10 +17,11 @@ declare module 'GoalModel' {
         nodes: Node[]
     }
 
+    export type NodeType = 'istar.Task' | 'istar.Goal' | 'istar.Actor'
     export interface Node extends CustomProperties {
         id: id
         text: string
-        type: 'istar.Task' | 'istar.Goal' | 'istar.Actor'
+        type: NodeType
         x: number
         y: number
     }

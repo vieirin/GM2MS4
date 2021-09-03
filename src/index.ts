@@ -1,9 +1,7 @@
-import { generateWaitForInput } from './ms4Builder'
-import { convertToTree, getGoals, loadModel } from './ObjectiveTree'
+import { generateGoalModelDNLs } from './ms4Builder'
+import { loadModel } from './ObjectiveTree'
 
 const validModel = loadModel('models/txregister_component.txt')
 // convertToTree(validModel).forEach((tree) => TraverseTree(tree))
-const leveledComponent = convertToTree(validModel).map((tree) =>
-    getGoals(tree, 'api')
-)
-generateWaitForInput(leveledComponent[0])
+// generateWaitForInput(leveledComponent[0])
+generateGoalModelDNLs(validModel)

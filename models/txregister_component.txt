@@ -4,8 +4,8 @@
       "id": "309c8d4d-f7a1-4ca3-83a8-a93e9240716b",
       "text": "Registrando uma transação",
       "type": "istar.Actor",
-      "x": 103,
-      "y": 152,
+      "x": 10,
+      "y": 164,
       "customProperties": {
         "Description": ""
       },
@@ -15,7 +15,7 @@
           "text": "Registrar uma transação",
           "type": "istar.Goal",
           "x": 416,
-          "y": 170,
+          "y": 182,
           "customProperties": {
             "Description": "",
             "selected": true
@@ -26,11 +26,11 @@
           "text": "Processar entrada na api",
           "type": "istar.Goal",
           "x": 268,
-          "y": 233,
+          "y": 245,
           "customProperties": {
             "Description": "",
             "emits": "rawInput",
-            "receives": "transactionProposal",
+            "receives": "rawInput:string",
             "component": "api"
           }
         },
@@ -39,7 +39,7 @@
           "text": "Calcular resultado da transação",
           "type": "istar.Goal",
           "x": 470,
-          "y": 230,
+          "y": 242,
           "customProperties": {
             "Description": ""
           }
@@ -49,7 +49,7 @@
           "text": "Invocar o chaincode",
           "type": "istar.Goal",
           "x": 501,
-          "y": 322,
+          "y": 334,
           "customProperties": {
             "Description": ""
           }
@@ -59,7 +59,7 @@
           "text": "Enviar resultado para api",
           "type": "istar.Goal",
           "x": 606,
-          "y": 325,
+          "y": 337,
           "customProperties": {
             "Description": ""
           }
@@ -69,7 +69,7 @@
           "text": "Verificar a pool de resultados",
           "type": "istar.Goal",
           "x": 771,
-          "y": 236,
+          "y": 248,
           "customProperties": {
             "Description": ""
           }
@@ -79,7 +79,7 @@
           "text": "Rejeitar a transação",
           "type": "istar.Goal",
           "x": 726,
-          "y": 315,
+          "y": 327,
           "customProperties": {
             "Description": ""
           }
@@ -89,7 +89,7 @@
           "text": "Enviar transação assinada para o orderer",
           "type": "istar.Goal",
           "x": 879,
-          "y": 309,
+          "y": 321,
           "customProperties": {
             "Description": ""
           }
@@ -99,7 +99,7 @@
           "text": "Validar assinaturas do bloco",
           "type": "istar.Goal",
           "x": 895,
-          "y": 372,
+          "y": 384,
           "customProperties": {
             "Description": ""
           }
@@ -109,7 +109,7 @@
           "text": "Rejeitar a transação",
           "type": "istar.Goal",
           "x": 813,
-          "y": 448,
+          "y": 460,
           "customProperties": {
             "Description": ""
           }
@@ -119,7 +119,7 @@
           "text": "Criar bloco",
           "type": "istar.Task",
           "x": 974,
-          "y": 454,
+          "y": 466,
           "customProperties": {
             "Description": ""
           }
@@ -129,7 +129,7 @@
           "text": "Adicionar bloco à cadeia",
           "type": "istar.Task",
           "x": 923,
-          "y": 518,
+          "y": 530,
           "customProperties": {
             "Description": ""
           }
@@ -139,7 +139,7 @@
           "text": "Notificar a rede ",
           "type": "istar.Task",
           "x": 1046,
-          "y": 520,
+          "y": 532,
           "customProperties": {
             "Description": ""
           }
@@ -149,11 +149,11 @@
           "text": "Abortar bad input",
           "type": "istar.Goal",
           "x": 113,
-          "y": 301,
+          "y": 313,
           "customProperties": {
             "Description": "",
             "emits": "rawInput",
-            "receives": "rawInput",
+            "receives": "rawInput:string",
             "component": "api",
             "responds": "fail:bool"
           }
@@ -163,7 +163,7 @@
           "text": "Propor transação à rede",
           "type": "istar.Goal",
           "x": 266,
-          "y": 300,
+          "y": 312,
           "customProperties": {
             "Description": "",
             "emits": "rawInput",
@@ -176,7 +176,7 @@
           "text": "Montar proposta de transação",
           "type": "istar.Task",
           "x": 213,
-          "y": 370,
+          "y": 382,
           "customProperties": {
             "Description": ""
           }
@@ -185,10 +185,12 @@
           "id": "9c1403b9-53f3-4036-8690-3af589e5c536",
           "text": "Abort (input)",
           "type": "istar.Task",
-          "x": 104,
-          "y": 412,
+          "x": 108,
+          "y": 427,
           "customProperties": {
-            "Description": ""
+            "Description": "",
+            "receives": "rawInput:string",
+            "emits": "abort:boolean"
           }
         },
         {
@@ -196,7 +198,7 @@
           "text": "Executar lógica de negócio",
           "type": "istar.Goal",
           "x": 503,
-          "y": 392,
+          "y": 404,
           "customProperties": {
             "Description": ""
           }
@@ -206,7 +208,7 @@
           "text": "Executar função solicitada",
           "type": "istar.Task",
           "x": 502,
-          "y": 454,
+          "y": 466,
           "customProperties": {
             "Description": ""
           }
@@ -216,7 +218,7 @@
           "text": "Enviar proposta para os Peers",
           "type": "istar.Goal",
           "x": 335,
-          "y": 362,
+          "y": 374,
           "customProperties": {
             "Description": "",
             "emit": "",
@@ -230,7 +232,7 @@
           "text": "Enviar proposta para os peers-alvo",
           "type": "istar.Task",
           "x": 403,
-          "y": 452,
+          "y": 464,
           "customProperties": {
             "Description": ""
           }
@@ -240,7 +242,7 @@
           "text": "Calcular peers-alvo",
           "type": "istar.Task",
           "x": 272,
-          "y": 450,
+          "y": 462,
           "customProperties": {
             "Description": ""
           }
@@ -250,7 +252,7 @@
           "text": "Enviar resultado para api",
           "type": "istar.Task",
           "x": 615,
-          "y": 397,
+          "y": 409,
           "customProperties": {
             "Description": ""
           }
@@ -260,7 +262,7 @@
           "text": "Receber pool de resultados",
           "type": "istar.Goal",
           "x": 663,
-          "y": 218,
+          "y": 230,
           "customProperties": {
             "Description": "",
             "component": "api",
@@ -272,9 +274,42 @@
           "text": "Enviar erro",
           "type": "istar.Task",
           "x": 724,
-          "y": 395,
+          "y": 407,
           "customProperties": {
             "Description": ""
+          }
+        },
+        {
+          "id": "67e9c362-52c2-40ce-9ced-809ba1221168",
+          "text": "Task",
+          "type": "istar.Task",
+          "x": 10,
+          "y": 485,
+          "customProperties": {
+            "Description": "",
+            "component": "api"
+          }
+        },
+        {
+          "id": "380e48f1-c7c0-4b61-b4e0-50b76b4d6f75",
+          "text": "Goal",
+          "type": "istar.Goal",
+          "x": 166,
+          "y": 479.5,
+          "customProperties": {
+            "Description": "",
+            "component": "api"
+          }
+        },
+        {
+          "id": "e56073a3-a0bb-4b8b-af4d-5dfa9f36f9a0",
+          "text": "Task2",
+          "type": "istar.Task",
+          "x": 20,
+          "y": 613,
+          "customProperties": {
+            "Description": "",
+            "component": "api"
           }
         }
       ]
@@ -284,148 +319,166 @@
   "dependencies": [],
   "links": [
     {
-      "id": "7bcf557a-dc09-4ba9-aa92-81023f15f9b8",
+      "id": "15b01431-dc8f-4487-aa97-a2fa0dce4d71",
       "type": "istar.AndRefinementLink",
       "source": "8de7a901-398e-4d37-a22d-3f954bb81601",
       "target": "f0406552-00af-4442-b03d-a78e27457929"
     },
     {
-      "id": "f6bb1ae9-de53-477c-a7f3-14d5989bc613",
+      "id": "8d56bc68-53d8-45ee-a506-9329a5904493",
       "type": "istar.AndRefinementLink",
       "source": "2bb58c75-9a35-4b6f-8e8c-85f4cb604c84",
       "target": "f0406552-00af-4442-b03d-a78e27457929"
     },
     {
-      "id": "07a63ea7-9815-42ad-8a62-34ec63e4d3a2",
+      "id": "4156918b-2cf1-475c-bdb9-77f616759790",
       "type": "istar.AndRefinementLink",
       "source": "51e1a122-2abe-4153-a42e-3e0c7a3bbd8e",
       "target": "2bb58c75-9a35-4b6f-8e8c-85f4cb604c84"
     },
     {
-      "id": "2c5b1965-fa22-4ca0-ad67-17911e9ef456",
+      "id": "f5671ac3-a46f-4c80-b746-2e6fc2d1dae0",
       "type": "istar.AndRefinementLink",
       "source": "52781a22-2ed1-4281-9c73-e6a9d314e240",
       "target": "2bb58c75-9a35-4b6f-8e8c-85f4cb604c84"
     },
     {
-      "id": "602063dc-1475-4a12-98b3-3e4095e6146b",
+      "id": "895751da-c6f9-45cc-afe7-c7a5b314f2d1",
       "type": "istar.OrRefinementLink",
       "source": "0d5629f0-4d07-46e9-a452-cac4d322e234",
       "target": "7c79330d-f564-4134-b810-47370afd7308"
     },
     {
-      "id": "296b7070-f2af-422d-a716-a8dbf68cd3c7",
+      "id": "f4dc20be-4056-4a3b-9159-a88a7d9b5c81",
       "type": "istar.OrRefinementLink",
       "source": "30fdd731-24c7-424d-b77c-6b9683a76bca",
       "target": "7c79330d-f564-4134-b810-47370afd7308"
     },
     {
-      "id": "0873d3f9-1301-4950-9043-2a4e86ba01c8",
+      "id": "2b5915a0-b89e-4749-87e1-8f835e67d7f5",
       "type": "istar.AndRefinementLink",
       "source": "fc1c1d20-d10d-48d0-a717-59094a59d944",
       "target": "30fdd731-24c7-424d-b77c-6b9683a76bca"
     },
     {
-      "id": "b12c8b4d-56b9-48a4-88ae-ea1231e196cf",
+      "id": "922ea318-64f2-4e63-a525-b05c99bc6590",
       "type": "istar.OrRefinementLink",
       "source": "0973aeef-286f-47b0-a6cf-640e43d7671f",
       "target": "fc1c1d20-d10d-48d0-a717-59094a59d944"
     },
     {
-      "id": "e70d4a78-5fe6-4fe9-b87f-667eb979d241",
+      "id": "87d55fc9-8d83-4243-9c1c-97b514aaafe2",
       "type": "istar.OrRefinementLink",
       "source": "a219eddf-f170-454f-b20b-7568228307e0",
       "target": "fc1c1d20-d10d-48d0-a717-59094a59d944"
     },
     {
-      "id": "2b6b0755-a30a-4940-a484-1f047c6dc207",
+      "id": "5a36ac35-ddcf-4031-9d88-99d09dbffffd",
       "type": "istar.AndRefinementLink",
       "source": "c4146a67-384f-48f8-b48a-65fbdb31c7d0",
       "target": "a219eddf-f170-454f-b20b-7568228307e0"
     },
     {
-      "id": "df273caf-418e-4c91-9a3c-4454230502bd",
+      "id": "dfc986b7-5e70-45d9-87ac-6b0e3b7001d4",
       "type": "istar.AndRefinementLink",
       "source": "637bd788-65ab-4223-81cd-ceab64eef5fb",
       "target": "a219eddf-f170-454f-b20b-7568228307e0"
     },
     {
-      "id": "8a2eee0c-a9bb-4195-8692-933b291f6bff",
+      "id": "45b3e791-c079-474f-95b4-469b8a6480fb",
       "type": "istar.OrRefinementLink",
       "source": "0429a68a-713a-4918-96d9-f3fbff61569d",
       "target": "8de7a901-398e-4d37-a22d-3f954bb81601"
     },
     {
-      "id": "6a420b44-b67f-495b-8ab1-7dffa3cfbc94",
+      "id": "30767a60-b9be-41cf-9a05-cfc1a6aae6f4",
       "type": "istar.OrRefinementLink",
       "source": "f6f3d933-8b3d-4c61-893c-cca36d2972c8",
       "target": "8de7a901-398e-4d37-a22d-3f954bb81601"
     },
     {
-      "id": "a7e8e32b-6dc6-4e32-a070-0150ef24bad9",
+      "id": "bc056525-6f4d-423a-95a7-c5f9e7aa40b8",
       "type": "istar.AndRefinementLink",
       "source": "c4963052-bad5-46ef-b79e-031266546f11",
       "target": "f6f3d933-8b3d-4c61-893c-cca36d2972c8"
     },
     {
-      "id": "6bf2c96d-bc98-4d56-be4d-999b43d58359",
+      "id": "aa7ffc40-92f0-4108-a9b2-8aa00385ea89",
       "type": "istar.AndRefinementLink",
       "source": "9c1403b9-53f3-4036-8690-3af589e5c536",
       "target": "0429a68a-713a-4918-96d9-f3fbff61569d"
     },
     {
-      "id": "ea58c3fb-0801-4795-8589-d062bd0b17dd",
+      "id": "4ad704cc-eab6-4565-8c84-c9a0faaf8be1",
       "type": "istar.AndRefinementLink",
       "source": "3867e9d3-349c-4829-8c9b-61de16ac60c2",
       "target": "51e1a122-2abe-4153-a42e-3e0c7a3bbd8e"
     },
     {
-      "id": "38817dd9-4494-40eb-99ba-2eb3cf216fa5",
+      "id": "7565cfd3-d93f-4be9-8614-daab7c1d2999",
       "type": "istar.AndRefinementLink",
       "source": "ba3fd6ff-acbc-4a10-911a-55c4b655ed8c",
       "target": "3867e9d3-349c-4829-8c9b-61de16ac60c2"
     },
     {
-      "id": "b59c8b7b-3dd5-483a-85a9-1379b4bde10b",
+      "id": "1980f9bb-b771-45aa-98ba-1f39885ba211",
       "type": "istar.AndRefinementLink",
       "source": "bbfc14b1-9da7-4112-82cf-3ec369887261",
       "target": "e3ea007b-e9df-4651-9260-8566a86c52d8"
     },
     {
-      "id": "4cd12f52-1c84-46da-9dac-05a8f236a300",
+      "id": "329e516b-e0b8-4db5-92c5-0b9973052480",
       "type": "istar.AndRefinementLink",
       "source": "e3ea007b-e9df-4651-9260-8566a86c52d8",
       "target": "f6f3d933-8b3d-4c61-893c-cca36d2972c8"
     },
     {
-      "id": "8e336c66-dd2e-4d51-b84b-5b7d634265ee",
+      "id": "511477c5-4e1d-417b-a47e-4c3551ce3bda",
       "type": "istar.AndRefinementLink",
       "source": "b96e97cd-d783-4f76-b006-b4c0ef93f4c9",
       "target": "e3ea007b-e9df-4651-9260-8566a86c52d8"
     },
     {
-      "id": "8b942885-6315-46ec-8c10-2ed38927baca",
+      "id": "01ea9e96-5b12-43a8-a0ff-04841c1b7ba3",
       "type": "istar.AndRefinementLink",
       "source": "bdacda33-50aa-4850-9ce5-ad6a47368972",
       "target": "52781a22-2ed1-4281-9c73-e6a9d314e240"
     },
     {
-      "id": "9ea26542-fe28-4993-91dd-a3411845ba05",
+      "id": "f1e38a1e-7694-4e0a-80fe-d854c729be09",
       "type": "istar.AndRefinementLink",
       "source": "0c59d725-3739-47ad-8ce9-d49b65004a52",
       "target": "f0406552-00af-4442-b03d-a78e27457929"
     },
     {
-      "id": "ff639566-3ebe-4ec2-89f6-7ac1748da50c",
+      "id": "bf9ac3c5-6f72-4e0f-a3f2-5ed6119fc60a",
       "type": "istar.AndRefinementLink",
       "source": "7c79330d-f564-4134-b810-47370afd7308",
       "target": "0c59d725-3739-47ad-8ce9-d49b65004a52"
     },
     {
-      "id": "a0c6b7a4-8b22-483b-8f33-84de228ad661",
+      "id": "4c53a037-050d-4fb7-b8b1-df3fb2f75788",
       "type": "istar.AndRefinementLink",
       "source": "72f6d345-7050-4382-8593-10719959349b",
       "target": "0d5629f0-4d07-46e9-a452-cac4d322e234"
+    },
+    {
+      "id": "ce4b5048-0623-44b9-b73d-3460f03a118e",
+      "type": "istar.AndRefinementLink",
+      "source": "67e9c362-52c2-40ce-9ced-809ba1221168",
+      "target": "9c1403b9-53f3-4036-8690-3af589e5c536"
+    },
+    {
+      "id": "8594a3c8-1a2c-4568-a528-8cde22f6dc63",
+      "type": "istar.AndRefinementLink",
+      "source": "380e48f1-c7c0-4b61-b4e0-50b76b4d6f75",
+      "target": "9c1403b9-53f3-4036-8690-3af589e5c536"
+    },
+    {
+      "id": "fde395f7-a190-485d-b83a-085485d9552b",
+      "type": "istar.AndRefinementLink",
+      "source": "e56073a3-a0bb-4b8b-af4d-5dfa9f36f9a0",
+      "target": "67e9c362-52c2-40ce-9ced-809ba1221168"
     }
   ],
   "display": {
@@ -517,18 +570,18 @@
     "72f6d345-7050-4382-8593-10719959349b": {
       "backgroundColor": "#38FA8E"
     },
-    "4cd12f52-1c84-46da-9dac-05a8f236a300": {
+    "329e516b-e0b8-4db5-92c5-0b9973052480": {
       "vertices": [
         {
           "x": 353,
-          "y": 351
+          "y": 363
         }
       ]
     }
   },
   "tool": "pistar.2.0.0",
   "istar": "2.0",
-  "saveDate": "Wed, 25 Aug 2021 04:28:56 GMT",
+  "saveDate": "Tue, 31 Aug 2021 01:20:35 GMT",
   "diagram": {
     "width": 2000,
     "height": 1300,
