@@ -174,17 +174,24 @@ export const getNodes = (
         ]
     }
 
-    if (node.type !== type && children?.length) {
+    if (node.type === 'goal' && nodeComponent !== component) {
         return [
-            ...children
+            ...(children
+                ?.filter(
+                    (child) => child.customProperties.component === component
+                )
                 .map((child) => getNodes(child, component, type, level))
                 .flat()
-                .filter((item) => item.type === type)
+                .filter((item) => item.type === type) || [])
         ]
     }
 
     if (!children || !children.length) {
-        return [{ ...node, level }]
+        if (type !== node.type || nodeComponent !== component) {
+            return []
+        } else {
+            return [{ ...node, level }]
+        }
     }
 
     return [

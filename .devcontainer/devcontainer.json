@@ -20,7 +20,8 @@
 		"eamodio.gitlens",
 		"visualstudioexptteam.vscodeintellicode",
 		"esbenp.prettier-vscode",
-		"firsttris.vscode-jest-runner"
+		"firsttris.vscode-jest-runner",
+		"pmneo.tsimporter"
 	],
 
     // Use 'forwardPorts' to make a list of ports inside the container available locally.

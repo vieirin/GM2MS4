@@ -1,17 +1,15 @@
 import { Model } from 'GoalModel'
-import { JavaWriter } from '../JavaWriter'
+import { JavaWriter } from '../JavaWriter/index'
 import {
     convertToTree,
     getNodes,
     getTreeNodeByComponent
 } from '../ObjectiveTree'
-import { ComponentData, leafType, ObjectiveTree } from '../ObjectiveTree/types'
+import { branchGoals } from '../ObjectiveTree/treeNavigation'
+import { ComponentData } from '../ObjectiveTree/types'
 import { MS4Constants } from './constants'
 import * as dnlWriter from './dnlWriting'
 import { nameInput, nameTaskMethod } from './namer'
-
-const firstChild = (type: leafType, children?: ObjectiveTree[]) =>
-    children?.filter((child) => child.type === type)[0]
 
 export const generateWaitForInput = (
     moduleName: string,
@@ -35,8 +33,6 @@ export const generateWaitForInput = (
 
     const dnl =
         dnlWriter.blockseparator(`To start passivate in ${initialState}!`) +
-        dnlWriter.holdState(MS4Constants.outputState, initialState) +
-        dnlWriter.outputMessage(MS4Constants.outputState) +
         dnlWriter.blockseparator(
             waitForInputGoals
                 .map(
@@ -48,21 +44,12 @@ export const generateWaitForInput = (
                 .join('\n')
         ) +
         dnlWriter.blockseparator(
-            waitForInputGoals
-                .map((goal) => {
-                    const state = goal.text
-                    const firstGoal = firstChild('goal', goal.children)
-                    if (firstGoal) {
-                        return dnlWriter.holdState(state, firstGoal.text)
-                    }
-                    const fTask = firstChild('task', goal.children)
-                    if (fTask) {
-                        return dnlWriter.runTaskAndOutput(state, fTask.text)
-                    }
-                    throw new Error('A top goal need at least a leaf task')
-                })
-                .join('\n')
+            waitForInputGoals.map(() => {}).join('\n') +
+                dnlWriter.holdState(MS4Constants.outputState, initialState) +
+                dnlWriter.outputMessage(MS4Constants.outputState)
         )
+    console.log(waitForInputGoals)
+    console.log(waitForInputGoals.map(branchGoals))
     console.log(dnl)
 }
 
