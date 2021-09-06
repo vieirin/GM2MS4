@@ -24,7 +24,7 @@ export const generateWaitForInput = (
     )
     // const initialState = MS4Constants.initialPassiveState
 
-    const javaWriter = new JavaWriter()
+    const javaWriter = new JavaWriter(moduleName)
     waitForInputGoals.forEach((item) => {
         javaWriter.writeTaskMethods(
             getNodes(item, moduleName, 'task').map((item) =>

@@ -1,4 +1,4 @@
-import { fileStart } from './helpers'
+import { fileStart, writeProperty } from './helpers'
 import { methodAccess } from './types'
 
 export class Class {
@@ -12,13 +12,23 @@ export class Class {
         this.fileContent = fileStart(this.className, extendsClass)
     }
 
-    protected writeMethodToClass(access: methodAccess, name: string) {
+    protected writeMethodToClass = (access: methodAccess, name: string) => {
         this.fileContent += `\t${access} Result ${name} (Result result) { 
 
             return new Result();
         }
 `
     }
+
+    protected writeContent = (content: string) => {
+        this.fileContent += content
+    }
+
+    protected addProperty = (
+        name: string,
+        type: string,
+        access: methodAccess = 'private'
+    ) => (this.fileContent += writeProperty(name, type, access))
 
     public getClassName = () => this.className
 

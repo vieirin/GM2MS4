@@ -29,7 +29,7 @@ export const transitionClassVarName = (component: string) =>
 export const transitionMethodName = (state: string) =>
     nameText(state) + '_runner'
 
-const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
+export const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
 const sanitizeComponent = (component: string) =>
     capitalize(component).replace(/ /g, '')
 

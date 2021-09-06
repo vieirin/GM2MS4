@@ -2,13 +2,19 @@ import { APITask } from './ApiTask'
 import { APITransitions } from './ApiTransitions'
 
 export class JavaWriter {
-    protected transitions = new APITransitions()
-    protected tasks = new APITask()
+    protected transitions: APITransitions
+    protected tasks: APITask
 
     /**
      *
      */
-    constructor() {}
+    constructor(component: string) {
+        this.tasks = new APITask()
+        this.transitions = new APITransitions(
+            component,
+            this.tasks.getClassName()
+        )
+    }
 
     writeTaskMethods = (tasks: string[]) => {
         tasks.forEach((task) => {
