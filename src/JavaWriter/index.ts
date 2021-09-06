@@ -1,5 +1,5 @@
 import { APITask } from './ApiTask'
-import { APITransitions } from './ApiTranstions'
+import { APITransitions } from './ApiTransitions'
 
 export class JavaWriter {
     protected transitions = new APITransitions()
@@ -10,11 +10,13 @@ export class JavaWriter {
      */
     constructor() {}
 
-    writeTaskMethods(tasks: string[]) {
+    writeTaskMethods = (tasks: string[]) => {
         tasks.forEach((task) => {
             this.tasks.createTaskMethod(task)
         })
     }
+
+    getTransitionClassName = () => this.transitions.getClassName()
 
     print() {
         console.log(this.tasks.print(), this.transitions.print())

@@ -1,0 +1,67 @@
+use api_transition with type APITransitionsClass and default "new APITransitionsClass()"!
+
+To start passivate in waitForInput!
+
+when in waitForInput and receive Processar_entrada_na_api_input go to Processar_entrada_na_api!
+when in waitForInput and receive Receber_pool_de_resultados_input go to Receber_pool_de_resultados!
+
+accepts input on Processar_entrada_na_api_input with type String!
+accepts input on Receber_pool_de_resultados_input with type String!
+
+hold in Processar_entrada_na_api for time 5!
+from Processar_entrada_na_api go to Abortar_bad_input!
+internal event for Processar_entrada_na_api
+<%
+    api_transition.Processar_entrada_na_api_runner();
+%>!
+
+hold in Abortar_bad_input for time 5!
+from Abortar_bad_input go to Propor_transacao_a_rede!
+internal event for Abortar_bad_input
+<%
+    api_transition.Abortar_bad_input_runner();
+%>!
+
+hold in Propor_transacao_a_rede for time 5!
+from Propor_transacao_a_rede go to Enviar_proposta_para_os_Peers!
+internal event for Propor_transacao_a_rede
+<%
+    api_transition.Propor_transacao_a_rede_runner();
+%>!
+
+hold in Enviar_proposta_para_os_Peers for time 5!
+from Enviar_proposta_para_os_Peers go to output_state!
+internal event for Enviar_proposta_para_os_Peers
+<%
+    api_transition.Enviar_proposta_para_os_Peers_runner();
+%>!
+
+// EndSequence for sequence starting at Processar_entrada_na_api
+
+hold in Receber_pool_de_resultados for time 5!
+from Receber_pool_de_resultados go to Verificar_a_pool_de_resultados!
+internal event for Receber_pool_de_resultados
+<%
+    api_transition.Receber_pool_de_resultados_runner();
+%>!
+
+hold in Verificar_a_pool_de_resultados for time 5!
+from Verificar_a_pool_de_resultados go to Enviar_transacao_assinada_para_o_orderer!
+internal event for Verificar_a_pool_de_resultados
+<%
+    api_transition.Verificar_a_pool_de_resultados_runner();
+%>!
+
+hold in Enviar_transacao_assinada_para_o_orderer for time 5!
+from Enviar_transacao_assinada_para_o_orderer go to output_state!
+internal event for Enviar_transacao_assinada_para_o_orderer
+<%
+    api_transition.Enviar_transacao_assinada_para_o_orderer_runner();
+%>!
+
+// EndSequence for sequence starting at Receber_pool_de_resultados
+
+hold in output_state for time 5!
+from output_state go to waitForInput!
+
+after output_state output MESSAGE_OUTPUT!

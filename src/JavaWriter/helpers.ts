@@ -11,4 +11,9 @@ public class ${className}${extendClass ? ' extends ' + extendClass : ''} {
         }`
             : ''
     }
-`
+\t`
+
+export const adapterRunnerInterface = () => `interface TaskRunner  { 
+    Result run(Result};
+}
+\t`

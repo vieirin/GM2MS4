@@ -1,6 +1,6 @@
 import { readFileSync } from 'fs'
-import { Actor, Model, Node, NodeType } from 'GoalModel'
-import { nameText } from '../ms4Builder/namer'
+import { Actor, Model, Node, NodeType } from '../GoalModel'
+import { nameText } from '../ms4Builder/naming'
 import {
     component,
     ComponentGoals,
@@ -165,9 +165,10 @@ export const getNodes = (
     // find for requested component on the tree
     // there are case where the component is under some child of
     // another component type
-    if (!nodeComponent && nodeComponent === component && children) {
+    if (nodeComponent && nodeComponent === component && children) {
         const treeLevel = node.customProperties.selected ? level : level + 1
         return [
+            { ...tree, level },
             ...children
                 .map((child) => getNodes(child, component, type, treeLevel))
                 .flat()

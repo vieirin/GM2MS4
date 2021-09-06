@@ -5,3 +5,6 @@ coverage/
 dist/
 
 !.vscode/
+
+# use yarn!
+package-lock.json

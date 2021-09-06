@@ -71,7 +71,8 @@
           "x": 771,
           "y": 248,
           "customProperties": {
-            "Description": ""
+            "Description": "",
+            "component": "api"
           }
         },
         {
@@ -91,7 +92,8 @@
           "x": 879,
           "y": 321,
           "customProperties": {
-            "Description": ""
+            "Description": "",
+            "component": "api"
           }
         },
         {
@@ -111,7 +113,8 @@
           "x": 813,
           "y": 460,
           "customProperties": {
-            "Description": ""
+            "Description": "",
+            "component": "api"
           }
         },
         {

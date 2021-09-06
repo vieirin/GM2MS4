@@ -1,4 +1,4 @@
-import { Model } from 'GoalModel'
+import { Model } from '../GoalModel'
 import { JavaWriter } from '../JavaWriter/index'
 import {
     convertToTree,
@@ -6,10 +6,14 @@ import {
     getTreeNodeByComponent
 } from '../ObjectiveTree'
 import { branchGoals } from '../ObjectiveTree/treeNavigation'
-import { ComponentData } from '../ObjectiveTree/types'
-import { MS4Constants } from './constants'
-import * as dnlWriter from './dnlWriting'
-import { nameInput, nameTaskMethod } from './namer'
+import { ComponentData, LeveledGoalComponent } from '../ObjectiveTree/types'
+import { nameTaskMethod } from './naming'
+import { SequenceState } from './types'
+
+const stateSequenceForInput = (
+    component: string,
+    inputNode: LeveledGoalComponent
+): SequenceState => [inputNode, ...branchGoals(component, inputNode)]
 
 export const generateWaitForInput = (
     moduleName: string,
@@ -18,39 +22,51 @@ export const generateWaitForInput = (
     const waitForInputGoals = component.goals.filter(
         (node) => node.level === component.lowestLevel
     )
-    const initialState = MS4Constants.initialPassiveState
+    // const initialState = MS4Constants.initialPassiveState
 
     const javaWriter = new JavaWriter()
     waitForInputGoals.forEach((item) => {
-        console.log('here')
         javaWriter.writeTaskMethods(
             getNodes(item, moduleName, 'task').map((item) =>
                 nameTaskMethod(item.text)
             )
         )
     })
-    javaWriter.print()
+    // javaWriter.print()
 
-    const dnl =
-        dnlWriter.blockseparator(`To start passivate in ${initialState}!`) +
-        dnlWriter.blockseparator(
-            waitForInputGoals
-                .map(
-                    (goal) =>
-                        `when in ${initialState} and receives ${nameInput(
-                            goal.text
-                        )} go to ${goal.text}!`
-                )
-                .join('\n')
-        ) +
-        dnlWriter.blockseparator(
-            waitForInputGoals.map(() => {}).join('\n') +
-                dnlWriter.holdState(MS4Constants.outputState, initialState) +
-                dnlWriter.outputMessage(MS4Constants.outputState)
-        )
-    console.log(waitForInputGoals)
-    console.log(waitForInputGoals.map(branchGoals))
-    console.log(dnl)
+    // const transitionClassName = javaWriter.getTransitionClassName()
+
+    // const dnl =
+    //     // var defs
+    //     dnlWriter.declareVars(moduleName, transitionClassName) +
+    //     // initial state
+    //     dnlWriter.initialState(initialState) +
+    //     // input signals
+    //     dnlWriter.blockseparator(
+    //         waitForInputGoals
+    //             .map((goal) =>
+    //                 dnlWriter.inputSignalsReceivement(initialState, goal.text)
+    //             )
+    //             .join('\n')
+    //     ) +
+    //     // open input ports "accepts on" statements
+    //     dnlWriter.blockseparator(
+    //         waitForInputGoals
+    //             .map((goal) => dnlWriter.openInputPort(goal.text))
+    //             .join('\n')
+    //     ) +
+    //     // writes the state sequence for a branch (a path that an input follows when recieived)
+    //     waitForInputGoals
+    //         .map((input) => stateSequenceForInput(moduleName, input))
+    //         .map((seq) => dnlWriter.stateSequence(moduleName, seq))
+    //         .join('') +
+    //     // loop from output to waitforinput
+    //     dnlWriter.blockseparator(
+    //         dnlWriter.holdState(MS4Constants.outputState, initialState) +
+    //             dnlWriter.outputMessage(MS4Constants.outputState)
+    //     )
+
+    // writeFileSync(`output/${dnlFileName(moduleName)}`, dnl.trim())
 }
 
 export const generateGoalModelDNLs = (model: Model) => {

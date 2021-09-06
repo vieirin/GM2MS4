@@ -20,6 +20,8 @@ export class Class {
 `
     }
 
+    public getClassName = () => this.className
+
     print() {
         console.log(this.fileContent)
     }
