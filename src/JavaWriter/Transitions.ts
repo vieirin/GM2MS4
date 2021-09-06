@@ -2,7 +2,7 @@ import { capitalize } from '../ms4Builder/naming'
 import { Class } from './Class'
 import { adapterRunnerInterface } from './helpers'
 
-export class APITransitions extends Class {
+export class Transitions extends Class {
     taskClassVarName: string
 
     /**
