@@ -1,4 +1,5 @@
 import { capitalize } from '../ms4Builder/naming'
+import { RunnerDecomposition } from '../ObjectiveTree/treeNavigation'
 import { Class } from './Class'
 import { adapterRunnerInterface } from './helpers'
 
@@ -16,4 +17,6 @@ export class Transitions extends Class {
         this.addProperty(this.taskClassVarName, tasksClassName)
         this.print()
     }
+
+    writeTransitionMethods = (decomposition: RunnerDecomposition) => {}
 }

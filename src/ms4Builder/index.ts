@@ -23,14 +23,16 @@ export const generateWaitForInput = (
         (node) => node.level === component.lowestLevel
     )
     // const initialState = MS4Constants.initialPassiveState
-
     const javaWriter = new JavaWriter(moduleName)
     waitForInputGoals.forEach((item) => {
+        console.log('task', getNodes(item, moduleName, 'task'))
         javaWriter.writeTaskMethods(
-            getNodes(item, moduleName, 'task').map((item) =>
-                nameTaskMethod(item.text)
-            )
+            getNodes(item, moduleName, 'task')
+                // filter leaf tasks
+                .filter((task) => !((task.children?.length || 0) > 0))
+                .map((item) => nameTaskMethod(item.text))
         )
+        javaWriter.writeTransitionsMethods(item)
     })
     // javaWriter.print()
 

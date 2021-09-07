@@ -1,4 +1,7 @@
+import { runnerDecomposition } from '../ObjectiveTree/treeNavigation'
+import { ObjectiveTree } from '../ObjectiveTree/types'
 import { APITask } from './ApiTask'
+import { writeRunner } from './helpers'
 import { Transitions } from './Transitions'
 
 export class JavaWriter {
@@ -17,6 +20,13 @@ export class JavaWriter {
         tasks.forEach((task) => {
             this.tasks.createTaskMethod(task)
         })
+    }
+
+    writeTransitionsMethods = (tree: ObjectiveTree) => {
+        const decomposotion = runnerDecomposition(tree)
+        console.log(
+            writeRunner(decomposotion.fromState, decomposotion.functions)
+        )
     }
 
     getTransitionClassName = () => this.transitions.getClassName()

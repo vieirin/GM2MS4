@@ -5,6 +5,7 @@
     "[javascript]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
+    "debug.javascript.usePreview": true,
     "[typescript]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode",
         "editor.codeActionsOnSave": {

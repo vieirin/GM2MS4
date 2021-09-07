@@ -1,4 +1,4 @@
-import { ADAPTER_RUNNER_METHOD_NAME } from './constants'
+import { JavaConstants } from './constants'
 import { methodAccess } from './types'
 
 const ident = (repeat: number) => '\t'.repeat(repeat)
@@ -21,7 +21,7 @@ public class ${className}${extendClass ? ' extends ' + extendClass : ''} {
 \n`
 
 export const adapterRunnerInterface =
-    () => `${methodIdent}interface ${ADAPTER_RUNNER_METHOD_NAME} { 
+    () => `${methodIdent}interface ${JavaConstants.ADAPTER_RUNNER_INTERFACE_NAME} { 
 ${methodBodyIdent}Result run(Result};
 ${methodIdent}}
 \n`
@@ -31,3 +31,21 @@ export const writeProperty = (
     type: string,
     access: methodAccess = 'private'
 ) => `${methodIdent}${access} ${type} ${name};\n`
+
+export const writeRunner = (
+    method: string,
+    functions: string[]
+) => `${methodIdent}public ${method}() {
+${methodBodyIdent}${
+    JavaConstants.ADAPTER_RUNNER_INTERFACE_NAME
+}[] runner = new ${JavaConstants.ADAPTER_RUNNER_INTERFACE_NAME}[] { 
+    ${functions
+        .map(
+            (fn) =>
+                `${ident(3)}new ${
+                    JavaConstants.ADAPTER_RUNNER_INTERFACE_NAME
+                }() {public Result run(Result) {return ${fn}}}`
+        )
+        .join('\n')}
+${methodBodyIdent}}
+${methodIdent}}`

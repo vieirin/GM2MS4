@@ -161,19 +161,25 @@ export const getNodes = (
 ): LeveledGoalComponent[] => {
     const { children, ...node } = tree
     const nodeComponent = node.customProperties.component
-
     // find for requested component on the tree
     // there are case where the component is under some child of
     // another component type
     if (nodeComponent && nodeComponent === component && children) {
         const treeLevel = node.customProperties.selected ? level : level + 1
-        return [
-            { ...tree, level },
-            ...children
-                .map((child) => getNodes(child, component, type, treeLevel))
-                .flat()
-        ]
+
+        return (
+            [
+                type === node.type && { ...node, level: treeLevel },
+                ...children
+                    .map((child) => getNodes(child, component, type, treeLevel))
+                    .flat()
+            ]
+                // filter "false" from the return array
+                .filter((node) => node) as LeveledGoalComponent[]
+        )
     }
+
+    // case it matche
 
     if (node.type === 'goal' && nodeComponent !== component) {
         return [
