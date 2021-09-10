@@ -161,52 +161,46 @@ export const getNodes = (
 ): LeveledGoalComponent[] => {
     const { children, ...node } = tree
     const nodeComponent = node.customProperties.component
-    // find for requested component on the tree
-    // there are case where the component is under some child of
-    // another component type
-    if (nodeComponent && nodeComponent === component && children) {
-        const treeLevel = node.customProperties.selected ? level : level + 1
 
-        return (
-            [
-                type === node.type && { ...node, level: treeLevel },
-                ...children
-                    .map((child) => getNodes(child, component, type, treeLevel))
-                    .flat()
-            ]
-                // filter "false" from the return array
-                .filter((node) => node) as LeveledGoalComponent[]
-        )
-    }
+    // for nodes matching the component asked - 'api' for example - and has children
+    // search on they for new "type" node
+    if (nodeComponent === component) {
+        // type === 'task' && console.log(node, children)
 
-    // case it matche
-
-    if (node.type === 'goal' && nodeComponent !== component) {
+        if (children && children.length > 0) {
+            const treeLevel = node.customProperties.selected ? level : level + 1
+            return (
+                [
+                    type === node.type && {
+                        ...tree,
+                        level: treeLevel
+                    },
+                    ...children
+                        .map((child) =>
+                            getNodes(child, component, type, treeLevel)
+                        )
+                        .flat()
+                ]
+                    // filter "false" from the return array
+                    .filter((node) => node) as LeveledGoalComponent[]
+            )
+        } else {
+            if (type !== node.type || nodeComponent !== component) {
+                return []
+            } else {
+                return [{ ...node, level }]
+            }
+        }
+    } else {
+        // case it matches a goal from a diff component keep searching for goals
+        // of this type on other components children
         return [
             ...(children
-                ?.filter(
-                    (child) => child.customProperties.component === component
-                )
-                .map((child) => getNodes(child, component, type, level))
+                ?.map((child) => getNodes(child, component, type, level))
                 .flat()
                 .filter((item) => item.type === type) || [])
         ]
     }
-
-    if (!children || !children.length) {
-        if (type !== node.type || nodeComponent !== component) {
-            return []
-        } else {
-            return [{ ...node, level }]
-        }
-    }
-
-    return [
-        { ...tree, level },
-        ...children
-            .map((child) => getNodes(child, component, type, level + 1))
-            .flat()
-    ]
 }
 
 const lowestGoalLevel = (goals: LeveledGoalComponent[]) => {

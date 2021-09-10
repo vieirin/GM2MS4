@@ -1,10 +1,10 @@
 const latinChars = `ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐ
 ÑÒÓÔÕÖØÙÚÛÜ
-ÝŔÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿŕ` as const
+ÝŔÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿŕ()-` as const
 
 const nonLatinChars = `AAAAAAACEEEEIIIIDN
 OOOOOOUUUUYRsBaaa
-aaaaceeeeiiiionoooooouuuuybyr` as const
+aaaaceeeeiiiionoooooouuuuybyr___` as const
 
 const sanitizeText = (text: string) =>
     text
@@ -21,13 +21,14 @@ export const nameText = (text: string) =>
 
 export const nameInput = (stateName: string) => nameText(stateName) + '_input'
 
-export const nameTaskMethod = (taskName: string) => nameText(taskName) + '_task'
+export const nameTaskMethod = (taskName: string, hasChildren?: boolean) =>
+    nameText(taskName) + (hasChildren ? '_runner' : '') + '_task'
 
 export const transitionClassVarName = (component: string) =>
     nameText(component) + '_transition'
 
 export const transitionMethodName = (state: string) =>
-    nameText(state) + '_runner'
+    nameText(state).toLowerCase() + '_runner'
 
 export const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
 const sanitizeComponent = (component: string) =>
@@ -35,3 +36,9 @@ const sanitizeComponent = (component: string) =>
 
 export const dnlFileName = (component: string) =>
     sanitizeComponent(component) + '.dnl'
+
+export const taskVarName = (component: string) =>
+    sanitizeComponent(component) + 'Runner'
+
+export const transitionClassName = (component: string) =>
+    component.toUpperCase() + 'TransitionsClass'

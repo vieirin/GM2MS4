@@ -1,4 +1,4 @@
-package Models.java;
+package components;
 
 public class Result {
 	private Error error = null;
@@ -30,6 +30,20 @@ public class Result {
     public String getResult() {
 		return result;
 	}
+
+
+	protected Result () { 
+		
+	}
 	
+	protected Result (String error) { 
+		this.result = error;
+		this.success = false;
+	}
 	
+	public Result (Result result) { 
+		this.error = result.error;
+		this.result = result.result;
+		this.success = result.success;
+	}
 }

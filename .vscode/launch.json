@@ -10,7 +10,9 @@
             "request": "attach",
             "restart": true,
             "skipFiles": ["<node_internals>/**"],
-            "type": "pwa-node"
+            "stopOnEntry": false,
+            "type": "pwa-node",
+            "timeout": 10000
         }
     ]
 }

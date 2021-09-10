@@ -14,9 +14,9 @@ export const initialState = (initialState: string) =>
 
 export const declareVars = (component: string, className: string) =>
     blockseparator(
-        `use ${transitionClassVarName(
-            component
-        )} with type ${className} and default "new ${className}()"!`
+        `use ${transitionClassVarName(component)} with type  ${
+            MS4Constants.packageName
+        }.${className} and default "new ${className}()"!`
     )
 
 export const holdState = (state: string, nextstate?: string, newLines = 2) =>
