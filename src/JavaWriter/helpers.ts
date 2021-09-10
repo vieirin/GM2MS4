@@ -7,7 +7,6 @@ import { methodAccess } from './types'
 const ident = (s: string[], repeat: number) =>
     s.map((text) => '\t'.repeat(repeat) + text).join('\n')
 const methodIdent = (methodName: string) => ident([methodName], 1)
-const methodBodyIdent = (body: string, tab = 2) => ident(body.split('\n'), tab)
 
 export const fileStart = (
     className: string,

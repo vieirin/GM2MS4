@@ -21,6 +21,7 @@ export const branchGoals = (
 export type RunnerDecomposition = {
     fromState: string
     relation: relationship
+    component: string
     functions: string[]
     nextLevel: RunnerDecomposition[]
 }
@@ -48,12 +49,13 @@ export const runnerDecomposition = (
 ): RunnerDecomposition => ({
     fromState: tree.text,
     relation: tree.relation,
+    component: tree.customProperties.component || '',
     functions:
         tree.children
             ?.filter(
                 (child) =>
                     child.type === 'task' &&
-                    child?.customProperties?.component === component
+                    child.customProperties?.component === component
             )
             .map((child) => nameTaskMethod(child.text, hasChildren(child))) ||
         [],

@@ -6,7 +6,7 @@ import { adapterRunnerInterface, writeRunner, writeTaskRunner } from './helpers'
 
 export class Transitions extends Class {
     taskClassVarName: string
-
+    component: string
     /**
      *
      */
@@ -14,6 +14,8 @@ export class Transitions extends Class {
         super(`${transitionClassName(component)}`, Java.RESULT_CLASS)
 
         this.taskClassVarName = taskVarName(component)
+        this.component = component
+
         this.writeContent(adapterRunnerInterface())
         this.addProperty(this.taskClassVarName, tasksClassName, '')
         this.addProperty(Java.RESULT_VAR, Java.RESULT_CLASS, '')
@@ -22,17 +24,20 @@ export class Transitions extends Class {
 
     getTransitionsRecursively = ({
         fromState,
+        component,
         functions,
         relation,
         nextLevel
     }: RunnerDecomposition): string =>
-        writeRunner(
-            this.taskClassVarName,
-            fromState,
-            functions,
-            relation,
-            nextLevel?.[0]?.fromState || ''
-        ) +
+        (component === this.component
+            ? writeRunner(
+                  this.taskClassVarName,
+                  fromState,
+                  functions,
+                  relation,
+                  nextLevel?.[0]?.fromState || ''
+              )
+            : '') +
         nextLevel
             .map((level) => this.getTransitionsRecursively(level))
             .join('\n')

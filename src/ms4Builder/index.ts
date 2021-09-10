@@ -63,6 +63,11 @@ export const generateWaitForInput = (
         // writes the state sequence for a branch (a path that an input follows when recieived)
         waitForInputGoals
             .map((input) => stateSequenceForInput(moduleName, input))
+            .map((seq) =>
+                seq.filter(
+                    (item) => item.customProperties.component === moduleName
+                )
+            )
             .map((seq) => dnlWriter.stateSequence(moduleName, seq))
             .join('') +
         // loop from output to waitforinput

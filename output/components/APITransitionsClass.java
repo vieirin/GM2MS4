@@ -107,28 +107,4 @@ public class APITransitionsClass extends Result {
         return this.result;
         //Goes to state: Validar_assinaturas_do_bloco
     }
-
-	public Result validar_assinaturas_do_bloco_runner() {
-
-        TaskRunner[] runners = new TaskRunner[] { 
-        
-        };
-
-        this.result = tasksRunner(runners, "or", this.result);
-        return this.result;
-        //Goes to state: Criar_bloco
-    }
-
-	public Result criar_bloco_runner() {
-
-        TaskRunner[] runners = new TaskRunner[] { 
-        
-        };
-
-        this.result = tasksRunner(runners, "and", this.result);
-        return this.result;
-        //Goes to state: output_state
-    }
-
-
 }

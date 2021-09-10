@@ -32,10 +32,31 @@ internal event for Enviar_proposta_para_os_Peers
 // EndSequence for sequence starting at Processar_entrada_na_api
 
 hold in Receber_pool_de_resultados for time 5!
-from Receber_pool_de_resultados go to output_state!
+from Receber_pool_de_resultados go to Verificar_a_pool_de_resultados!
 internal event for Receber_pool_de_resultados
 <%
     api_transition.receber_pool_de_resultados_runner();
+%>!
+
+hold in Verificar_a_pool_de_resultados for time 5!
+from Verificar_a_pool_de_resultados go to Rejeitar_a_transacao!
+internal event for Verificar_a_pool_de_resultados
+<%
+    api_transition.verificar_a_pool_de_resultados_runner();
+%>!
+
+hold in Rejeitar_a_transacao for time 5!
+from Rejeitar_a_transacao go to Enviar_transacao_assinada_para_o_orderer!
+internal event for Rejeitar_a_transacao
+<%
+    api_transition.rejeitar_a_transacao_runner();
+%>!
+
+hold in Enviar_transacao_assinada_para_o_orderer for time 5!
+from Enviar_transacao_assinada_para_o_orderer go to output_state!
+internal event for Enviar_transacao_assinada_para_o_orderer
+<%
+    api_transition.enviar_transacao_assinada_para_o_orderer_runner();
 %>!
 
 // EndSequence for sequence starting at Receber_pool_de_resultados
