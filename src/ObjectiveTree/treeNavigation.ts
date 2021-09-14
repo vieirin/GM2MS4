@@ -1,5 +1,5 @@
 import { nameTaskMethod } from '../ms4Builder/naming'
-import { ObjectiveTree, relationship } from './types'
+import { leafType, ObjectiveTree, relationship } from './types'
 
 // extract element from a tree branch
 export const branchGoals = (
@@ -18,11 +18,14 @@ export const branchGoals = (
             new Array<ObjectiveTree>()
         ) || []
 
+export type func = { name: string; refiner: boolean }
+
 export type RunnerDecomposition = {
     fromState: string
     relation: relationship
     component: string
-    functions: string[]
+    nodeType: leafType | 'refiner'
+    functions: func[]
     nextLevel: RunnerDecomposition[]
 }
 
@@ -50,15 +53,19 @@ export const runnerDecomposition = (
     fromState: tree.text,
     relation: tree.relation,
     component: tree.customProperties.component || '',
+    nodeType: hasChildren(tree) && tree.type === 'task' ? 'refiner' : tree.type,
     functions:
         tree.children
             ?.filter(
                 (child) =>
                     child.type === 'task' &&
+                    !hasChildren(child) &&
                     child.customProperties?.component === component
             )
-            .map((child) => nameTaskMethod(child.text, hasChildren(child))) ||
-        [],
+            .map((child) => ({
+                name: nameTaskMethod(child.text, hasChildren(child)),
+                refiner: hasChildren(child)
+            })) || [],
     nextLevel:
         tree.children
             ?.filter(hasChildren)

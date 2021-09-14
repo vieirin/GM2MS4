@@ -1,0 +1,21 @@
+use chaincode_transition with type  components.ChaincodeTransitionsClass and default "new ChaincodeTransitionsClass()"!
+
+To start passivate in waitForInput!
+
+when in waitForInput and receive Executar_logica_de_negocio_input go to Executar_logica_de_negocio!
+
+accepts input on Executar_logica_de_negocio_input with type String!
+
+hold in Executar_logica_de_negocio for time 5!
+from Executar_logica_de_negocio go to output_state!
+internal event for Executar_logica_de_negocio
+<%
+    chaincode_transition.executar_logica_de_negocio_runner();
+%>!
+
+// EndSequence for sequence starting at Executar_logica_de_negocio
+
+hold in output_state for time 5!
+from output_state go to waitForInput!
+
+after output_state output MESSAGE_OUTPUT!

@@ -1,0 +1,28 @@
+use orderer_transition with type  components.OrdererTransitionsClass and default "new OrdererTransitionsClass()"!
+
+To start passivate in waitForInput!
+
+when in waitForInput and receive Validar_assinaturas_do_bloco_input go to Validar_assinaturas_do_bloco!
+
+accepts input on Validar_assinaturas_do_bloco_input with type String!
+
+hold in Validar_assinaturas_do_bloco for time 5!
+from Validar_assinaturas_do_bloco go to Rejeitar_a_transacao!
+internal event for Validar_assinaturas_do_bloco
+<%
+    orderer_transition.validar_assinaturas_do_bloco_runner();
+%>!
+
+hold in Rejeitar_a_transacao for time 5!
+from Rejeitar_a_transacao go to output_state!
+internal event for Rejeitar_a_transacao
+<%
+    orderer_transition.rejeitar_a_transacao_runner();
+%>!
+
+// EndSequence for sequence starting at Validar_assinaturas_do_bloco
+
+hold in output_state for time 5!
+from output_state go to waitForInput!
+
+after output_state output MESSAGE_OUTPUT!

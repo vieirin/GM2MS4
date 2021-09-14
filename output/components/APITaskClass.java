@@ -1,6 +1,6 @@
 package components;
 
-public class APITaskClass {
+public class apiTaskClass {
     
 
 	public Result Montar_proposta_de_transacao_task (Result result) { 

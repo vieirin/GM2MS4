@@ -4,8 +4,8 @@ export class APITask extends Class {
     /**
      *
      */
-    constructor() {
-        super('APITaskClass')
+    constructor(className: string) {
+        super(className)
     }
 
     createTaskMethod(taskName: string) {

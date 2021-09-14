@@ -38,25 +38,43 @@ export const writeProperty = (
         `${access} ${type} ${name} = new ${type}(${constructor || ''});\n`
     )
 
-export const writeRunner = (
-    tasksVar: string,
-    method: string,
+export const writeRunnerStructure = (
     functions: string[],
-    relation: relationship,
-    nextGoal: string
-) =>
-    methodIdent(
-        `public ${Java.RESULT_CLASS} ${transitionMethodName(method)}() {\n
-        ${Java.RUNNER_ITF}[] runners = new ${Java.RUNNER_ITF}[] { 
+    tasksVar?: string
+) => ` ${Java.RUNNER_ITF}[] runners = new ${Java.RUNNER_ITF}[] { 
         ${functions
             .map(
                 (fn, index) =>
-                    `   new ${Java.RUNNER_ITF}() {public Result run(Result res) {return ${tasksVar}.${fn}(res);}}`
+                    `   new ${
+                        Java.RUNNER_ITF
+                    }() {public Result run(Result res) {return ${
+                        tasksVar ? tasksVar + '.' : ''
+                    }${fn}(res);}}`
             )
             .reverse()
             .join(',\n\t\t')}
         };
+`
 
+export const writeRefinedTask = (
+    method: string,
+    childrenTasks: string[]
+) => `public ${Java.RESULT_CLASS} ${transitionMethodName(method)}(${
+    Java.RESULT_CLASS
+} res) {\n
+        ${writeRunnerStructure(childrenTasks)}
+    }`
+
+export const writeRunner = (
+    method: string,
+    functions: string[],
+    relation: relationship,
+    nextGoal: string,
+    tasksVar?: string
+) =>
+    methodIdent(
+        `public ${Java.RESULT_CLASS} ${transitionMethodName(method)}() {\n
+        ${writeRunnerStructure(functions, tasksVar)}
         this.result = ${
             Java.RUNNER_METHOD
         }(runners, "${relation}", this.result);

@@ -41,7 +41,8 @@
           "x": 713,
           "y": 235,
           "customProperties": {
-            "Description": ""
+            "Description": "",
+            "component": "peer"
           }
         },
         {
@@ -51,7 +52,8 @@
           "x": 744,
           "y": 327,
           "customProperties": {
-            "Description": ""
+            "Description": "",
+            "component": "peer"
           }
         },
         {
@@ -61,7 +63,9 @@
           "x": 849,
           "y": 330,
           "customProperties": {
-            "Description": ""
+            "Description": "component",
+            "peer": "",
+            "component": "peer"
           }
         },
         {
@@ -105,7 +109,8 @@
           "x": 1138,
           "y": 377,
           "customProperties": {
-            "Description": ""
+            "Description": "",
+            "component": "orderer"
           }
         },
         {
@@ -115,7 +120,9 @@
           "x": 1056,
           "y": 453,
           "customProperties": {
-            "Description": ""
+            "Description": "",
+            "compoonent": "orderer",
+            "component": "orderer"
           }
         },
         {
@@ -125,7 +132,8 @@
           "x": 1217,
           "y": 459,
           "customProperties": {
-            "Description": ""
+            "Description": "",
+            "component": "orderer"
           }
         },
         {
@@ -135,17 +143,19 @@
           "x": 1166,
           "y": 523,
           "customProperties": {
-            "Description": ""
+            "Description": "",
+            "component": "orderer"
           }
         },
         {
           "id": "637bd788-65ab-4223-81cd-ceab64eef5fb",
           "text": "Notificar a rede ",
           "type": "istar.Task",
-          "x": 1289,
+          "x": 1288,
           "y": 525,
           "customProperties": {
-            "Description": ""
+            "Description": "",
+            "component": "orderer"
           }
         },
         {
@@ -192,7 +202,8 @@
           "x": 746,
           "y": 397,
           "customProperties": {
-            "Description": ""
+            "Description": "",
+            "component": "chaincode"
           }
         },
         {
@@ -202,7 +213,8 @@
           "x": 745,
           "y": 459,
           "customProperties": {
-            "Description": ""
+            "Description": "",
+            "component": "chaincode"
           }
         },
         {
@@ -248,7 +260,8 @@
           "x": 858,
           "y": 402,
           "customProperties": {
-            "Description": ""
+            "Description": "",
+            "component": "peer"
           }
         },
         {
@@ -273,6 +286,17 @@
             "Description": "",
             "component": "api"
           }
+        },
+        {
+          "id": "12d045a6-1aee-46fa-9d00-15b0ba6c5555",
+          "text": "Task",
+          "type": "istar.Task",
+          "x": 1051,
+          "y": 566,
+          "customProperties": {
+            "Description": "",
+            "component": "orderer"
+          }
         }
       ]
     }
@@ -281,142 +305,148 @@
   "dependencies": [],
   "links": [
     {
-      "id": "ec4b51e5-f4fb-4879-b5ba-fbd01973519f",
+      "id": "2ea2c723-91fb-414e-8ac2-962be53bb82f",
       "type": "istar.AndRefinementLink",
       "source": "8de7a901-398e-4d37-a22d-3f954bb81601",
       "target": "f0406552-00af-4442-b03d-a78e27457929"
     },
     {
-      "id": "2b7b2885-9472-46e9-9c01-24c94c7b90e2",
+      "id": "d5a23a80-aba7-4358-ab1b-4c2af2a3289b",
       "type": "istar.AndRefinementLink",
       "source": "2bb58c75-9a35-4b6f-8e8c-85f4cb604c84",
       "target": "f0406552-00af-4442-b03d-a78e27457929"
     },
     {
-      "id": "e8d9dc2a-1023-48b7-a7eb-ec3953cc064e",
+      "id": "9710fe7d-8058-4916-9d82-df8661fe44b9",
       "type": "istar.AndRefinementLink",
       "source": "51e1a122-2abe-4153-a42e-3e0c7a3bbd8e",
       "target": "2bb58c75-9a35-4b6f-8e8c-85f4cb604c84"
     },
     {
-      "id": "1afc4ad1-1138-409b-9b0e-80e6f63302cd",
+      "id": "9cdc71e2-d08b-4c54-b3c4-17060e801b62",
       "type": "istar.AndRefinementLink",
       "source": "52781a22-2ed1-4281-9c73-e6a9d314e240",
       "target": "2bb58c75-9a35-4b6f-8e8c-85f4cb604c84"
     },
     {
-      "id": "3c2b0677-f2de-452d-8d98-4f5c4684c5b1",
+      "id": "00ee4cff-b319-490d-967b-26d4839e4493",
       "type": "istar.OrRefinementLink",
       "source": "0d5629f0-4d07-46e9-a452-cac4d322e234",
       "target": "7c79330d-f564-4134-b810-47370afd7308"
     },
     {
-      "id": "a15cac4f-feda-4136-a683-0f6f8e03f4ca",
+      "id": "c8e0fe77-c0f3-4efc-87c9-1b57cc9356d7",
       "type": "istar.OrRefinementLink",
       "source": "30fdd731-24c7-424d-b77c-6b9683a76bca",
       "target": "7c79330d-f564-4134-b810-47370afd7308"
     },
     {
-      "id": "c7cb1f82-c64b-4e0d-ba7d-b2d546b58e04",
+      "id": "f4226e6e-ea28-4208-8ca0-f87d88341332",
       "type": "istar.AndRefinementLink",
       "source": "fc1c1d20-d10d-48d0-a717-59094a59d944",
       "target": "30fdd731-24c7-424d-b77c-6b9683a76bca"
     },
     {
-      "id": "0240c740-9d04-4828-b964-c1b4fcc0faa5",
+      "id": "c9b58a4e-adaf-4b6f-bab6-6948a30788fe",
       "type": "istar.OrRefinementLink",
       "source": "0973aeef-286f-47b0-a6cf-640e43d7671f",
       "target": "fc1c1d20-d10d-48d0-a717-59094a59d944"
     },
     {
-      "id": "3b73053f-5186-4a48-aed4-9fd49ca589ab",
+      "id": "e0de7b01-9041-4676-a281-da87eaaa697a",
       "type": "istar.OrRefinementLink",
       "source": "a219eddf-f170-454f-b20b-7568228307e0",
       "target": "fc1c1d20-d10d-48d0-a717-59094a59d944"
     },
     {
-      "id": "a8fb5f5b-ecce-41eb-ac6f-389f9afa7e5f",
+      "id": "fd1b0932-ffa0-486f-b3e6-cf846511c58c",
       "type": "istar.AndRefinementLink",
       "source": "c4146a67-384f-48f8-b48a-65fbdb31c7d0",
       "target": "a219eddf-f170-454f-b20b-7568228307e0"
     },
     {
-      "id": "9baa3c35-99c0-4900-8e4d-1a1b4f147548",
+      "id": "39510362-0c03-48cf-8364-616912a4c4e1",
       "type": "istar.AndRefinementLink",
       "source": "637bd788-65ab-4223-81cd-ceab64eef5fb",
       "target": "a219eddf-f170-454f-b20b-7568228307e0"
     },
     {
-      "id": "de37084b-ca17-417a-ba47-307b750ae37e",
+      "id": "f76a96a6-56bb-4af5-94ca-da39c5640f89",
       "type": "istar.OrRefinementLink",
       "source": "f6f3d933-8b3d-4c61-893c-cca36d2972c8",
       "target": "8de7a901-398e-4d37-a22d-3f954bb81601"
     },
     {
-      "id": "3590aa26-20bf-4f4a-84f3-d7a09b707d86",
+      "id": "71520244-7ae4-4398-943e-aed36fcb8d53",
       "type": "istar.AndRefinementLink",
       "source": "c4963052-bad5-46ef-b79e-031266546f11",
       "target": "f6f3d933-8b3d-4c61-893c-cca36d2972c8"
     },
     {
-      "id": "e84ab941-142e-44dc-9951-b3ca28d8ca29",
+      "id": "9f69a1a0-2ff6-471a-814a-bf16e8d8df31",
       "type": "istar.AndRefinementLink",
       "source": "3867e9d3-349c-4829-8c9b-61de16ac60c2",
       "target": "51e1a122-2abe-4153-a42e-3e0c7a3bbd8e"
     },
     {
-      "id": "d1a7e468-b83d-4c51-ab7a-78703dc6b10d",
+      "id": "1a968528-8d27-4e50-bab0-65ad639592c9",
       "type": "istar.AndRefinementLink",
       "source": "ba3fd6ff-acbc-4a10-911a-55c4b655ed8c",
       "target": "3867e9d3-349c-4829-8c9b-61de16ac60c2"
     },
     {
-      "id": "cd73cf3a-26bd-4ecc-b785-dc3a0285d00e",
+      "id": "1f897a97-8edb-47a9-b891-faa2feb9e2e5",
       "type": "istar.AndRefinementLink",
       "source": "bbfc14b1-9da7-4112-82cf-3ec369887261",
       "target": "e3ea007b-e9df-4651-9260-8566a86c52d8"
     },
     {
-      "id": "a4874a01-435e-497d-9df6-708638fdfc87",
+      "id": "085dd170-1c6d-4309-a43d-30cb12e0c746",
       "type": "istar.AndRefinementLink",
       "source": "e3ea007b-e9df-4651-9260-8566a86c52d8",
       "target": "f6f3d933-8b3d-4c61-893c-cca36d2972c8"
     },
     {
-      "id": "9dc2447c-b5f3-4507-859c-99203accaf02",
+      "id": "8e3ce3f9-5632-407a-8e03-0a47b9466a90",
       "type": "istar.AndRefinementLink",
       "source": "b96e97cd-d783-4f76-b006-b4c0ef93f4c9",
       "target": "e3ea007b-e9df-4651-9260-8566a86c52d8"
     },
     {
-      "id": "603150d0-cf75-4f06-9e61-a573e2e68e8b",
+      "id": "61d38991-fee4-43e2-a776-7d32b76d6715",
       "type": "istar.AndRefinementLink",
       "source": "bdacda33-50aa-4850-9ce5-ad6a47368972",
       "target": "52781a22-2ed1-4281-9c73-e6a9d314e240"
     },
     {
-      "id": "25d110ea-a496-41f2-a1db-4f8906763bf8",
+      "id": "b622eb19-e18a-44a5-8bb2-2b5c4826f8bc",
       "type": "istar.AndRefinementLink",
       "source": "0c59d725-3739-47ad-8ce9-d49b65004a52",
       "target": "f0406552-00af-4442-b03d-a78e27457929"
     },
     {
-      "id": "f23e4848-aa95-4160-a1f3-d4e6a8f7fc0a",
+      "id": "048a9547-1b2c-4efc-b42a-545895859617",
       "type": "istar.AndRefinementLink",
       "source": "7c79330d-f564-4134-b810-47370afd7308",
       "target": "0c59d725-3739-47ad-8ce9-d49b65004a52"
     },
     {
-      "id": "a837628e-5386-4676-b11c-93b840b94a94",
+      "id": "83481d9a-416d-4888-918f-8a764479d769",
       "type": "istar.AndRefinementLink",
       "source": "72f6d345-7050-4382-8593-10719959349b",
       "target": "0d5629f0-4d07-46e9-a452-cac4d322e234"
     },
     {
-      "id": "bcaead49-d7d5-484b-999d-e8b8c1727f04",
+      "id": "e12baa15-a1ac-4317-a6ca-3363f4947bc6",
       "type": "istar.OrRefinementLink",
       "source": "9c1403b9-53f3-4036-8690-3af589e5c536",
       "target": "8de7a901-398e-4d37-a22d-3f954bb81601"
+    },
+    {
+      "id": "81d031c5-cc5a-4ee5-8c4f-b3acdf7c3259",
+      "type": "istar.AndRefinementLink",
+      "source": "12d045a6-1aee-46fa-9d00-15b0ba6c5555",
+      "target": "0973aeef-286f-47b0-a6cf-640e43d7671f"
     }
   ],
   "display": {
@@ -505,7 +535,7 @@
     "72f6d345-7050-4382-8593-10719959349b": {
       "backgroundColor": "#38FA8E"
     },
-    "a4874a01-435e-497d-9df6-708638fdfc87": {
+    "085dd170-1c6d-4309-a43d-30cb12e0c746": {
       "vertices": [
         {
           "x": 596,
@@ -516,7 +546,7 @@
   },
   "tool": "pistar.2.0.0",
   "istar": "2.0",
-  "saveDate": "Fri, 10 Sep 2021 05:50:13 GMT",
+  "saveDate": "Tue, 14 Sep 2021 06:09:04 GMT",
   "diagram": {
     "width": 2000,
     "height": 1300,

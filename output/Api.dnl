@@ -1,4 +1,4 @@
-use api_transition with type  components.APITransitionsClass and default "new APITransitionsClass()"!
+use api_transition with type  components.ApiTransitionsClass and default "new ApiTransitionsClass()"!
 
 To start passivate in waitForInput!
 

@@ -11,7 +11,7 @@ export class JavaWriter {
      *
      */
     constructor(component: string) {
-        this.tasks = new APITask()
+        this.tasks = new APITask(component + 'TaskClass')
         this.transitions = new Transitions(component, this.tasks.getClassName())
         this.component = component
     }

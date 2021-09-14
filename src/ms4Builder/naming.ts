@@ -41,4 +41,4 @@ export const taskVarName = (component: string) =>
     sanitizeComponent(component) + 'Runner'
 
 export const transitionClassName = (component: string) =>
-    component.toUpperCase() + 'TransitionsClass'
+    capitalize(component) + 'TransitionsClass'
