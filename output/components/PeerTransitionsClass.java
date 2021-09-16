@@ -31,8 +31,7 @@ public class PeerTransitionsClass extends Result {
 	public Result calcular_resultado_da_transacao_runner() {
 
          TaskRunner[] runners = new TaskRunner[] { 
-           new TaskRunner() {public Result run(Result res) {return enviar_resultado_para_api_runner(res);}},
-		   new TaskRunner() {public Result run(Result res) {return invocar_o_chaincode_runner(res);}}
+        
         };
         this.result = tasksRunner(runners, "and", this.result);
         return this.result;
@@ -45,7 +44,7 @@ public class PeerTransitionsClass extends Result {
 	public Result invocar_o_chaincode_runner() {
 
          TaskRunner[] runners = new TaskRunner[] { 
-           new TaskRunner() {public Result run(Result res) {return executar_logica_de_negocio_runner(res);}}
+        
         };
         this.result = tasksRunner(runners, "and", this.result);
         return this.result;

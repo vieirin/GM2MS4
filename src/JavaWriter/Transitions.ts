@@ -56,9 +56,11 @@ export class Transitions extends Class {
                   fromState,
                   this.hasNodeWithChildren(functions)
                       ? functions.map((fn) => fn.name)
-                      : nextLevel.map((item) =>
-                            transitionMethodName(item.fromState)
-                        ),
+                      : nextLevel
+                            .filter((level) => level.nodeType === 'refiner')
+                            .map((item) =>
+                                transitionMethodName(item.fromState)
+                            ),
                   relation,
                   nextLevel?.[0]?.fromState || '',
                   this.hasNodeWithChildren(functions)

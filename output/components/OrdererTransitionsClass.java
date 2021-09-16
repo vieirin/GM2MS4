@@ -31,8 +31,7 @@ public class OrdererTransitionsClass extends Result {
 	public Result validar_assinaturas_do_bloco_runner() {
 
          TaskRunner[] runners = new TaskRunner[] { 
-           new TaskRunner() {public Result run(Result res) {return rejeitar_a_transacao_runner(res);}},
-		   new TaskRunner() {public Result run(Result res) {return criar_bloco_runner(res);}}
+           new TaskRunner() {public Result run(Result res) {return criar_bloco_runner(res);}}
         };
         this.result = tasksRunner(runners, "or", this.result);
         return this.result;

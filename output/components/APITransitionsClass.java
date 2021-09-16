@@ -72,7 +72,7 @@ public class ApiTransitionsClass extends Result {
 	public Result receber_pool_de_resultados_runner() {
 
          TaskRunner[] runners = new TaskRunner[] { 
-           new TaskRunner() {public Result run(Result res) {return verificar_a_pool_de_resultados_runner(res);}}
+        
         };
         this.result = tasksRunner(runners, "and", this.result);
         return this.result;
@@ -85,8 +85,7 @@ public class ApiTransitionsClass extends Result {
 	public Result verificar_a_pool_de_resultados_runner() {
 
          TaskRunner[] runners = new TaskRunner[] { 
-           new TaskRunner() {public Result run(Result res) {return enviar_transacao_assinada_para_o_orderer_runner(res);}},
-		   new TaskRunner() {public Result run(Result res) {return rejeitar_a_transacao_runner(res);}}
+        
         };
         this.result = tasksRunner(runners, "or", this.result);
         return this.result;
@@ -113,7 +112,7 @@ public class ApiTransitionsClass extends Result {
 	public Result enviar_transacao_assinada_para_o_orderer_runner() {
 
          TaskRunner[] runners = new TaskRunner[] { 
-           new TaskRunner() {public Result run(Result res) {return validar_assinaturas_do_bloco_runner(res);}}
+        
         };
         this.result = tasksRunner(runners, "and", this.result);
         return this.result;
