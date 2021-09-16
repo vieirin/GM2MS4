@@ -28,6 +28,46 @@ export const validateModel = (model: Model) => {
     }
 }
 
+export const validateTree = (tree: ObjectiveTree, level = 0) => {
+    if (!tree.children?.length) {
+        return
+    }
+
+    // comparing null with undefined cuz case one of them don't exist it must be false
+    const firstGoal = tree.children.findIndex(
+        (v) =>
+            v.type === 'goal' &&
+            (v.customProperties.component || null) ===
+                (tree.customProperties.component || undefined)
+    )
+    const lastTask = [...tree.children]
+        .reverse()
+        .findIndex(
+            (v) =>
+                v.type === 'task' &&
+                (v.customProperties.component || null) ===
+                    (tree.customProperties.component || undefined)
+        )
+    if (firstGoal === -1 || lastTask === -1) {
+        tree.children?.forEach((child) => {
+            validateTree(child, level + 1)
+        })
+        return
+    }
+
+    // invert index after search cuz it was made on the reverse array
+    const taskIndex = tree.children.length - 1 - lastTask
+
+    if (firstGoal < taskIndex) {
+        throw new Error(
+            `The task's brothers must come before the goal for a same level on tree
+            At level:  ${level}
+            Error node: ${tree.text}; type: ${tree.type}
+            `
+        )
+    }
+}
+
 export const loadModel = (filename: string) => {
     const modelFile = readFileSync(filename)
     const model = JSON.parse(modelFile.toString()) as Model
@@ -134,6 +174,9 @@ export const convertToTree = (model: Model) => {
         })
         // filter undefined trees (those without a root node)
         .filter((tree) => tree) as ObjectiveTree[]
+    trees.forEach((tree) => {
+        validateTree(tree)
+    })
 
     return trees
 }

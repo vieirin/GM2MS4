@@ -25,6 +25,7 @@ export const generateWaitForInput = (
     const waitForInputGoals = component.goals.filter(
         (node) => node.level === component.lowestLevel
     )
+
     const javaWriter = new JavaWriter(moduleName)
     waitForInputGoals.forEach((inputNode) => {
         javaWriter.writeTaskMethods(

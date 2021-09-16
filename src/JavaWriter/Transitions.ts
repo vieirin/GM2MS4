@@ -47,7 +47,9 @@ export class Transitions extends Class {
         (nodeType === 'refiner'
             ? writeRefinedTask(
                   fromState,
-                  functions.map((fn) => fn.name)
+                  functions,
+                  relation,
+                  this.taskClassVarName
               )
             : component === this.component
             ? writeRunner(

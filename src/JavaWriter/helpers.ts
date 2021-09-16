@@ -1,5 +1,6 @@
 import { MS4Constants } from '../ms4Builder/constants'
 import { transitionMethodName } from '../ms4Builder/naming'
+import { func } from '../ObjectiveTree/treeNavigation'
 import { relationship } from '../ObjectiveTree/types'
 import { Java } from './constants'
 import { methodAccess } from './types'
@@ -40,6 +41,7 @@ export const writeProperty = (
 
 export const writeRunnerStructure = (
     functions: string[],
+    relation: relationship,
     tasksVar?: string
 ) => ` ${Java.RUNNER_ITF}[] runners = new ${Java.RUNNER_ITF}[] { 
         ${functions
@@ -54,15 +56,27 @@ export const writeRunnerStructure = (
             .reverse()
             .join(',\n\t\t')}
         };
+        this.result = ${
+            Java.RUNNER_METHOD
+        }(runners, "${relation}", this.result);
+        return this.result;
+
 `
 
 export const writeRefinedTask = (
     method: string,
-    childrenTasks: string[]
+    childrenTasks: func[],
+    relation: relationship,
+    taskVar: string
 ) => `public ${Java.RESULT_CLASS} ${transitionMethodName(method)}(${
     Java.RESULT_CLASS
 } res) {\n
-        ${writeRunnerStructure(childrenTasks)}
+        ${writeRunnerStructure(
+            childrenTasks.map((task) =>
+                task.refiner ? task.name : `${taskVar}.${task.name}`
+            ),
+            relation
+        )}
     }`
 
 export const writeRunner = (
@@ -74,11 +88,8 @@ export const writeRunner = (
 ) =>
     methodIdent(
         `public ${Java.RESULT_CLASS} ${transitionMethodName(method)}() {\n
-        ${writeRunnerStructure(functions, tasksVar)}
-        this.result = ${
-            Java.RUNNER_METHOD
-        }(runners, "${relation}", this.result);
-        return this.result;
+        ${writeRunnerStructure(functions, relation, tasksVar)}
+       
         //Goes to state: ${nextGoal || MS4Constants.outputState}
     }
 \n`

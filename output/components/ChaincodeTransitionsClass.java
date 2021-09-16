@@ -33,9 +33,11 @@ public class ChaincodeTransitionsClass extends Result {
          TaskRunner[] runners = new TaskRunner[] { 
            new TaskRunner() {public Result run(Result res) {return ChaincodeRunner.Executar_funcao_solicitada_task(res);}}
         };
-
         this.result = tasksRunner(runners, "and", this.result);
         return this.result;
+
+
+       
         //Goes to state: output_state
     }
 
