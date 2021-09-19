@@ -2,18 +2,20 @@ use undefined_transition with type  components.UndefinedTransitionsClass and def
 
 To start passivate in waitForInput!
 
-when in waitForInput and receive Registrar_uma_transacao_input go to Registrar uma transação!
+when in waitForInput and receive Registrar_uma_transacao_input go to Registrar_uma_transacao!
 
-accepts input on Registrar_uma_transacao_input with type String!
+accepts input on G0Processar_entrada_na_api_input with type String!
+accepts input on G0Calcular_resultado_da_transacao_input with type String!
+accepts input on G0Receber_pool_de_resultados_input with type String!
 
-hold in Registrar uma transação for time 5!
-from Registrar uma transação go to output_state!
-internal event for Registrar uma transação
+hold in Registrar_uma_transacao for time 5!
+from Registrar_uma_transacao go to output_state!
+internal event for Registrar_uma_transacao
 <%
     undefined_transition.registrar_uma_transacao_runner();
 %>!
 
-// EndSequence for sequence starting at Registrar uma transação
+// EndSequence for sequence starting at Registrar_uma_transacao
 
 hold in output_state for time 5!
 from output_state go to waitForInput!

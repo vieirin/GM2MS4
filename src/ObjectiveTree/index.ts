@@ -1,6 +1,6 @@
 import { readFileSync } from 'fs'
 import { Actor, Model, Node, NodeType } from '../GoalModel'
-import { nameText } from '../ms4Builder/naming'
+import { nodeName } from '../ms4Builder/naming'
 import {
     component,
     ComponentGoals,
@@ -131,11 +131,16 @@ export const convertToTree = (model: Model) => {
                     return undefined
                 }
 
-                node.text = nameText(node.text)
+                const [id, text] = nodeName(
+                    node.text,
+                    convertIstarType(node.type)
+                )
 
                 const [granChildren, relation] = nodeChildren(actor, node?.id)
                 return {
                     ...node,
+                    identifier: id,
+                    text: text,
                     component: node.customProperties.component || 'verifier',
                     isRoot: node.customProperties.selected || false,
                     children: granChildren,
@@ -151,9 +156,12 @@ export const convertToTree = (model: Model) => {
 
     const nodeToTree = (actor: Actor, node: Node): ObjectiveTree => {
         const [children, relation] = nodeChildren(actor, node?.id)
+        const [id, text] = nodeName(node.text, convertIstarType(node.type))
         return {
             ...node,
             relation,
+            identifier: id,
+            text,
             isRoot: node.customProperties.selected || false,
             component: node.customProperties.component || 'undefined',
             children: children,

@@ -19,6 +19,22 @@ const sanitizeText = (text: string) =>
 export const nameText = (text: string) =>
     sanitizeText(text).trim().replace(/ /g, '_')
 
+export const nodeName = (text: string, type: 'goal' | 'task') => {
+    const goalText = text.split(':')
+    switch (type) {
+        case 'goal':
+            if (!goalText[0].match(/G\d*/)) {
+                throw new Error(
+                    'Goal text must start with `G%d:` string, got: ' + goalText
+                )
+            }
+            break
+        case 'task':
+            return ['', nameText(goalText[0])]
+    }
+    return [goalText[0], nameText(goalText[1])]
+}
+
 export const nameInput = (stateName: string) => nameText(stateName) + '_input'
 
 export const nameTaskMethod = (taskName: string, hasChildren?: boolean) =>

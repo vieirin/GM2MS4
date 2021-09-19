@@ -4,7 +4,7 @@
       "id": "309c8d4d-f7a1-4ca3-83a8-a93e9240716b",
       "text": "Registrando uma transação",
       "type": "istar.Actor",
-      "x": 252,
+      "x": 254,
       "y": 159,
       "customProperties": {
         "Description": ""
@@ -14,7 +14,7 @@
           "id": "f0406552-00af-4442-b03d-a78e27457929",
           "text": "G0: Registrar uma transação",
           "type": "istar.Goal",
-          "x": 659,
+          "x": 661,
           "y": 178,
           "customProperties": {
             "Description": "",
@@ -25,7 +25,7 @@
           "id": "8de7a901-398e-4d37-a22d-3f954bb81601",
           "text": "G1: Processar entrada na api",
           "type": "istar.Goal",
-          "x": 511,
+          "x": 513,
           "y": 240,
           "customProperties": {
             "Description": "",
@@ -38,7 +38,7 @@
           "id": "2bb58c75-9a35-4b6f-8e8c-85f4cb604c84",
           "text": "G4: Calcular resultado da transação",
           "type": "istar.Goal",
-          "x": 674,
+          "x": 676,
           "y": 236,
           "customProperties": {
             "Description": "",
@@ -49,7 +49,7 @@
           "id": "51e1a122-2abe-4153-a42e-3e0c7a3bbd8e",
           "text": "G5: Invocar o chaincode",
           "type": "istar.Goal",
-          "x": 743,
+          "x": 745,
           "y": 329,
           "customProperties": {
             "Description": "",
@@ -60,7 +60,7 @@
           "id": "52781a22-2ed1-4281-9c73-e6a9d314e240",
           "text": "G6: Enviar resultado para api",
           "type": "istar.Goal",
-          "x": 848,
+          "x": 850,
           "y": 332,
           "customProperties": {
             "Description": "component",
@@ -72,7 +72,7 @@
           "id": "7c79330d-f564-4134-b810-47370afd7308",
           "text": "G8: Verificar a pool de resultados",
           "type": "istar.Goal",
-          "x": 1013,
+          "x": 1015,
           "y": 243,
           "customProperties": {
             "Description": "",
@@ -83,7 +83,7 @@
           "id": "0d5629f0-4d07-46e9-a452-cac4d322e234",
           "text": "G9: Rejeitar a transação",
           "type": "istar.Goal",
-          "x": 968,
+          "x": 970,
           "y": 322,
           "customProperties": {
             "Description": "",
@@ -95,7 +95,7 @@
           "id": "30fdd731-24c7-424d-b77c-6b9683a76bca",
           "text": "G10: Enviar transação assinada para o orderer",
           "type": "istar.Goal",
-          "x": 1149,
+          "x": 1151,
           "y": 329,
           "customProperties": {
             "Description": "",
@@ -106,7 +106,7 @@
           "id": "fc1c1d20-d10d-48d0-a717-59094a59d944",
           "text": "G11: Validar assinaturas do bloco",
           "type": "istar.Goal",
-          "x": 1262,
+          "x": 1264,
           "y": 412,
           "customProperties": {
             "Description": "",
@@ -117,7 +117,7 @@
           "id": "0973aeef-286f-47b0-a6cf-640e43d7671f",
           "text": "G12: criar bloco",
           "type": "istar.Goal",
-          "x": 1377,
+          "x": 1379,
           "y": 484,
           "customProperties": {
             "Description": "",
@@ -129,7 +129,7 @@
           "id": "a219eddf-f170-454f-b20b-7568228307e0",
           "text": "Rejeitar a transação",
           "type": "istar.Task",
-          "x": 1172,
+          "x": 1174,
           "y": 487,
           "customProperties": {
             "Description": "",
@@ -140,7 +140,7 @@
           "id": "c4146a67-384f-48f8-b48a-65fbdb31c7d0",
           "text": "Adicionar bloco à cadeia",
           "type": "istar.Task",
-          "x": 1331,
+          "x": 1333,
           "y": 575,
           "customProperties": {
             "Description": "",
@@ -151,7 +151,7 @@
           "id": "637bd788-65ab-4223-81cd-ceab64eef5fb",
           "text": "Notificar a rede ",
           "type": "istar.Task",
-          "x": 1432,
+          "x": 1434,
           "y": 571,
           "customProperties": {
             "Description": "",
@@ -162,7 +162,7 @@
           "id": "f6f3d933-8b3d-4c61-893c-cca36d2972c8",
           "text": "G2: Propor transação à rede",
           "type": "istar.Goal",
-          "x": 508,
+          "x": 510,
           "y": 307,
           "customProperties": {
             "Description": "",
@@ -175,7 +175,7 @@
           "id": "c4963052-bad5-46ef-b79e-031266546f11",
           "text": "Montar proposta de transação",
           "type": "istar.Task",
-          "x": 455,
+          "x": 457,
           "y": 377,
           "customProperties": {
             "Description": "",
@@ -186,7 +186,7 @@
           "id": "9c1403b9-53f3-4036-8690-3af589e5c536",
           "text": "Abort (input)",
           "type": "istar.Task",
-          "x": 346,
+          "x": 348,
           "y": 306,
           "customProperties": {
             "Description": "",
@@ -197,9 +197,9 @@
         },
         {
           "id": "3867e9d3-349c-4829-8c9b-61de16ac60c2",
-          "text": "Executar lógica de negócio",
+          "text": "G13: Executar lógica de negócio",
           "type": "istar.Goal",
-          "x": 770,
+          "x": 772,
           "y": 449,
           "customProperties": {
             "Description": "",
@@ -210,7 +210,7 @@
           "id": "ba3fd6ff-acbc-4a10-911a-55c4b655ed8c",
           "text": "Executar função solicitada",
           "type": "istar.Task",
-          "x": 770,
+          "x": 772,
           "y": 532,
           "customProperties": {
             "Description": "",
@@ -221,7 +221,7 @@
           "id": "e3ea007b-e9df-4651-9260-8566a86c52d8",
           "text": "G3: Enviar proposta para os Peers",
           "type": "istar.Goal",
-          "x": 577,
+          "x": 579,
           "y": 369,
           "customProperties": {
             "Description": "",
@@ -235,7 +235,7 @@
           "id": "bbfc14b1-9da7-4112-82cf-3ec369887261",
           "text": "Enviar proposta para os peers-alvo",
           "type": "istar.Task",
-          "x": 645,
+          "x": 647,
           "y": 459,
           "customProperties": {
             "Description": "",
@@ -246,7 +246,7 @@
           "id": "b96e97cd-d783-4f76-b006-b4c0ef93f4c9",
           "text": "Calcular peers-alvo",
           "type": "istar.Task",
-          "x": 514,
+          "x": 516,
           "y": 457,
           "customProperties": {
             "Description": "",
@@ -257,7 +257,7 @@
           "id": "bdacda33-50aa-4850-9ce5-ad6a47368972",
           "text": "Enviar resultado para api",
           "type": "istar.Task",
-          "x": 857,
+          "x": 859,
           "y": 404,
           "customProperties": {
             "Description": "",
@@ -268,7 +268,7 @@
           "id": "0c59d725-3739-47ad-8ce9-d49b65004a52",
           "text": "G7: Receber pool de resultados",
           "type": "istar.Goal",
-          "x": 905,
+          "x": 907,
           "y": 225,
           "customProperties": {
             "Description": "",
@@ -280,7 +280,7 @@
           "id": "72f6d345-7050-4382-8593-10719959349b",
           "text": "Enviar erro",
           "type": "istar.Task",
-          "x": 966,
+          "x": 968,
           "y": 402,
           "customProperties": {
             "Description": "",
@@ -291,7 +291,7 @@
           "id": "12d045a6-1aee-46fa-9d00-15b0ba6c5555",
           "text": "Task",
           "type": "istar.Task",
-          "x": 1171,
+          "x": 1173,
           "y": 574,
           "customProperties": {
             "Description": "",
@@ -512,7 +512,9 @@
       "backgroundColor": "#38FA8E"
     },
     "3867e9d3-349c-4829-8c9b-61de16ac60c2": {
-      "backgroundColor": "#8AEAFA"
+      "backgroundColor": "#8AEAFA",
+      "width": 98.86807250976562,
+      "height": 37.9375
     },
     "ba3fd6ff-acbc-4a10-911a-55c4b655ed8c": {
       "backgroundColor": "#8AEAFA"
@@ -540,7 +542,7 @@
     "b2ff83ba-9a97-4411-bc40-c911db3715a2": {
       "vertices": [
         {
-          "x": 595,
+          "x": 597,
           "y": 358
         }
       ]
@@ -548,7 +550,7 @@
   },
   "tool": "pistar.2.0.0",
   "istar": "2.0",
-  "saveDate": "Sun, 19 Sep 2021 21:09:41 GMT",
+  "saveDate": "Sun, 19 Sep 2021 21:42:50 GMT",
   "diagram": {
     "width": 2000,
     "height": 1300,

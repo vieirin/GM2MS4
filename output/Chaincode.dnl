@@ -4,7 +4,7 @@ To start passivate in waitForInput!
 
 when in waitForInput and receive Executar_logica_de_negocio_input go to Executar_logica_de_negocio!
 
-accepts input on Executar_logica_de_negocio_input with type String!
+accepts input on G13Invocar_o_chaincode_input with type String!
 
 hold in Executar_logica_de_negocio for time 5!
 from Executar_logica_de_negocio go to output_state!

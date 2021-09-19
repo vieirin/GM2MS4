@@ -5,8 +5,8 @@ To start passivate in waitForInput!
 when in waitForInput and receive Processar_entrada_na_api_input go to Processar_entrada_na_api!
 when in waitForInput and receive Receber_pool_de_resultados_input go to Receber_pool_de_resultados!
 
-accepts input on Processar_entrada_na_api_input with type String!
-accepts input on Receber_pool_de_resultados_input with type String!
+accepts input on G10Validar_assinaturas_do_bloco_input with type String!
+accepts input on G7Registrar_uma_transacao_input with type String!
 
 hold in Processar_entrada_na_api for time 5!
 from Processar_entrada_na_api go to Propor_transacao_a_rede!

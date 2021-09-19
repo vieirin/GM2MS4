@@ -11,6 +11,7 @@ export interface annotatedNode extends Omit<Node, 'type' | 'customProperties'> {
     type: leafType
     isRoot: boolean
     component: string
+    identifier: string
 }
 
 export interface ObjectiveTree extends annotatedNode {
@@ -29,13 +30,19 @@ export type ComponentData = {
 }
 export type ComponentGoals = [component, ComponentData]
 
-export const TraverseTree = (tree: ObjectiveTree, tabs = 0) => {
-    console.log(`\n${'\t'.repeat(tabs)}id:`, tree.id)
-    console.log(`${'\t'.repeat(tabs)}title:`, tree.text)
-    console.log(`${'\t'.repeat(tabs)}type:`, tree.type)
-    console.log(`${'\t'.repeat(tabs)}relation:`, tree.relation)
-    console.log(`${'\t'.repeat(tabs)}child: `)
+export const TraverseTree = (
+    tree: ObjectiveTree,
+    print?: boolean,
+    tabs = 0
+) => {
+    if (print) {
+        console.log(`\n${'\t'.repeat(tabs)}id:`, tree.id)
+        console.log(`${'\t'.repeat(tabs)}title:`, tree.text)
+        console.log(`${'\t'.repeat(tabs)}type:`, tree.type)
+        console.log(`${'\t'.repeat(tabs)}relation:`, tree.relation)
+        console.log(`${'\t'.repeat(tabs)}child: `)
+    }
     for (const child of tree.children || []) {
-        TraverseTree(child, tabs + 1)
+        TraverseTree(child, print, tabs + 1)
     }
 }

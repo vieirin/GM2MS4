@@ -63,11 +63,11 @@ export const generateMS4Model = (
         ) +
         // open input ports "accepts on" statements
         dnlWriter.blockseparator(
-            waitForInputGoals
-                .map((goal) => dnlWriter.openInputPort(goal.text))
+            connections.input
+                .map((input) => dnlWriter.openInputPort(input.to))
                 .join('\n')
         ) +
-        // writes the state sequence for a branch (a path that an input follows when recieived)
+        // writes the state sequence for a branch (a path that an input follows when received)
         waitForInputGoals
             .map((input) => stateSequenceForInput(moduleName, input))
             .map((seq) => seq.filter((item) => item.component === moduleName))

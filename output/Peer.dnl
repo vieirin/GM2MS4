@@ -4,7 +4,8 @@ To start passivate in waitForInput!
 
 when in waitForInput and receive Calcular_resultado_da_transacao_input go to Calcular_resultado_da_transacao!
 
-accepts input on Calcular_resultado_da_transacao_input with type String!
+accepts input on G5Executar_logica_de_negocio_input with type String!
+accepts input on G4Registrar_uma_transacao_input with type String!
 
 hold in Calcular_resultado_da_transacao for time 5!
 from Calcular_resultado_da_transacao go to Invocar_o_chaincode!

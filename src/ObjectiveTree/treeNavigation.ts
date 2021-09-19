@@ -16,6 +16,18 @@ export const branchGoals = (
             new Array<ObjectiveTree>()
         ) || []
 
+export const getGoals = (tree: ObjectiveTree): ObjectiveTree[] => {
+    return (
+        tree.children
+            ?.filter((child) => child.type === 'goal')
+            .map((child) => [child, ...getGoals(child).flat()])
+            .reduce(
+                (prev, curr) => [...prev, ...curr],
+                new Array<ObjectiveTree>()
+            ) || []
+    )
+}
+
 export type func = { name: string; refiner: boolean }
 
 export type RunnerDecomposition = {
@@ -97,8 +109,8 @@ type Connections = {
 }
 
 const createPort = (from: treeNode, to: treeNode) => ({
-    from: from.text,
-    to: to.text,
+    from: from.identifier + from.text,
+    to: to.identifier + from.text,
     type: 'String',
     rootLink: from.isRoot || to.isRoot
 })

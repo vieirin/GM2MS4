@@ -1,4 +1,5 @@
 import { convertToTree, loadModel } from '../../src/ObjectiveTree'
+import { getGoals } from '../../src/ObjectiveTree/treeNavigation'
 import { TraverseTree } from '../../src/ObjectiveTree/types'
 
 describe('On load model', () => {
@@ -19,7 +20,23 @@ describe('Test tree creation', () => {
         })
 
         it('should be able to traverse the tree', () => {
-            convertToTree(validModel).forEach((tree) => TraverseTree(tree))
+            convertToTree(validModel).forEach((tree) =>
+                TraverseTree(tree, false)
+            )
+        })
+    })
+})
+
+describe('Test tree properties', () => {
+    const tree = convertToTree(loadModel('models/txregister_component5.txt'))
+
+    it('should have identifiers on its goals', () => {
+        tree.map(getGoals).forEach((goals) => {
+            goals.forEach((goal) => {
+                expect(goal).toMatchObject({
+                    identifier: expect.stringMatching(/G\d*/)
+                })
+            })
         })
     })
 })

@@ -4,7 +4,7 @@ To start passivate in waitForInput!
 
 when in waitForInput and receive Validar_assinaturas_do_bloco_input go to Validar_assinaturas_do_bloco!
 
-accepts input on Validar_assinaturas_do_bloco_input with type String!
+accepts input on G11Enviar_transacao_assinada_para_o_orderer_input with type String!
 
 hold in Validar_assinaturas_do_bloco for time 5!
 from Validar_assinaturas_do_bloco go to criar_bloco!
