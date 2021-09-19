@@ -6,7 +6,12 @@ import {
     getNodes,
     getTreeNodeByComponent
 } from '../ObjectiveTree'
-import { branchGoals, hasChildren } from '../ObjectiveTree/treeNavigation'
+import {
+    branchGoals,
+    componentConnections,
+    ExtenalMessages,
+    hasChildren
+} from '../ObjectiveTree/treeNavigation'
 import { ComponentData, LeveledGoalComponent } from '../ObjectiveTree/types'
 import { MS4Constants } from './constants'
 import * as dnlWriter from './dnlWriting'
@@ -18,9 +23,10 @@ const stateSequenceForInput = (
     inputNode: LeveledGoalComponent
 ): SequenceState => [inputNode, ...branchGoals(component, inputNode)]
 
-export const generateWaitForInput = (
+export const generateMS4Model = (
     moduleName: string,
-    component: ComponentData
+    component: ComponentData,
+    connections: ExtenalMessages
 ) => {
     const waitForInputGoals = component.goals.filter(
         (node) => node.level === component.lowestLevel
@@ -64,11 +70,7 @@ export const generateWaitForInput = (
         // writes the state sequence for a branch (a path that an input follows when recieived)
         waitForInputGoals
             .map((input) => stateSequenceForInput(moduleName, input))
-            .map((seq) =>
-                seq.filter(
-                    (item) => item.customProperties.component === moduleName
-                )
-            )
+            .map((seq) => seq.filter((item) => item.component === moduleName))
             .map((seq) => dnlWriter.stateSequence(moduleName, seq))
             .join('') +
         // loop from output to waitforinput
@@ -81,7 +83,9 @@ export const generateWaitForInput = (
 }
 
 export const generateGoalModelDNLs = (model: Model) => {
-    getTreeNodeByComponent('goal', convertToTree(model)[0]!).map(
-        ([component, data]) => generateWaitForInput(component, data)
+    const tree = convertToTree(model)[0]!
+    const connections = componentConnections(tree)
+    getTreeNodeByComponent('goal', tree).map(([component, data]) =>
+        generateMS4Model(component, data, connections[component])
     )
 }

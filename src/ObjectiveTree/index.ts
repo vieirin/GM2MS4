@@ -37,16 +37,14 @@ export const validateTree = (tree: ObjectiveTree, level = 0) => {
     const firstGoal = tree.children.findIndex(
         (v) =>
             v.type === 'goal' &&
-            (v.customProperties.component || null) ===
-                (tree.customProperties.component || undefined)
+            (v.component || null) === (tree.component || undefined)
     )
     const lastTask = [...tree.children]
         .reverse()
         .findIndex(
             (v) =>
                 v.type === 'task' &&
-                (v.customProperties.component || null) ===
-                    (tree.customProperties.component || undefined)
+                (v.component || null) === (tree.component || undefined)
         )
     if (firstGoal === -1 || lastTask === -1) {
         tree.children?.forEach((child) => {
@@ -138,6 +136,8 @@ export const convertToTree = (model: Model) => {
                 const [granChildren, relation] = nodeChildren(actor, node?.id)
                 return {
                     ...node,
+                    component: node.customProperties.component || 'verifier',
+                    isRoot: node.customProperties.selected || false,
                     children: granChildren,
                     relation,
                     type: convertIstarType(node.type)
@@ -154,6 +154,8 @@ export const convertToTree = (model: Model) => {
         return {
             ...node,
             relation,
+            isRoot: node.customProperties.selected || false,
+            component: node.customProperties.component || 'undefined',
             children: children,
             type: convertIstarType(node.type)
         }
@@ -187,7 +189,7 @@ const findComponents = (tree: ObjectiveTree): component[] => {
     }
 
     return [
-        tree.customProperties.component || '',
+        tree.component || '',
         ...tree.children.map((child) => findComponents(child)).flat()
     ].filter((item) => item)
 }
@@ -203,7 +205,7 @@ export const getNodes = (
     level = 0
 ): LeveledGoalComponent[] => {
     const { children, ...node } = tree
-    const nodeComponent = node.customProperties.component
+    const nodeComponent = node.component
 
     // for nodes matching the component asked - 'api' for example - and has children
     // search on they for new "type" node
@@ -211,7 +213,7 @@ export const getNodes = (
         // type === 'task' && console.log(node, children)
 
         if (children && children.length > 0) {
-            const treeLevel = node.customProperties.selected ? level : level + 1
+            const treeLevel = node.isRoot ? level : level + 1
             return (
                 [
                     type === node.type && {

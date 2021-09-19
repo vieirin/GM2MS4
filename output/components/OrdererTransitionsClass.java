@@ -31,31 +31,31 @@ public class OrdererTransitionsClass extends Result {
 	public Result validar_assinaturas_do_bloco_runner() {
 
          TaskRunner[] runners = new TaskRunner[] { 
-           new TaskRunner() {public Result run(Result res) {return criar_bloco_runner(res);}}
+           new TaskRunner() {public Result run(Result res) {return rejeitar_a_transacao_runner(res);}}
         };
         this.result = tasksRunner(runners, "or", this.result);
         return this.result;
 
 
        
-        //Goes to state: Criar_bloco
+        //Goes to state: Rejeitar_a_transacao
     }
 
-public Result criar_bloco_runner(Result res) {
+public Result rejeitar_a_transacao_runner(Result res) {
 
          TaskRunner[] runners = new TaskRunner[] { 
-           new TaskRunner() {public Result run(Result res) {return OrdererRunner.Notificar_a_rede_task(res);}},
-		   new TaskRunner() {public Result run(Result res) {return OrdererRunner.Adicionar_bloco_a_cadeia_task(res);}}
+           new TaskRunner() {public Result run(Result res) {return OrdererRunner.Task_task(res);}}
         };
         this.result = tasksRunner(runners, "and", this.result);
         return this.result;
 
 
     }
-	public Result rejeitar_a_transacao_runner() {
+	public Result criar_bloco_runner() {
 
          TaskRunner[] runners = new TaskRunner[] { 
-           new TaskRunner() {public Result run(Result res) {return OrdererRunner.Task_task(res);}}
+           new TaskRunner() {public Result run(Result res) {return OrdererRunner.Notificar_a_rede_task(res);}},
+		   new TaskRunner() {public Result run(Result res) {return OrdererRunner.Adicionar_bloco_a_cadeia_task(res);}}
         };
         this.result = tasksRunner(runners, "and", this.result);
         return this.result;

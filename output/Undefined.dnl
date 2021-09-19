@@ -1,0 +1,21 @@
+use undefined_transition with type  components.UndefinedTransitionsClass and default "new UndefinedTransitionsClass()"!
+
+To start passivate in waitForInput!
+
+when in waitForInput and receive Registrar_uma_transacao_input go to Registrar uma transação!
+
+accepts input on Registrar_uma_transacao_input with type String!
+
+hold in Registrar uma transação for time 5!
+from Registrar uma transação go to output_state!
+internal event for Registrar uma transação
+<%
+    undefined_transition.registrar_uma_transacao_runner();
+%>!
+
+// EndSequence for sequence starting at Registrar uma transação
+
+hold in output_state for time 5!
+from output_state go to waitForInput!
+
+after output_state output MESSAGE_OUTPUT!

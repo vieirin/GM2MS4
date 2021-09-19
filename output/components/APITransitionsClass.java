@@ -122,7 +122,7 @@ public class ApiTransitionsClass extends Result {
         //Goes to state: Validar_assinaturas_do_bloco
     }
 
-public Result criar_bloco_runner(Result res) {
+public Result rejeitar_a_transacao_runner(Result res) {
 
          TaskRunner[] runners = new TaskRunner[] { 
         

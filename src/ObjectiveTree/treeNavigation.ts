@@ -1,5 +1,5 @@
 import { nameTaskMethod } from '../ms4Builder/naming'
-import { leafType, ObjectiveTree, relationship } from './types'
+import { leafType, ObjectiveTree, relationship, treeNode } from './types'
 
 // extract element from a tree branch
 export const branchGoals = (
@@ -8,9 +8,7 @@ export const branchGoals = (
 ): ObjectiveTree[] =>
     tree.children
         ?.filter(
-            (child) =>
-                child.type === 'goal' &&
-                child.customProperties.component === component
+            (child) => child.type === 'goal' && child.component === component
         )
         .map((child) => [child, ...branchGoals(component, child).flat()])
         .reduce(
@@ -52,7 +50,7 @@ export const runnerDecomposition = (
 ): RunnerDecomposition => ({
     fromState: tree.text,
     relation: tree.relation,
-    component: tree.customProperties.component || '',
+    component: tree.component,
     nodeType: hasChildren(tree) && tree.type === 'task' ? 'refiner' : tree.type,
     functions:
         tree.children
@@ -60,7 +58,7 @@ export const runnerDecomposition = (
                 (child) =>
                     child.type === 'task' &&
                     !hasChildren(child) &&
-                    child.customProperties?.component === component
+                    child.component === component
             )
             .map((child) => ({
                 name: nameTaskMethod(child.text, hasChildren(child)),
@@ -80,4 +78,64 @@ export const removeLeafNodes = (tree: ObjectiveTree): ObjectiveTree => {
             ?.filter((child) => child.children?.length || 0 > 0)
             .map(removeLeafNodes)
     }
+}
+
+type port = {
+    from: string
+    to: string
+    type: 'string'
+    rootLink: boolean
+}
+
+export type ExtenalMessages = {
+    output: port[]
+    input: port[]
+}
+
+type Connections = {
+    [K: string]: ExtenalMessages
+}
+
+const createPort = (from: treeNode, to: treeNode) => ({
+    from: from.text,
+    to: to.text,
+    type: 'String',
+    rootLink: from.isRoot || to.isRoot
+})
+
+// this will find connections over the tree between distincts components and describing them on the
+// Connections structure form
+export const componentConnections = (tree: ObjectiveTree): Connections => {
+    return tree.children?.reduce((memo, child) => {
+        const treeComponent = tree.component
+        const transitionMemo: Connections = {
+            ...memo,
+            ...componentConnections(child)
+        }
+        return child.component !== tree.component
+            ? {
+                  ...transitionMemo,
+                  [treeComponent]: {
+                      output: [
+                          ...(transitionMemo[treeComponent]?.output || []),
+                          createPort(tree, child)
+                      ],
+                      input: [
+                          ...(transitionMemo[treeComponent]?.input || []),
+                          createPort(child, tree)
+                      ]
+                  },
+                  [child.component]: {
+                      output: [
+                          ...(transitionMemo[child.component]?.output || []),
+                          createPort(child, tree)
+                      ],
+                      input: [
+                          ...(transitionMemo[child.component]?.input || []),
+                          createPort(tree, child)
+                      ]
+                  }
+              }
+            : transitionMemo
+    }, {} || {}) as Connections
 }

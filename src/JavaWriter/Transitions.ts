@@ -57,6 +57,7 @@ export class Transitions extends Class {
                   this.hasNodeWithChildren(functions)
                       ? functions.map((fn) => fn.name)
                       : nextLevel
+                            // filter only those which are refiner nodes, excluding goals from the list
                             .filter((level) => level.nodeType === 'refiner')
                             .map((item) =>
                                 transitionMethodName(item.fromState)

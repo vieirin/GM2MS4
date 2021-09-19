@@ -5,9 +5,16 @@ export type component = string
 export type leafType = 'task' | 'goal' | 'resource'
 
 export type child = ObjectiveTree
+export type treeNode = ObjectiveTree
 
-export interface ObjectiveTree extends Omit<Node, 'type'> {
+export interface annotatedNode extends Omit<Node, 'type' | 'customProperties'> {
     type: leafType
+    isRoot: boolean
+    component: string
+}
+
+export interface ObjectiveTree extends annotatedNode {
+    component: string
     children?: child[]
     relation: relationship
 }

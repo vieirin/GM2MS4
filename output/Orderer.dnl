@@ -7,17 +7,17 @@ when in waitForInput and receive Validar_assinaturas_do_bloco_input go to Valida
 accepts input on Validar_assinaturas_do_bloco_input with type String!
 
 hold in Validar_assinaturas_do_bloco for time 5!
-from Validar_assinaturas_do_bloco go to Rejeitar_a_transacao!
+from Validar_assinaturas_do_bloco go to criar_bloco!
 internal event for Validar_assinaturas_do_bloco
 <%
     orderer_transition.validar_assinaturas_do_bloco_runner();
 %>!
 
-hold in Rejeitar_a_transacao for time 5!
-from Rejeitar_a_transacao go to output_state!
-internal event for Rejeitar_a_transacao
+hold in criar_bloco for time 5!
+from criar_bloco go to output_state!
+internal event for criar_bloco
 <%
-    orderer_transition.rejeitar_a_transacao_runner();
+    orderer_transition.criar_bloco_runner();
 %>!
 
 // EndSequence for sequence starting at Validar_assinaturas_do_bloco
