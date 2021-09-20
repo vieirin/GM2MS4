@@ -47,7 +47,6 @@ export const generateMS4Model = (
 
     const transitionClassName = javaWriter.getTransitionClassName()
     const initialState = MS4Constants.initialPassiveState
-
     const dnl =
         // var defs
         dnlWriter.declareVars(moduleName, transitionClassName) +
@@ -63,8 +62,8 @@ export const generateMS4Model = (
         ) +
         // open input ports "accepts on" statements
         dnlWriter.blockseparator(
-            connections.input
-                .map((input) => dnlWriter.openInputPort(input.to))
+            connections.ports
+                .map((input) => dnlWriter.openInputPort(input.inputPortName))
                 .join('\n')
         ) +
         // writes the state sequence for a branch (a path that an input follows when received)
@@ -85,7 +84,8 @@ export const generateMS4Model = (
 export const generateGoalModelDNLs = (model: Model) => {
     const tree = convertToTree(model)[0]!
     const connections = componentConnections(tree)
+    console.log(connections)
     getTreeNodeByComponent('goal', tree).map(([component, data]) =>
-        generateMS4Model(component, data, connections[component])
+        generateMS4Model(component, data, { ports: [] })
     )
 }

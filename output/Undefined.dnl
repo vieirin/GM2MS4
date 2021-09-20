@@ -4,9 +4,7 @@ To start passivate in waitForInput!
 
 when in waitForInput and receive Registrar_uma_transacao_input go to Registrar_uma_transacao!
 
-accepts input on G0Processar_entrada_na_api_input with type String!
-accepts input on G0Calcular_resultado_da_transacao_input with type String!
-accepts input on G0Receber_pool_de_resultados_input with type String!
+
 
 hold in Registrar_uma_transacao for time 5!
 from Registrar_uma_transacao go to output_state!

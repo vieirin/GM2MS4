@@ -1,6 +1,6 @@
+import mergeWith from 'lodash.mergewith'
 import { nameTaskMethod } from '../ms4Builder/naming'
 import { leafType, ObjectiveTree, relationship, treeNode } from './types'
-
 // extract element from a tree branch
 export const branchGoals = (
     component: string,
@@ -93,6 +93,8 @@ export const removeLeafNodes = (tree: ObjectiveTree): ObjectiveTree => {
 }
 
 type port = {
+    inputPortName: string
+    outputPortName: string
     from: string
     to: string
     type: 'string'
@@ -100,8 +102,7 @@ type port = {
 }
 
 export type ExtenalMessages = {
-    output: port[]
-    input: port[]
+    ports: port[]
 }
 
 type Connections = {
@@ -109,45 +110,38 @@ type Connections = {
 }
 
 const createPort = (from: treeNode, to: treeNode) => ({
+    inputPortName: `from_${from.identifier}_to_${to.identifier}`,
+    outputPortName: `from_${to.identifier}_to_${from.identifier}`,
     from: from.identifier + from.text,
-    to: to.identifier + from.text,
+    to: to.identifier + to.text,
     type: 'String',
     rootLink: from.isRoot || to.isRoot
 })
 
+// merge reducing result concating arrays\
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const merger = (arrValue: any, srcValue: any) => {
+    if (Array.isArray(arrValue)) {
+        return arrValue.concat(srcValue)
+    }
+    return
+}
+
 // this will find connections over the tree between distincts components and describing them on the
 // Connections structure form
-export const componentConnections = (tree: ObjectiveTree): Connections => {
-    return tree.children?.reduce((memo, child) => {
-        const treeComponent = tree.component
-        const transitionMemo: Connections = {
-            ...memo,
-            ...componentConnections(child)
+export const componentConnections = (tree: ObjectiveTree): Connections =>
+    (tree.children?.reduce((memo, child) => {
+        const otherPortsOnBranch = componentConnections(child)
+        if (child.component !== tree.component) {
+            return mergeWith(
+                memo,
+                otherPortsOnBranch,
+                {
+                    [child.component]: [createPort(tree, child)],
+                    [tree.component]: [createPort(child, tree)]
+                },
+                merger
+            )
         }
-        return child.component !== tree.component
-            ? {
-                  ...transitionMemo,
-                  [treeComponent]: {
-                      output: [
-                          ...(transitionMemo[treeComponent]?.output || []),
-                          createPort(tree, child)
-                      ],
-                      input: [
-                          ...(transitionMemo[treeComponent]?.input || []),
-                          createPort(child, tree)
-                      ]
-                  },
-                  [child.component]: {
-                      output: [
-                          ...(transitionMemo[child.component]?.output || []),
-                          createPort(child, tree)
-                      ],
-                      input: [
-                          ...(transitionMemo[child.component]?.input || []),
-                          createPort(tree, child)
-                      ]
-                  }
-              }
-            : transitionMemo
-    }, {} || {}) as Connections
-}
+        return mergeWith(memo, otherPortsOnBranch, merger)
+    }, {}) || {}) as Connections

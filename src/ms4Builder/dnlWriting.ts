@@ -44,9 +44,11 @@ export const inputSignalsReceivement = (
         goalName
     )} go to ${goalName}!`
 
-export const openInputPort = (goalName: string, type = 'String') =>
-    `accepts input on ${nameInput(goalName)} with type ${type}!`
+export const openInputPort = (port: string, type = 'String') =>
+    `accepts input on ${nameInput(port)} with type ${type}!`
 
+export const exposeOutputPort = (port: string, type = 'String') =>
+    `generates output on ${port} with type ${type}!`
 const internalTransition = (
     component: string,
     state: string
