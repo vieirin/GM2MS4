@@ -2,9 +2,11 @@ use chaincode_transition with type  components.ChaincodeTransitionsClass and def
 
 To start passivate in waitForInput!
 
-when in waitForInput and receive Executar_logica_de_negocio_input go to Executar_logica_de_negocio!
+when in waitForInput and receive from_G5_to_G13_input go to Executar_logica_de_negocio!
 
+generates output on from_G13_to_G5 with type String!
 
+accepts input on from_G5_to_G13_input with type String!
 
 hold in Executar_logica_de_negocio for time 5!
 from Executar_logica_de_negocio go to output_state!

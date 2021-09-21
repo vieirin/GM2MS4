@@ -2,10 +2,17 @@ use api_transition with type  components.ApiTransitionsClass and default "new Ap
 
 To start passivate in waitForInput!
 
-when in waitForInput and receive Processar_entrada_na_api_input go to Processar_entrada_na_api!
-when in waitForInput and receive Receber_pool_de_resultados_input go to Receber_pool_de_resultados!
+when in waitForInput and receive from_G0_to_G1_input go to Processar_entrada_na_api!
+when in waitForInput and receive from_G11_to_G10_input go to Enviar_transacao_assinada_para_o_orderer!
+when in waitForInput and receive from_G0_to_G7_input go to Receber_pool_de_resultados!
 
+generates output on from_G1_to_G0 with type String!
+generates output on from_G10_to_G11 with type String!
+generates output on from_G7_to_G0 with type String!
 
+accepts input on from_G0_to_G1_input with type String!
+accepts input on from_G11_to_G10_input with type String!
+accepts input on from_G0_to_G7_input with type String!
 
 hold in Processar_entrada_na_api for time 5!
 from Processar_entrada_na_api go to Propor_transacao_a_rede!

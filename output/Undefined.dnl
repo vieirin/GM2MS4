@@ -2,9 +2,17 @@ use undefined_transition with type  components.UndefinedTransitionsClass and def
 
 To start passivate in waitForInput!
 
-when in waitForInput and receive Registrar_uma_transacao_input go to Registrar_uma_transacao!
+when in waitForInput and receive from_G1_to_G0_input go to Registrar_uma_transacao!
+when in waitForInput and receive from_G4_to_G0_input go to Registrar_uma_transacao!
+when in waitForInput and receive from_G7_to_G0_input go to Registrar_uma_transacao!
 
+generates output on from_G0_to_G1 with type String!
+generates output on from_G0_to_G4 with type String!
+generates output on from_G0_to_G7 with type String!
 
+accepts input on from_G1_to_G0_input with type String!
+accepts input on from_G4_to_G0_input with type String!
+accepts input on from_G7_to_G0_input with type String!
 
 hold in Registrar_uma_transacao for time 5!
 from Registrar_uma_transacao go to output_state!

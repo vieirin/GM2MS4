@@ -6,15 +6,12 @@ import {
     getNodes,
     getTreeNodeByComponent
 } from '../ObjectiveTree'
-import {
-    branchGoals,
-    componentConnections,
-    ExtenalMessages,
-    hasChildren
-} from '../ObjectiveTree/treeNavigation'
+import { componentConnections, port } from '../ObjectiveTree/connections'
+import { branchGoals, hasChildren } from '../ObjectiveTree/treeNavigation'
 import { ComponentData, LeveledGoalComponent } from '../ObjectiveTree/types'
 import { MS4Constants } from './constants'
 import * as dnlWriter from './dnlWriting'
+import { exposeOutputPort } from './dnlWriting'
 import { dnlFileName, nameTaskMethod } from './naming'
 import { SequenceState } from './types'
 
@@ -26,12 +23,11 @@ const stateSequenceForInput = (
 export const generateMS4Model = (
     moduleName: string,
     component: ComponentData,
-    connections: ExtenalMessages
+    connections: port[]
 ) => {
     const waitForInputGoals = component.goals.filter(
         (node) => node.level === component.lowestLevel
     )
-
     const javaWriter = new JavaWriter(moduleName)
     waitForInputGoals.forEach((inputNode) => {
         javaWriter.writeTaskMethods(
@@ -54,16 +50,25 @@ export const generateMS4Model = (
         dnlWriter.initialState(initialState) +
         // input signals
         dnlWriter.blockseparator(
-            waitForInputGoals
-                .map((goal) =>
-                    dnlWriter.inputSignalsReceivement(initialState, goal.text)
+            connections
+                .map((conn) =>
+                    dnlWriter.inputSignalsReceivement(
+                        initialState,
+                        conn,
+                        moduleName
+                    )
                 )
+                .join('\n')
+        ) +
+        dnlWriter.blockseparator(
+            connections
+                .map((conn) => exposeOutputPort(conn.outputPortName))
                 .join('\n')
         ) +
         // open input ports "accepts on" statements
         dnlWriter.blockseparator(
-            connections.ports
-                .map((input) => dnlWriter.openInputPort(input.inputPortName))
+            connections
+                .map((conn) => dnlWriter.openInputPort(conn.inputPortName))
                 .join('\n')
         ) +
         // writes the state sequence for a branch (a path that an input follows when received)
@@ -84,8 +89,7 @@ export const generateMS4Model = (
 export const generateGoalModelDNLs = (model: Model) => {
     const tree = convertToTree(model)[0]!
     const connections = componentConnections(tree)
-    console.log(connections)
     getTreeNodeByComponent('goal', tree).map(([component, data]) =>
-        generateMS4Model(component, data, { ports: [] })
+        generateMS4Model(component, data, connections[component])
     )
 }

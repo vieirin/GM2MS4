@@ -1,3 +1,4 @@
+import { port } from '../ObjectiveTree/connections'
 import { MS4Constants } from './constants'
 import {
     nameInput,
@@ -36,13 +37,24 @@ export const runTaskAndOutput = (state: string, taskName: string) =>
         `internal event for ${state}\n` + '<%\n' + `\tapiImpl.${taskName}`
     )
 
+const getStateForInput = (port: port, component: string) => {
+    if (port.from.component === component) {
+        return port.from.state
+    }
+    if (port.to.component === component) {
+        return port.to.state
+    }
+    return MS4Constants.CONNECTION_ERROR
+}
+
 export const inputSignalsReceivement = (
     initialState: string,
-    goalName: string
+    port: port,
+    component: string
 ) =>
     `when in ${initialState} and receive ${nameInput(
-        goalName
-    )} go to ${goalName}!`
+        port.inputPortName
+    )} go to ${getStateForInput(port, component)}!`
 
 export const openInputPort = (port: string, type = 'String') =>
     `accepts input on ${nameInput(port)} with type ${type}!`

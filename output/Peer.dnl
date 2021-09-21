@@ -2,9 +2,14 @@ use peer_transition with type  components.PeerTransitionsClass and default "new 
 
 To start passivate in waitForInput!
 
-when in waitForInput and receive Calcular_resultado_da_transacao_input go to Calcular_resultado_da_transacao!
+when in waitForInput and receive from_G13_to_G5_input go to Invocar_o_chaincode!
+when in waitForInput and receive from_G0_to_G4_input go to Calcular_resultado_da_transacao!
 
+generates output on from_G5_to_G13 with type String!
+generates output on from_G4_to_G0 with type String!
 
+accepts input on from_G13_to_G5_input with type String!
+accepts input on from_G0_to_G4_input with type String!
 
 hold in Calcular_resultado_da_transacao for time 5!
 from Calcular_resultado_da_transacao go to Invocar_o_chaincode!
