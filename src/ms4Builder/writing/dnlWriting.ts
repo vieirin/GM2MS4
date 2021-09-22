@@ -1,14 +1,14 @@
-import { port } from '../ObjectiveTree/connections'
-import { MS4Constants } from './constants'
+import { port } from '../../ObjectiveTree/connections'
+import { MS4Constants } from '../constants'
 import {
     nameInput,
     transitionClassVarName,
     transitionMethodName
-} from './naming'
-import { SequenceState } from './types'
+} from '../naming'
+import { SequenceState } from '../types'
 
-export const blockseparator = (block: string, repeat = 2) =>
-    block + '\n'.repeat(repeat)
+export const blockseparator = (block: string | string[], repeat = 2) =>
+    (Array.isArray(block) ? block.join('\n') : block) + '\n'.repeat(repeat)
 
 export const initialState = (initialState: string) =>
     blockseparator(`To start passivate in ${initialState}!`)
@@ -38,10 +38,10 @@ export const runTaskAndOutput = (state: string, taskName: string) =>
     )
 
 const getStateForInput = (port: port, component: string) => {
-    if (port.from.component === component) {
+    if (port.from.component.toLowerCase() === component.toLowerCase()) {
         return port.from.state
     }
-    if (port.to.component === component) {
+    if (port.to.component.toLowerCase() === component.toLowerCase()) {
         return port.to.state
     }
     return MS4Constants.CONNECTION_ERROR

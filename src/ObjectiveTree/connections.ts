@@ -1,4 +1,5 @@
 import mergeWith from 'lodash.mergewith'
+import { sanitizeComponent } from '../ms4Builder/naming'
 import { ObjectiveTree, treeNode } from './types'
 interface connectionNode {
     state: string
@@ -14,24 +15,28 @@ export type port = {
     rootLink: boolean
 }
 
-type Connections = {
+export type Connections = {
     [K: string]: port[]
 }
 
-const createPort = (from: treeNode, to: treeNode): port => ({
-    inputPortName: `from_${from.identifier}_to_${to.identifier}`,
-    outputPortName: `from_${to.identifier}_to_${from.identifier}`,
-    from: {
-        state: from.text,
-        component: from.component
-    },
-    to: {
-        state: to.text,
-        component: to.component
-    },
-    type: 'String',
-    rootLink: from.isRoot || to.isRoot
-})
+const isRootLink = (from: treeNode, to: treeNode) => from.isRoot || to.isRoot
+
+const createPort = (from: treeNode, to: treeNode): port => {
+    return {
+        inputPortName: `from_${from.identifier}_to_${to.identifier}`,
+        outputPortName: `from_${to.identifier}_to_${from.identifier}`,
+        from: {
+            state: from.text,
+            component: sanitizeComponent(from.component)
+        },
+        to: {
+            state: to.text,
+            component: sanitizeComponent(to.component)
+        },
+        type: 'String',
+        rootLink: isRootLink(from, to)
+    }
+}
 
 // merge reducing result concating arrays\
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

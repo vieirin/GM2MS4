@@ -1,4 +1,4 @@
-use undefined_transition with type  components.UndefinedTransitionsClass and default "new UndefinedTransitionsClass()"!
+use verifier_transition with type  components.VerifierTransitionsClass and default "new VerifierTransitionsClass()"!
 
 To start passivate in waitForInput!
 
@@ -18,7 +18,7 @@ hold in Registrar_uma_transacao for time 5!
 from Registrar_uma_transacao go to output_state!
 internal event for Registrar_uma_transacao
 <%
-    undefined_transition.registrar_uma_transacao_runner();
+    verifier_transition.registrar_uma_transacao_runner();
 %>!
 
 // EndSequence for sequence starting at Registrar_uma_transacao

@@ -1,7 +1,7 @@
 package components;
 
-public class UndefinedTransitionsClass extends Result {
-    public UndefinedTransitionsClass() { 
+public class VerifierTransitionsClass extends Result {
+    public VerifierTransitionsClass() { 
         super();
     }
 
@@ -9,7 +9,7 @@ public class UndefinedTransitionsClass extends Result {
         Result run(Result res);
     }
 
-	private undefinedTaskClass UndefinedRunner = new undefinedTaskClass();
+	private verifierTaskClass VerifierRunner = new verifierTaskClass();
 
 	private Result result = new Result();
 

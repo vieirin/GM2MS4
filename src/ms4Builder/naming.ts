@@ -1,3 +1,4 @@
+import { MS4Constants } from './constants'
 const latinChars = `ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐ
 ÑÒÓÔÕÖØÙÚÛÜ
 ÝŔÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿŕ()-` as const
@@ -47,11 +48,15 @@ export const transitionMethodName = (state: string) =>
     nameText(state).toLowerCase() + '_runner'
 
 export const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
-const sanitizeComponent = (component: string) =>
+
+export const sanitizeComponent = (component: string) =>
     capitalize(component).replace(/ /g, '')
 
 export const dnlFileName = (component: string) =>
     sanitizeComponent(component) + '.dnl'
+
+export const SeSFileName =
+    sanitizeComponent(MS4Constants.MODEL_PERSPECTIVE) + '.ses'
 
 export const taskVarName = (component: string) =>
     sanitizeComponent(component) + 'Runner'
