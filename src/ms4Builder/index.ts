@@ -9,9 +9,13 @@ import {
 import {
     componentConnections,
     Connections,
+    indexPortsByGoal,
     port
 } from '../ObjectiveTree/connections'
-import { branchGoals, hasChildren } from '../ObjectiveTree/treeNavigation'
+import {
+    branchGoalsWithOutput,
+    hasChildren
+} from '../ObjectiveTree/treeNavigation'
 import {
     ComponentData,
     ComponentGoals,
@@ -26,8 +30,12 @@ import { writeConnections, writePerspective } from './writing/sesWriting'
 
 const stateSequenceForInput = (
     component: string,
-    inputNode: LeveledGoalComponent
-): SequenceState => [inputNode, ...branchGoals(component, inputNode)]
+    inputNode: LeveledGoalComponent,
+    connections: port[]
+): SequenceState => {
+    const indexed = indexPortsByGoal(component, connections)
+    return branchGoalsWithOutput(component, inputNode, indexed)
+}
 
 export const generateMS4Model = (
     moduleName: string,
@@ -36,7 +44,8 @@ export const generateMS4Model = (
 ) => {
     const waitForInputGoals = component.goals.filter(
         (node) => node.level === component.lowestLevel
-    )
+    ) as LeveledGoalComponent[]
+
     const javaWriter = new JavaWriter(moduleName)
     waitForInputGoals.forEach((inputNode) => {
         javaWriter.writeTaskMethods(
@@ -78,15 +87,11 @@ export const generateMS4Model = (
         ) +
         // writes the state sequence for a branch (a path that an input follows when received)
         waitForInputGoals
-            .map((input) => stateSequenceForInput(moduleName, input))
-            .map((seq) => seq.filter((item) => item.component === moduleName))
+            .map((input) =>
+                stateSequenceForInput(moduleName, input, connections)
+            )
             .map((seq) => dnlWriter.stateSequence(moduleName, seq))
-            .join('') +
-        // loop from output to waitforinput
-        dnlWriter.blockseparator(
-            dnlWriter.holdState(MS4Constants.outputState, initialState) +
-                dnlWriter.outputMessage(MS4Constants.outputState)
-        )
+            .join('')
 
     writeFileSync(`output/${dnlFileName(moduleName)}`, dnl.trim())
 }

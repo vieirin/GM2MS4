@@ -15,15 +15,52 @@ accepts input on from_G4_to_G0_input with type String!
 accepts input on from_G7_to_G0_input with type String!
 
 hold in Registrar_uma_transacao for time 5!
-from Registrar_uma_transacao go to output_state!
+from Registrar_uma_transacao go to Processar_entrada_na_api!
 internal event for Registrar_uma_transacao
 <%
     verifier_transition.registrar_uma_transacao_runner();
 %>!
 
+hold in Processar_entrada_na_api for time 5!
+from Processar_entrada_na_api go to waitForInput
+external event for Processar_entrada_na_api
+<%
+    output.add(outfrom_G0_to_G1, "outProcessar_entrada_na_api")
+%>!
+
+hold in Processar_entrada_na_api_continue for time 5!
+from Processar_entrada_na_api_continue go to Calcular_resultado_da_transacao!
+internal event for Processar_entrada_na_api_continue
+<%
+    verifier_transition.processar_entrada_na_api_continue_runner();
+%>!
+
+hold in Calcular_resultado_da_transacao for time 5!
+from Calcular_resultado_da_transacao go to waitForInput
+external event for Calcular_resultado_da_transacao
+<%
+    output.add(outfrom_G0_to_G4, "outCalcular_resultado_da_transacao")
+%>!
+
+hold in Calcular_resultado_da_transacao_continue for time 5!
+from Calcular_resultado_da_transacao_continue go to Receber_pool_de_resultados!
+internal event for Calcular_resultado_da_transacao_continue
+<%
+    verifier_transition.calcular_resultado_da_transacao_continue_runner();
+%>!
+
+hold in Receber_pool_de_resultados for time 5!
+from Receber_pool_de_resultados go to waitForInput
+external event for Receber_pool_de_resultados
+<%
+    output.add(outfrom_G0_to_G7, "outReceber_pool_de_resultados")
+%>!
+
+hold in Receber_pool_de_resultados_continue for time 5!
+from Receber_pool_de_resultados_continue go to waitForInput
+internal event for Receber_pool_de_resultados_continue
+<%
+    verifier_transition.receber_pool_de_resultados_continue_runner();
+%>!
+
 // EndSequence for sequence starting at Registrar_uma_transacao
-
-hold in output_state for time 5!
-from output_state go to waitForInput!
-
-after output_state output MESSAGE_OUTPUT!

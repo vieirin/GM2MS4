@@ -1,6 +1,8 @@
 import { port } from '../../ObjectiveTree/connections'
+import { linkedNode } from '../../ObjectiveTree/treeNavigation'
 import { MS4Constants } from '../constants'
 import {
+    nameGoalContinuation,
     nameInput,
     transitionClassVarName,
     transitionMethodName
@@ -20,11 +22,18 @@ export const declareVars = (component: string, className: string) =>
         }.${className} and default "new ${className}()"!`
     )
 
-export const holdState = (state: string, nextstate?: string, newLines = 2) =>
+export const holdState = (
+    state: linkedNode,
+    nextstate?: linkedNode,
+    newLines = 2
+) =>
     blockseparator(
         [
-            `hold in ${state} for time 5!`,
-            `from ${state} go to ${nextstate || ''}!`
+            `hold in ${state.text} for time 5!`,
+            `from ${state.text} ` +
+                (nextstate
+                    ? `go to ${nextstate?.text || ''}!`
+                    : `go to ${MS4Constants.initialPassiveState}`)
         ].join('\n'),
         newLines
     )
@@ -38,13 +47,25 @@ export const runTaskAndOutput = (state: string, taskName: string) =>
     )
 
 const getStateForInput = (port: port, component: string) => {
-    if (port.from.component.toLowerCase() === component.toLowerCase()) {
-        return port.from.state
+    let entryState = ''
+    if (port.rootLink) {
+        if (port.from.component.toLowerCase() === component.toLowerCase()) {
+            entryState = port.from.state
+        } else if (
+            port.to.component.toLowerCase() === component.toLowerCase()
+        ) {
+            entryState = port.to.state
+        }
+        return entryState
     }
-    if (port.to.component.toLowerCase() === component.toLowerCase()) {
-        return port.to.state
+
+    if (port.from.component.toLowerCase() !== component.toLowerCase()) {
+        entryState = port.from.state
+    } else if (port.to.component.toLowerCase() !== component.toLowerCase()) {
+        entryState = port.to.state
     }
-    return MS4Constants.CONNECTION_ERROR
+
+    return nameGoalContinuation(entryState)
 }
 
 export const inputSignalsReceivement = (
@@ -61,6 +82,7 @@ export const openInputPort = (port: string, type = 'String') =>
 
 export const exposeOutputPort = (port: string, type = 'String') =>
     `generates output on ${port} with type ${type}!`
+
 const internalTransition = (
     component: string,
     state: string
@@ -70,19 +92,30 @@ const internalTransition = (
 %>!
 `
 
+const externalTransition = (
+    state: linkedNode
+) => `external event for ${state.text}
+<%
+    output.add(out${state.port}, "out${state.text}")
+%>!
+`
+
 export const stateSequence = (component: string, sequence: SequenceState) =>
     sequence
-        .map((state, index, arr) =>
-            blockseparator(
-                holdState(
-                    state.text,
-                    arr[index + 1]?.text || MS4Constants.outputState,
-                    1
-                ) + internalTransition(component, state.text),
-                1
-            )
+        .map((seq) =>
+            seq
+                .map((state, index, arr) =>
+                    blockseparator(
+                        holdState(state, arr[index + 1], 1) +
+                            (state.direction === 'out'
+                                ? externalTransition(state)
+                                : internalTransition(component, state.text)),
+                        1
+                    )
+                )
+                .join('')
         )
         .join('') +
     `// EndSequence for sequence starting at ${
-        sequence[0]?.text || 'invalid sequence'
+        sequence[0]?.[0]?.text || 'invalid sequence'
     }\n\n`

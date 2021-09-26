@@ -1,6 +1,6 @@
 import mergeWith from 'lodash.mergewith'
 import { sanitizeComponent } from '../ms4Builder/naming'
-import { ObjectiveTree, treeNode } from './types'
+import { component, ObjectiveTree, treeNode } from './types'
 interface connectionNode {
     state: string
     component: string
@@ -65,3 +65,17 @@ export const componentConnections = (tree: ObjectiveTree): Connections =>
         }
         return mergeWith(memo, otherPortsOnBranch, mergeConcat)
     }, {}) || {}
+
+const componentTransactions = (component: component, ports: port[]) => {}
+
+export type StatePortIndex = Map<string, { out: string; in: string }>
+export const indexPortsByGoal = (
+    component: component,
+    ports: port[]
+): StatePortIndex =>
+    new Map(
+        ports.map((port) => [
+            port.from.state,
+            { out: port.outputPortName, in: port.inputPortName }
+        ])
+    )

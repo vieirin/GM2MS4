@@ -1,19 +1,91 @@
-import { nameTaskMethod } from '../ms4Builder/naming'
-import { leafType, ObjectiveTree, relationship } from './types'
+import { nameGoalContinuation, nameTaskMethod } from '../ms4Builder/naming'
+import { StatePortIndex } from './connections'
+import { component, leafType, ObjectiveTree, relationship } from './types'
+
+type node = ObjectiveTree & { originalName?: string; direction?: 'in' | 'out' }
+
+const childBranchGoals = () => {}
+
+const branchGoals = (component: component, tree?: ObjectiveTree): node[] => {
+    return (
+        tree?.type === 'goal' && tree?.component === component
+            ? [tree, ...(branchChildrenGoals(component, tree) || [])]
+            : [
+                  //   ...(tree.children
+                  //       ?.map((child) => brGoals(component, child))
+                  //       .flat() || [])
+              ].flat()
+    ).filter((n) => n) as node[]
+}
+
 // extract element from a tree branch
-export const branchGoals = (
+export const branchChildrenGoals = (
     component: string,
     tree: ObjectiveTree
-): ObjectiveTree[] =>
+): node[] =>
     tree.children
-        ?.filter(
-            (child) => child.type === 'goal' && child.component === component
+        ?.filter((child) => child.type === 'goal')
+        .map((child) => [
+            {
+                ...child,
+                direction:
+                    component !== child.component ? ('out' as const) : undefined
+            },
+            ...(child.component === component
+                ? branchChildrenGoals(component, child).flat()
+                : [
+                      {
+                          ...child,
+                          text: nameGoalContinuation(child.text),
+                          originalName: child.text,
+                          direction: 'in' as const
+                      }
+                  ])
+        ])
+        .reduce((prev, curr) => [...prev, ...curr], new Array<node>()) || []
+
+export type linkedNode = node & { port: string }
+
+const splitSequece = (component: component, nodes: node[]): node[][] => {
+    const firstOutput = nodes.findIndex(
+        (node) => node.component !== component && node.direction === 'out'
+    )
+    if (firstOutput == -1) {
+        return [nodes]
+    }
+    return [
+        nodes.slice(0, firstOutput + 1),
+        ...splitSequece(component, nodes.slice(firstOutput + 1))
+    ]
+}
+
+export const branchGoalsWithOutput = (
+    component: component,
+    tree: ObjectiveTree,
+    goalOutput: StatePortIndex
+): linkedNode[][] => {
+    const branch = branchGoals(component, tree)
+    const seq: linkedNode[][] = splitSequece(component, branch)
+        .map((sequence) =>
+            sequence.map((goal) => ({
+                ...goal,
+                port:
+                    goalOutput.get(goal.originalName || goal.text)?.[
+                        goal.direction || 'in'
+                    ] || ''
+            }))
         )
-        .map((child) => [child, ...branchGoals(component, child).flat()])
-        .reduce(
-            (prev, curr) => [...prev, ...curr],
-            new Array<ObjectiveTree>()
-        ) || []
+        .filter((seq) => seq.length > 0)
+
+    // move output from the input to the last objective to be executed
+    const lastSeq = seq[seq.length - 1]
+    const lastGoal = lastSeq?.[lastSeq?.length - 1 || 0]
+    const treeConn = goalOutput.get(tree.text)
+    if (treeConn) {
+        lastGoal.port = treeConn?.out
+    }
+    return seq
+}
 
 export const getGoals = (tree: ObjectiveTree): ObjectiveTree[] => {
     return (

@@ -63,3 +63,6 @@ export const taskVarName = (component: string) =>
 
 export const transitionClassName = (component: string) =>
     capitalize(component) + 'TransitionsClass'
+
+export const nameGoalContinuation = (goal: string) =>
+    sanitizeComponent(goal) + '_continue'
