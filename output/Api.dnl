@@ -2,53 +2,43 @@ use api_transition with type  components.ApiTransitionsClass and default "new Ap
 
 To start passivate in waitForInput!
 
-when in waitForInput and receive from_G0_to_G1_input go to Processar_entrada_na_api!
-when in waitForInput and receive from_G11_to_G10_input go to Validar_assinaturas_do_bloco_continue!
-when in waitForInput and receive from_G0_to_G7_input go to Receber_pool_de_resultados!
+when in waitForInput and receive From_G0_to_G1 go to Processar_entrada_na_api!
+when in waitForInput and receive From_G0_to_G7 go to Receber_pool_de_resultados!
 
-generates output on from_G1_to_G0 with type String!
-generates output on from_G10_to_G11 with type String!
-generates output on from_G7_to_G0 with type String!
+when in waitForInput and receive From_G11_to_G10 go to Validar_assinaturas_do_bloco_continue!
 
-accepts input on from_G0_to_G1_input with type String!
-accepts input on from_G11_to_G10_input with type String!
-accepts input on from_G0_to_G7_input with type String!
+
+generates output on From_G1_to_G0 with type String!
+generates output on From_G10_to_G11 with type String!
+generates output on From_G7_to_G0 with type String!
+
+accepts input on From_G0_to_G1 with type String!
+accepts input on From_G11_to_G10 with type String!
+accepts input on From_G0_to_G7 with type String!
 
 hold in Processar_entrada_na_api for time 5!
-from Processar_entrada_na_api go to Propor_transacao_a_rede!
+from Processar_entrada_na_api go to Enviar_proposta_para_os_Peers!
 internal event for Processar_entrada_na_api
 <%
     api_transition.processar_entrada_na_api_runner();
 %>!
 
-hold in Propor_transacao_a_rede for time 5!
-from Propor_transacao_a_rede go to Enviar_proposta_para_os_Peers!
-internal event for Propor_transacao_a_rede
-<%
-    api_transition.propor_transacao_a_rede_runner();
-%>!
-
 hold in Enviar_proposta_para_os_Peers for time 5!
-from Enviar_proposta_para_os_Peers go to waitForInput
+from Enviar_proposta_para_os_Peers go to waitForInput!
 internal event for Enviar_proposta_para_os_Peers
 <%
     api_transition.enviar_proposta_para_os_peers_runner();
 %>!
+after Enviar_proposta_para_os_Peers output From_G1_to_G0!
+
 
 // EndSequence for sequence starting at Processar_entrada_na_api
 
 hold in Receber_pool_de_resultados for time 5!
-from Receber_pool_de_resultados go to Verificar_a_pool_de_resultados!
+from Receber_pool_de_resultados go to Rejeitar_a_transacao!
 internal event for Receber_pool_de_resultados
 <%
     api_transition.receber_pool_de_resultados_runner();
-%>!
-
-hold in Verificar_a_pool_de_resultados for time 5!
-from Verificar_a_pool_de_resultados go to Rejeitar_a_transacao!
-internal event for Verificar_a_pool_de_resultados
-<%
-    api_transition.verificar_a_pool_de_resultados_runner();
 %>!
 
 hold in Rejeitar_a_transacao for time 5!
@@ -59,24 +49,13 @@ internal event for Rejeitar_a_transacao
 %>!
 
 hold in Enviar_transacao_assinada_para_o_orderer for time 5!
-from Enviar_transacao_assinada_para_o_orderer go to Validar_assinaturas_do_bloco!
-internal event for Enviar_transacao_assinada_para_o_orderer
-<%
-    api_transition.enviar_transacao_assinada_para_o_orderer_runner();
-%>!
+from Enviar_transacao_assinada_para_o_orderer go to Validar_assinaturas_do_bloco_continue!
+after Enviar_transacao_assinada_para_o_orderer output From_G10_to_G11!
 
-hold in Validar_assinaturas_do_bloco for time 5!
-from Validar_assinaturas_do_bloco go to waitForInput
-external event for Validar_assinaturas_do_bloco
-<%
-    output.add(outfrom_G10_to_G11, "outValidar_assinaturas_do_bloco")
-%>!
 
 hold in Validar_assinaturas_do_bloco_continue for time 5!
-from Validar_assinaturas_do_bloco_continue go to waitForInput
-internal event for Validar_assinaturas_do_bloco_continue
-<%
-    api_transition.validar_assinaturas_do_bloco_continue_runner();
-%>!
+from Validar_assinaturas_do_bloco_continue go to waitForInput!
+after Validar_assinaturas_do_bloco_continue output From_G7_to_G0!
+
 
 // EndSequence for sequence starting at Receber_pool_de_resultados

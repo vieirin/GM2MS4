@@ -1,4 +1,5 @@
 import { writeFileSync } from 'fs'
+import { uniqBy } from 'lodash'
 import { Model } from '../GoalModel'
 import { JavaWriter } from '../JavaWriter/index'
 import {
@@ -23,19 +24,9 @@ import {
 } from '../ObjectiveTree/types'
 import { MS4Constants } from './constants'
 import { dnlFileName, nameTaskMethod, nameText, SeSFileName } from './naming'
-import { SequenceState } from './types'
 import * as dnlWriter from './writing/dnlWriting'
 import { exposeOutputPort } from './writing/dnlWriting'
 import { writeConnections, writePerspective } from './writing/sesWriting'
-
-const stateSequenceForInput = (
-    component: string,
-    inputNode: LeveledGoalComponent,
-    connections: port[]
-): SequenceState => {
-    const indexed = indexPortsByGoal(component, connections)
-    return branchGoalsWithOutput(component, inputNode, indexed)
-}
 
 export const generateMS4Model = (
     moduleName: string,
@@ -45,6 +36,11 @@ export const generateMS4Model = (
     const waitForInputGoals = component.goals.filter(
         (node) => node.level === component.lowestLevel
     ) as LeveledGoalComponent[]
+
+    const root = waitForInputGoals.reduce(
+        (prev, curr) => (curr.isRoot && !prev ? curr : undefined),
+        undefined as LeveledGoalComponent | undefined
+    )
 
     const javaWriter = new JavaWriter(moduleName)
     waitForInputGoals.forEach((inputNode) => {
@@ -60,7 +56,21 @@ export const generateMS4Model = (
     javaWriter.close()
 
     const transitionClassName = javaWriter.getTransitionClassName()
+
+    const connIndex = indexPortsByGoal(moduleName, connections)
+    const outputConnections = connections.filter(
+        (conn) => conn.from.component.toLowerCase() !== moduleName
+    )
+    const inputConnections = connections.filter(
+        (conn) => conn.from.component.toLowerCase() === moduleName
+    )
+
+    const inputNames = waitForInputGoals.map((input) => input.text)
+    const inputSequence = waitForInputGoals.map((input) =>
+        branchGoalsWithOutput(moduleName, input, connIndex)
+    )
     const initialState = MS4Constants.initialPassiveState
+
     const dnl =
         // var defs
         dnlWriter.declareVars(moduleName, transitionClassName) +
@@ -68,29 +78,45 @@ export const generateMS4Model = (
         dnlWriter.initialState(initialState) +
         // input signals
         dnlWriter.blockseparator(
-            connections.map((conn) =>
-                dnlWriter.inputSignalsReceivement(
-                    initialState,
-                    conn,
-                    moduleName
+            inputConnections
+                .filter((conn) => inputNames.includes(conn.from.state))
+                .map((conn) =>
+                    dnlWriter.defaultSignalsReceivement(
+                        initialState,
+                        conn,
+                        moduleName
+                    )
                 )
-            )
         ) +
+        dnlWriter.blockseparator([
+            ...inputConnections
+                .filter((conn) => !inputNames.includes(conn.from.state))
+                .map((conn) =>
+                    dnlWriter.inputSignalsReceivement(
+                        initialState,
+                        conn,
+                        moduleName
+                    )
+                ),
+            root
+                ? dnlWriter.startSignalsReceivement(initialState, root.text)
+                : ''
+        ]) +
         dnlWriter.blockseparator(
-            connections.map((conn) => exposeOutputPort(conn.outputPortName))
+            outputConnections.map((conn) =>
+                exposeOutputPort(conn.inputPortName)
+            )
         ) +
         // open input ports "accepts on" statements
         dnlWriter.blockseparator(
-            connections.map((conn) =>
-                dnlWriter.openInputPort(conn.inputPortName)
+            outputConnections.map((conn) =>
+                dnlWriter.openInputPort(conn.outputPortName)
             )
         ) +
         // writes the state sequence for a branch (a path that an input follows when received)
-        waitForInputGoals
-            .map((input) =>
-                stateSequenceForInput(moduleName, input, connections)
-            )
-            .map((seq) => dnlWriter.stateSequence(moduleName, seq))
+
+        inputSequence
+            .map((seq) => dnlWriter.stateSequence(moduleName, seq, connIndex))
             .join('')
 
     writeFileSync(`output/${dnlFileName(moduleName)}`, dnl.trim())
@@ -109,7 +135,7 @@ const generateSES = (
         writePerspective(
             actorName,
             componentGoals.map(([component]) => component)
-        ) + writeConnections(allPorts)
+        ) + writeConnections(uniqBy(allPorts, 'outputPortName'))
 
     writeFileSync(`output/Models.ses/${SeSFileName}`, ses.trim())
 }

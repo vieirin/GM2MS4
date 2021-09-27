@@ -27,7 +27,7 @@ ${perspectiveString}, ${missionName} sends StartUp to ${sanitizeComponent(
 
 export const writeConnections = (connections: port[]) =>
     blockseparator(
-        connections.map(({ inputPortName, from, to }) =>
-            `${perspectiveString}, ${from.component} sends ${inputPortName} to ${to.component}!`.trim()
+        connections.map(({ outputPortName, from, to }) =>
+            `${perspectiveString}, ${from.component} sends ${outputPortName} to ${to.component}!`.trim()
         )
     )

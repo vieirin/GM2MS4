@@ -2,14 +2,16 @@ use peer_transition with type  components.PeerTransitionsClass and default "new 
 
 To start passivate in waitForInput!
 
-when in waitForInput and receive from_G13_to_G5_input go to Executar_logica_de_negocio_continue!
-when in waitForInput and receive from_G0_to_G4_input go to Calcular_resultado_da_transacao!
+when in waitForInput and receive From_G0_to_G4 go to Calcular_resultado_da_transacao!
 
-generates output on from_G5_to_G13 with type String!
-generates output on from_G4_to_G0 with type String!
+when in waitForInput and receive From_G13_to_G5 go to Executar_logica_de_negocio_continue!
 
-accepts input on from_G13_to_G5_input with type String!
-accepts input on from_G0_to_G4_input with type String!
+
+generates output on From_G5_to_G13 with type String!
+generates output on From_G4_to_G0 with type String!
+
+accepts input on From_G13_to_G5 with type String!
+accepts input on From_G0_to_G4 with type String!
 
 hold in Calcular_resultado_da_transacao for time 5!
 from Calcular_resultado_da_transacao go to Invocar_o_chaincode!
@@ -19,31 +21,20 @@ internal event for Calcular_resultado_da_transacao
 %>!
 
 hold in Invocar_o_chaincode for time 5!
-from Invocar_o_chaincode go to Executar_logica_de_negocio!
-internal event for Invocar_o_chaincode
-<%
-    peer_transition.invocar_o_chaincode_runner();
-%>!
+from Invocar_o_chaincode go to Executar_logica_de_negocio_continue!
+after Invocar_o_chaincode output From_G5_to_G13!
 
-hold in Executar_logica_de_negocio for time 5!
-from Executar_logica_de_negocio go to waitForInput
-external event for Executar_logica_de_negocio
-<%
-    output.add(outfrom_G5_to_G13, "outExecutar_logica_de_negocio")
-%>!
 
 hold in Executar_logica_de_negocio_continue for time 5!
 from Executar_logica_de_negocio_continue go to Enviar_resultado_para_api!
-internal event for Executar_logica_de_negocio_continue
-<%
-    peer_transition.executar_logica_de_negocio_continue_runner();
-%>!
 
 hold in Enviar_resultado_para_api for time 5!
-from Enviar_resultado_para_api go to waitForInput
+from Enviar_resultado_para_api go to waitForInput!
 internal event for Enviar_resultado_para_api
 <%
     peer_transition.enviar_resultado_para_api_runner();
 %>!
+after Enviar_resultado_para_api output From_G4_to_G0!
+
 
 // EndSequence for sequence starting at Calcular_resultado_da_transacao

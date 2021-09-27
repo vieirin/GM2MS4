@@ -2,11 +2,13 @@ use orderer_transition with type  components.OrdererTransitionsClass and default
 
 To start passivate in waitForInput!
 
-when in waitForInput and receive from_G10_to_G11_input go to Enviar_transacao_assinada_para_o_orderer_continue!
+when in waitForInput and receive From_G10_to_G11 go to Validar_assinaturas_do_bloco!
 
-generates output on from_G11_to_G10 with type String!
 
-accepts input on from_G10_to_G11_input with type String!
+
+generates output on From_G11_to_G10 with type String!
+
+accepts input on From_G10_to_G11 with type String!
 
 hold in Validar_assinaturas_do_bloco for time 5!
 from Validar_assinaturas_do_bloco go to criar_bloco!
@@ -16,10 +18,12 @@ internal event for Validar_assinaturas_do_bloco
 %>!
 
 hold in criar_bloco for time 5!
-from criar_bloco go to waitForInput
+from criar_bloco go to waitForInput!
 internal event for criar_bloco
 <%
     orderer_transition.criar_bloco_runner();
 %>!
+after criar_bloco output From_G11_to_G10!
+
 
 // EndSequence for sequence starting at Validar_assinaturas_do_bloco

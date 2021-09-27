@@ -22,8 +22,10 @@
     },
     "dependencies": {
         "@types/node": "^12.11.5",
+        "lodash.intersectionby": "^4.7.0",
         "lodash.merge": "^4.6.2",
         "lodash.mergewith": "^4.6.2",
+        "lodash.uniqby": "^4.7.0",
         "ora": "^4.0.2",
         "replace-in-files": "^2.0.3",
         "typescript": "^4.3.5",
@@ -40,6 +42,7 @@
         "@types/lodash.isarray": "^4.0.6",
         "@types/lodash.merge": "^4.6.6",
         "@types/lodash.mergewith": "^4.6.6",
+        "@types/lodash.uniqby": "^4.7.6",
         "@typescript-eslint/eslint-plugin": "^4.29.2",
         "@typescript-eslint/parser": "^4.29.3",
         "babel-jest": "^27.0.6",

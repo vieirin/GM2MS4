@@ -2,7 +2,11 @@ import { nameGoalContinuation, nameTaskMethod } from '../ms4Builder/naming'
 import { StatePortIndex } from './connections'
 import { component, leafType, ObjectiveTree, relationship } from './types'
 
-type node = ObjectiveTree & { originalName?: string; direction?: 'in' | 'out' }
+type node = ObjectiveTree & {
+    originalName?: string
+    direction?: 'in' | 'out'
+    returnToParent?: boolean
+}
 
 const childBranchGoals = () => {}
 
@@ -25,24 +29,29 @@ export const branchChildrenGoals = (
 ): node[] =>
     tree.children
         ?.filter((child) => child.type === 'goal')
-        .map((child) => [
-            {
-                ...child,
-                direction:
-                    component !== child.component ? ('out' as const) : undefined
-            },
-            ...(child.component === component
-                ? branchChildrenGoals(component, child).flat()
-                : [
-                      {
-                          ...child,
-                          text: nameGoalContinuation(child.text),
-                          originalName: child.text,
-                          direction: 'in' as const
-                      }
-                  ])
-        ])
-        .reduce((prev, curr) => [...prev, ...curr], new Array<node>()) || []
+        .flatMap((child) => {
+            if (child.component === component) {
+                const childGoals = branchChildrenGoals(component, child)
+                if (!childGoals.length) {
+                    return [{ ...child, returnToParent: true }]
+                } else {
+                    return [...childGoals]
+                }
+            }
+            if (child.component !== component) {
+                return [
+                    { ...tree, direction: 'out' },
+                    {
+                        ...child,
+                        text: nameGoalContinuation(child.text),
+                        originalName: child.text,
+                        direction: 'in' as const
+                    }
+                ] as node[]
+            }
+            return child as node
+        })
+        .reduce((prev, curr) => [...prev, curr], new Array<node>()) || []
 
 export type linkedNode = node & { port: string }
 

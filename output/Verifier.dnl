@@ -2,65 +2,37 @@ use verifier_transition with type  components.VerifierTransitionsClass and defau
 
 To start passivate in waitForInput!
 
-when in waitForInput and receive from_G1_to_G0_input go to Registrar_uma_transacao!
-when in waitForInput and receive from_G4_to_G0_input go to Registrar_uma_transacao!
-when in waitForInput and receive from_G7_to_G0_input go to Registrar_uma_transacao!
+when in waitForInput and receive From_G1_to_G0 go to Processar_entrada_na_api_continue!
+when in waitForInput and receive From_G4_to_G0 go to Calcular_resultado_da_transacao_continue!
+when in waitForInput and receive From_G7_to_G0 go to Receber_pool_de_resultados_continue!
 
-generates output on from_G0_to_G1 with type String!
-generates output on from_G0_to_G4 with type String!
-generates output on from_G0_to_G7 with type String!
+when in waitForInput and receive StartUp go to Registrar_uma_transacao!
 
-accepts input on from_G1_to_G0_input with type String!
-accepts input on from_G4_to_G0_input with type String!
-accepts input on from_G7_to_G0_input with type String!
+generates output on From_G0_to_G1 with type String!
+generates output on From_G0_to_G4 with type String!
+generates output on From_G0_to_G7 with type String!
+
+accepts input on From_G1_to_G0 with type String!
+accepts input on From_G4_to_G0 with type String!
+accepts input on From_G7_to_G0 with type String!
+accepts input on StartUp!
 
 hold in Registrar_uma_transacao for time 5!
-from Registrar_uma_transacao go to Processar_entrada_na_api!
-internal event for Registrar_uma_transacao
-<%
-    verifier_transition.registrar_uma_transacao_runner();
-%>!
+after Registrar_uma_transacao output From_G0_to_G7!
+from Registrar_uma_transacao go to waitForInput!
 
-hold in Processar_entrada_na_api for time 5!
-from Processar_entrada_na_api go to waitForInput
-external event for Processar_entrada_na_api
-<%
-    output.add(outfrom_G0_to_G1, "outProcessar_entrada_na_api")
-%>!
 
 hold in Processar_entrada_na_api_continue for time 5!
-from Processar_entrada_na_api_continue go to Calcular_resultado_da_transacao!
-internal event for Processar_entrada_na_api_continue
-<%
-    verifier_transition.processar_entrada_na_api_continue_runner();
-%>!
+from Processar_entrada_na_api_continue go to waitForInput!
 
-hold in Calcular_resultado_da_transacao for time 5!
-from Calcular_resultado_da_transacao go to waitForInput
-external event for Calcular_resultado_da_transacao
-<%
-    output.add(outfrom_G0_to_G4, "outCalcular_resultado_da_transacao")
-%>!
 
 hold in Calcular_resultado_da_transacao_continue for time 5!
-from Calcular_resultado_da_transacao_continue go to Receber_pool_de_resultados!
-internal event for Calcular_resultado_da_transacao_continue
-<%
-    verifier_transition.calcular_resultado_da_transacao_continue_runner();
-%>!
+from Calcular_resultado_da_transacao_continue go to waitForInput!
 
-hold in Receber_pool_de_resultados for time 5!
-from Receber_pool_de_resultados go to waitForInput
-external event for Receber_pool_de_resultados
-<%
-    output.add(outfrom_G0_to_G7, "outReceber_pool_de_resultados")
-%>!
 
 hold in Receber_pool_de_resultados_continue for time 5!
-from Receber_pool_de_resultados_continue go to waitForInput
-internal event for Receber_pool_de_resultados_continue
-<%
-    verifier_transition.receber_pool_de_resultados_continue_runner();
-%>!
+after Receber_pool_de_resultados_continue output From_G0_to_G7!
+from Receber_pool_de_resultados_continue go to waitForInput!
+
 
 // EndSequence for sequence starting at Registrar_uma_transacao

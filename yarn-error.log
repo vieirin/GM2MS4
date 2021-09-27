@@ -1,5 +1,5 @@
 Arguments: 
-  /usr/local/bin/node /usr/share/yarn/bin/yarn.js add -D @types/lodash.mergewith @types/lodash.isArray
+  /usr/local/bin/node /usr/share/yarn/bin/yarn.js add loadash.uniqby
 
 PATH: 
   /vscode/vscode-server/bin/x64/3866c3553be8b268c8a7f8c0482c0c0177aa8bfa/bin:/usr/local/share/npm-global/bin:/usr/local/share/nvm/current/bin:/usr/local/share/npm-global/bin:/usr/local/share/nvm/current/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/node/.local/bin
@@ -14,7 +14,7 @@ Platform:
   linux x64
 
 Trace: 
-  Error: https://registry.yarnpkg.com/@types%2flodash.isArray: Not found
+  Error: https://registry.yarnpkg.com/loadash.uniqby: Not found
       at Request.params.callback [as _callback] (/usr/share/yarn/lib/cli.js:66988:18)
       at Request.self.callback (/usr/share/yarn/lib/cli.js:140749:22)
       at Request.emit (node:events:394:28)
@@ -51,7 +51,9 @@ npm manifest:
       },
       "dependencies": {
           "@types/node": "^12.11.5",
+          "lodash.intersectionby": "^4.7.0",
           "lodash.merge": "^4.6.2",
+          "lodash.mergewith": "^4.6.2",
           "ora": "^4.0.2",
           "replace-in-files": "^2.0.3",
           "typescript": "^4.3.5",
@@ -65,7 +67,9 @@ npm manifest:
           "@babel/preset-env": "^7.15.0",
           "@babel/preset-typescript": "^7.15.0",
           "@types/jest": "^27.0.1",
+          "@types/lodash.isarray": "^4.0.6",
           "@types/lodash.merge": "^4.6.6",
+          "@types/lodash.mergewith": "^4.6.6",
           "@typescript-eslint/eslint-plugin": "^4.29.2",
           "@typescript-eslint/parser": "^4.29.3",
           "babel-jest": "^27.0.6",
@@ -1414,10 +1418,24 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/@types/json-schema/-/json-schema-7.0.9.tgz#97edc9037ea0c38585320b28964dde3b39e4660d"
     integrity sha512-qcUXuemtEu+E5wZSJHNxUXeCZhAfXKQ41D+duX+VYPde7xyEVZci+/oXKJL13tnRs9lR2pr4fod59GT6/X1/yQ==
   
+  "@types/lodash.isarray@^4.0.6":
+    version "4.0.6"
+    resolved "https://registry.yarnpkg.com/@types/lodash.isarray/-/lodash.isarray-4.0.6.tgz#5979c4301508d9571dfb740b81a2f172b7382ade"
+    integrity sha512-lXLDKJ4jWhtAd6EVQOGHwX8iKJlITY5J+HAgim6oglepJrPXAv7hdoN7hrJSwpOYZ7oEpMng+bPasl4LZWp4GQ==
+    dependencies:
+      "@types/lodash" "*"
+  
   "@types/lodash.merge@^4.6.6":
     version "4.6.6"
     resolved "https://registry.yarnpkg.com/@types/lodash.merge/-/lodash.merge-4.6.6.tgz#b84b403c1d31bc42d51772d1cd5557fa008cd3d6"
     integrity sha512-IB90krzMf7YpfgP3u/EvZEdXVvm4e3gJbUvh5ieuI+o+XqiNEt6fCzqNRaiLlPVScLI59RxIGZMQ3+Ko/DJ8vQ==
+    dependencies:
+      "@types/lodash" "*"
+  
+  "@types/lodash.mergewith@^4.6.6":
+    version "4.6.6"
+    resolved "https://registry.yarnpkg.com/@types/lodash.mergewith/-/lodash.mergewith-4.6.6.tgz#c4698f5b214a433ff35cb2c75ee6ec7f99d79f10"
+    integrity sha512-RY/8IaVENjG19rxTZu9Nukqh0W2UrYgmBj5sdns4hWRZaV8PqR7wIKHFKzvOTjo4zVRV7sVI+yFhAJql12Kfqg==
     dependencies:
       "@types/lodash" "*"
   
@@ -3791,10 +3809,20 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/lodash.debounce/-/lodash.debounce-4.0.8.tgz#82d79bff30a67c4005ffd5e2515300ad9ca4d7af"
     integrity sha1-gteb/zCmfEAF/9XiUVMArZyk168=
   
+  lodash.intersectionby@^4.7.0:
+    version "4.7.0"
+    resolved "https://registry.yarnpkg.com/lodash.intersectionby/-/lodash.intersectionby-4.7.0.tgz#12f125e4da00b22290febda1b6c1b68bb9255125"
+    integrity sha1-EvEl5NoAsiKQ/r2htsG2i7klUSU=
+  
   lodash.merge@^4.6.2:
     version "4.6.2"
     resolved "https://registry.yarnpkg.com/lodash.merge/-/lodash.merge-4.6.2.tgz#558aa53b43b661e1925a0afdfa36a9a1085fe57a"
     integrity sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==
+  
+  lodash.mergewith@^4.6.2:
+    version "4.6.2"
+    resolved "https://registry.yarnpkg.com/lodash.mergewith/-/lodash.mergewith-4.6.2.tgz#617121f89ac55f59047c7aec1ccd6654c6590f55"
+    integrity sha512-GK3g5RPZWTRSeLSpgP8Xhra+pnjBC56q9FZYe1d5RN3TJ35dbkGy3YqBSMbyCrlbi+CM9Z3Jk5yTL7RCsqboyQ==
   
   lodash.truncate@^4.4.2:
     version "4.4.2"

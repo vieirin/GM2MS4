@@ -1,4 +1,4 @@
-import { port } from '../../ObjectiveTree/connections'
+import { port, StatePortIndex } from '../../ObjectiveTree/connections'
 import { linkedNode } from '../../ObjectiveTree/treeNavigation'
 import { MS4Constants } from '../constants'
 import {
@@ -33,7 +33,7 @@ export const holdState = (
             `from ${state.text} ` +
                 (nextstate
                     ? `go to ${nextstate?.text || ''}!`
-                    : `go to ${MS4Constants.initialPassiveState}`)
+                    : `go to ${MS4Constants.initialPassiveState}!`)
         ].join('\n'),
         newLines
     )
@@ -46,7 +46,7 @@ export const runTaskAndOutput = (state: string, taskName: string) =>
         `internal event for ${state}\n` + '<%\n' + `\tapiImpl.${taskName}`
     )
 
-const getStateForInput = (port: port, component: string) => {
+const getStateForInput = (port: port, component: string, isInput?: boolean) => {
     let entryState = ''
     if (port.rootLink) {
         if (port.from.component.toLowerCase() === component.toLowerCase()) {
@@ -59,14 +59,30 @@ const getStateForInput = (port: port, component: string) => {
         return entryState
     }
 
-    if (port.from.component.toLowerCase() !== component.toLowerCase()) {
-        entryState = port.from.state
-    } else if (port.to.component.toLowerCase() !== component.toLowerCase()) {
-        entryState = port.to.state
+    if (isInput) {
+        return port.from.state
     }
 
-    return nameGoalContinuation(entryState)
+    if (port.to.component.toLowerCase() !== component) {
+        return nameGoalContinuation(port.to.state)
+    }
+
+    return entryState
 }
+
+export const defaultSignalsReceivement = (
+    initialState: string,
+    port: port,
+    component: string
+) =>
+    `when in ${initialState} and receive ${nameInput(
+        port.inputPortName
+    )} go to ${getStateForInput(port, component, true)}!`
+
+export const startSignalsReceivement = (
+    initialState: string,
+    nextState: string
+) => `when in ${initialState} and receive StartUp go to ${nextState}!`
 
 export const inputSignalsReceivement = (
     initialState: string,
@@ -93,26 +109,58 @@ const internalTransition = (
 `
 
 const externalTransition = (
-    state: linkedNode
-) => `external event for ${state.text}
-<%
-    output.add(out${state.port}, "out${state.text}")
-%>!
+    state: linkedNode,
+    conn: StatePortIndex,
+    overrideStateSource?: string
+) => `after ${overrideStateSource || state.text} output ${
+    conn.get(state.text)?.out
+}!
+
 `
 
-export const stateSequence = (component: string, sequence: SequenceState) =>
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const isLast = (arr: Array<any>, idx: number) => arr.length - 1 === idx
+
+export const stateSequence = (
+    component: string,
+    sequence: SequenceState,
+    connections: StatePortIndex
+) =>
     sequence
-        .map((seq) =>
+        .map((seq, seqIndex, seqArr) =>
             seq
-                .map((state, index, arr) =>
-                    blockseparator(
+                .filter(
+                    (state) =>
+                        state.component === component ||
+                        state.text.endsWith('_continue')
+                )
+                .map((state, index, arr) => {
+                    let returnEvent = ''
+                    if (
+                        isLast(seqArr, seqIndex) &&
+                        isLast(arr, index) &&
+                        state.direction != 'out'
+                    ) {
+                        returnEvent = externalTransition(
+                            seqArr[0][0],
+                            connections,
+                            state.text
+                        )
+                    }
+                    return blockseparator(
                         holdState(state, arr[index + 1], 1) +
                             (state.direction === 'out'
-                                ? externalTransition(state)
-                                : internalTransition(component, state.text)),
+                                ? externalTransition(state, connections)
+                                : (state.component === component
+                                      ? internalTransition(
+                                            component,
+                                            state.text
+                                        )
+                                      : '') + returnEvent),
+
                         1
                     )
-                )
+                })
                 .join('')
         )
         .join('') +

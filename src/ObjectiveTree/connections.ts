@@ -22,16 +22,18 @@ export type Connections = {
 const isRootLink = (from: treeNode, to: treeNode) => from.isRoot || to.isRoot
 
 const createPort = (from: treeNode, to: treeNode): port => {
+    const [useFrom, useTo] = [from, to]
+
     return {
-        inputPortName: `from_${from.identifier}_to_${to.identifier}`,
-        outputPortName: `from_${to.identifier}_to_${from.identifier}`,
+        inputPortName: `From_${useTo.identifier}_to_${useFrom.identifier}`,
+        outputPortName: `From_${useFrom.identifier}_to_${useTo.identifier}`,
         from: {
-            state: from.text,
-            component: sanitizeComponent(from.component)
+            state: useFrom.text,
+            component: sanitizeComponent(useFrom.component)
         },
         to: {
-            state: to.text,
-            component: sanitizeComponent(to.component)
+            state: useTo.text,
+            component: sanitizeComponent(useTo.component)
         },
         type: 'String',
         rootLink: isRootLink(from, to)
@@ -57,8 +59,14 @@ export const componentConnections = (tree: ObjectiveTree): Connections =>
                 memo,
                 otherPortsOnBranch,
                 {
-                    [child.component]: [createPort(tree, child)],
-                    [tree.component]: [createPort(child, tree)]
+                    [child.component]: [
+                        createPort(tree, child),
+                        createPort(child, tree)
+                    ],
+                    [tree.component]: [
+                        createPort(tree, child),
+                        createPort(child, tree)
+                    ]
                 },
                 mergeConcat
             )

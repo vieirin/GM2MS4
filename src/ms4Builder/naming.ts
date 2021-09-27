@@ -36,7 +36,7 @@ export const nodeName = (text: string, type: 'goal' | 'task') => {
     return [goalText[0], nameText(goalText[1])]
 }
 
-export const nameInput = (stateName: string) => nameText(stateName) + '_input'
+export const nameInput = (stateName: string) => nameText(stateName)
 
 export const nameTaskMethod = (taskName: string, hasChildren?: boolean) =>
     nameText(taskName) + (hasChildren ? '_runner' : '') + '_task'
