@@ -17,10 +17,17 @@ accepts input on From_G11_to_G10 with type String!
 accepts input on From_G0_to_G7 with type String!
 
 hold in Processar_entrada_na_api for time 5!
-from Processar_entrada_na_api go to Enviar_proposta_para_os_Peers!
+from Processar_entrada_na_api go to Propor_transacao_a_rede!
 internal event for Processar_entrada_na_api
 <%
     api_transition.processar_entrada_na_api_runner();
+%>!
+
+hold in Propor_transacao_a_rede for time 5!
+from Propor_transacao_a_rede go to Enviar_proposta_para_os_Peers!
+internal event for Propor_transacao_a_rede
+<%
+    api_transition.propor_transacao_a_rede_runner();
 %>!
 
 hold in Enviar_proposta_para_os_Peers for time 5!
@@ -35,10 +42,17 @@ after Enviar_proposta_para_os_Peers output From_G1_to_G0!
 // EndSequence for sequence starting at Processar_entrada_na_api
 
 hold in Receber_pool_de_resultados for time 5!
-from Receber_pool_de_resultados go to Rejeitar_a_transacao!
+from Receber_pool_de_resultados go to Verificar_a_pool_de_resultados!
 internal event for Receber_pool_de_resultados
 <%
     api_transition.receber_pool_de_resultados_runner();
+%>!
+
+hold in Verificar_a_pool_de_resultados for time 5!
+from Verificar_a_pool_de_resultados go to Rejeitar_a_transacao!
+internal event for Verificar_a_pool_de_resultados
+<%
+    api_transition.verificar_a_pool_de_resultados_runner();
 %>!
 
 hold in Rejeitar_a_transacao for time 5!
@@ -50,8 +64,10 @@ internal event for Rejeitar_a_transacao
 
 hold in Enviar_transacao_assinada_para_o_orderer for time 5!
 from Enviar_transacao_assinada_para_o_orderer go to Validar_assinaturas_do_bloco_continue!
-after Enviar_transacao_assinada_para_o_orderer output From_G10_to_G11!
-
+internal event for Enviar_transacao_assinada_para_o_orderer
+<%
+    api_transition.enviar_transacao_assinada_para_o_orderer_runner();
+%>!
 
 hold in Validar_assinaturas_do_bloco_continue for time 5!
 from Validar_assinaturas_do_bloco_continue go to waitForInput!

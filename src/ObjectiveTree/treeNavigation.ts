@@ -1,3 +1,4 @@
+import { uniqBy } from 'lodash'
 import { nameGoalContinuation, nameTaskMethod } from '../ms4Builder/naming'
 import { StatePortIndex } from './connections'
 import { component, leafType, ObjectiveTree, relationship } from './types'
@@ -35,10 +36,9 @@ export const branchChildrenGoals = (
                 if (!childGoals.length) {
                     return [{ ...child, returnToParent: true }]
                 } else {
-                    return [...childGoals]
+                    return uniqBy([child, ...childGoals], 'identifier')
                 }
-            }
-            if (child.component !== component) {
+            } else {
                 return [
                     { ...tree, direction: 'out' },
                     {
@@ -49,7 +49,6 @@ export const branchChildrenGoals = (
                     }
                 ] as node[]
             }
-            return child as node
         })
         .reduce((prev, curr) => [...prev, curr], new Array<node>()) || []
 

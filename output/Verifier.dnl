@@ -2,9 +2,9 @@ use verifier_transition with type  components.VerifierTransitionsClass and defau
 
 To start passivate in waitForInput!
 
-when in waitForInput and receive From_G1_to_G0 go to Processar_entrada_na_api_continue!
-when in waitForInput and receive From_G4_to_G0 go to Calcular_resultado_da_transacao_continue!
-when in waitForInput and receive From_G7_to_G0 go to Receber_pool_de_resultados_continue!
+when in waitForInput and receive From_G1_to_G0 go to Registrar_uma_transacao!
+when in waitForInput and receive From_G4_to_G0 go to Registrar_uma_transacao!
+when in waitForInput and receive From_G7_to_G0 go to Registrar_uma_transacao!
 
 when in waitForInput and receive StartUp go to Registrar_uma_transacao!
 
@@ -15,24 +15,38 @@ generates output on From_G0_to_G7 with type String!
 accepts input on From_G1_to_G0 with type String!
 accepts input on From_G4_to_G0 with type String!
 accepts input on From_G7_to_G0 with type String!
-accepts input on StartUp!
 
 hold in Registrar_uma_transacao for time 5!
+from Registrar_uma_transacao go to Registrar_uma_transacao!
+internal event for Registrar_uma_transacao
+<%
+    verifier_transition.registrar_uma_transacao_runner();
+%>!
+
+hold in Registrar_uma_transacao for time 5!
+from Registrar_uma_transacao go to Processar_entrada_na_api_continue!
 after Registrar_uma_transacao output From_G0_to_G7!
-from Registrar_uma_transacao go to waitForInput!
 
 
 hold in Processar_entrada_na_api_continue for time 5!
-from Processar_entrada_na_api_continue go to waitForInput!
+from Processar_entrada_na_api_continue go to Registrar_uma_transacao!
+
+hold in Registrar_uma_transacao for time 5!
+from Registrar_uma_transacao go to Calcular_resultado_da_transacao_continue!
+after Registrar_uma_transacao output From_G0_to_G7!
 
 
 hold in Calcular_resultado_da_transacao_continue for time 5!
-from Calcular_resultado_da_transacao_continue go to waitForInput!
+from Calcular_resultado_da_transacao_continue go to Registrar_uma_transacao!
+
+hold in Registrar_uma_transacao for time 5!
+from Registrar_uma_transacao go to Receber_pool_de_resultados_continue!
+after Registrar_uma_transacao output From_G0_to_G7!
 
 
 hold in Receber_pool_de_resultados_continue for time 5!
-after Receber_pool_de_resultados_continue output From_G0_to_G7!
 from Receber_pool_de_resultados_continue go to waitForInput!
+after Receber_pool_de_resultados_continue output From_G0_to_G7!
 
 
 // EndSequence for sequence starting at Registrar_uma_transacao
