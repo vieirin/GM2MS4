@@ -11,6 +11,7 @@ import {
     componentConnections,
     Connections,
     indexPortsByGoal,
+    invertPort,
     port
 } from '../ObjectiveTree/connections'
 import {
@@ -27,6 +28,9 @@ import { dnlFileName, nameTaskMethod, nameText, SeSFileName } from './naming'
 import * as dnlWriter from './writing/dnlWriting'
 import { exposeOutputPort } from './writing/dnlWriting'
 import { writeConnections, writePerspective } from './writing/sesWriting'
+
+const isTreeRoot = (goal: LeveledGoalComponent[]) =>
+    goal.length == 1 && goal[0].isRoot
 
 export const generateMS4Model = (
     moduleName: string,
@@ -58,19 +62,20 @@ export const generateMS4Model = (
     const transitionClassName = javaWriter.getTransitionClassName()
 
     const connIndex = indexPortsByGoal(moduleName, connections)
-    const outputConnections = connections.filter(
-        (conn) => conn.from.component.toLowerCase() !== moduleName
-    )
-    const inputConnections = connections.filter(
-        (conn) => conn.from.component.toLowerCase() === moduleName
-    )
+
+    // the root-level must have its ports inverted for connections
+    const outputConnections = connections
+        .filter((conn) => conn.from.component.toLowerCase() !== moduleName)
+        .map((out) => (isTreeRoot(waitForInputGoals) ? invertPort(out) : out))
+    const inputConnections = connections
+        .filter((conn) => conn.from.component.toLowerCase() === moduleName)
+        .map((out) => (isTreeRoot(waitForInputGoals) ? invertPort(out) : out))
 
     const inputNames = waitForInputGoals.map((input) => input.text)
     const inputSequence = waitForInputGoals.map((input) =>
         branchGoalsWithOutput(moduleName, input, connIndex)
     )
     const initialState = MS4Constants.initialPassiveState
-
     const dnl =
         // var defs
         dnlWriter.declareVars(moduleName, transitionClassName) +

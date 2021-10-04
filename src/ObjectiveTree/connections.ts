@@ -19,7 +19,7 @@ export type Connections = {
     [K: string]: port[]
 }
 
-const isRootLink = (from: treeNode, to: treeNode) => from.isRoot || to.isRoot
+const isRootLink = (from: treeNode) => from.isRoot
 
 const createPort = (from: treeNode, to: treeNode): port => {
     const [useFrom, useTo] = [from, to]
@@ -36,7 +36,7 @@ const createPort = (from: treeNode, to: treeNode): port => {
             component: sanitizeComponent(useTo.component)
         },
         type: 'String',
-        rootLink: isRootLink(from, to)
+        rootLink: isRootLink(from)
     }
 }
 
@@ -48,6 +48,12 @@ const mergeConcat = (arrValue: any, srcValue: any) => {
     }
     return
 }
+
+export const invertPort = (p: port): port => ({
+    ...p,
+    inputPortName: p.outputPortName,
+    outputPortName: p.inputPortName
+})
 
 // this will find connections over the tree between distincts components and describing them on the
 // Connections structure form
@@ -66,15 +72,15 @@ export const componentConnections = (tree: ObjectiveTree): Connections =>
                     [tree.component]: [
                         createPort(tree, child),
                         createPort(child, tree)
-                    ]
+                    ].map((port) =>
+                        isRootLink(tree) ? invertPort(port) : port
+                    )
                 },
                 mergeConcat
             )
         }
         return mergeWith(memo, otherPortsOnBranch, mergeConcat)
     }, {}) || {}
-
-const componentTransactions = (component: component, ports: port[]) => {}
 
 export type StatePortIndex = Map<string, { out: string; in: string }>
 export const indexPortsByGoal = (

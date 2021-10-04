@@ -31,7 +31,7 @@ export const holdState = (
         [
             `hold in ${state.text} for time 5!`,
             `from ${state.text} ` +
-                (nextstate
+                (nextstate && !nextstate.text.includes('_continue')
                     ? `go to ${nextstate?.text || ''}!`
                     : `go to ${MS4Constants.initialPassiveState}!`)
         ].join('\n'),
@@ -49,13 +49,7 @@ export const runTaskAndOutput = (state: string, taskName: string) =>
 const getStateForInput = (port: port, component: string, isInput?: boolean) => {
     let entryState = ''
     if (port.rootLink) {
-        if (port.from.component.toLowerCase() === component.toLowerCase()) {
-            entryState = port.from.state
-        } else if (
-            port.to.component.toLowerCase() === component.toLowerCase()
-        ) {
-            entryState = port.to.state
-        }
+        entryState = nameGoalContinuation(port.to.state)
         return entryState
     }
 
@@ -113,7 +107,7 @@ const externalTransition = (
     conn: StatePortIndex,
     overrideStateSource?: string
 ) => `after ${overrideStateSource || state.text} output ${
-    conn.get(state.text)?.out
+    conn.get(state.originalName || state.text)?.out
 }!
 
 `
@@ -129,11 +123,6 @@ export const stateSequence = (
     sequence
         .map((seq, seqIndex, seqArr) =>
             seq
-                .filter(
-                    (state) =>
-                        state.component === component ||
-                        state.text.endsWith('_continue')
-                )
                 .map((state, index, arr) => {
                     let returnEvent = ''
                     if (

@@ -1,4 +1,3 @@
-import { uniqBy } from 'lodash'
 import { nameGoalContinuation, nameTaskMethod } from '../ms4Builder/naming'
 import { StatePortIndex } from './connections'
 import { component, leafType, ObjectiveTree, relationship } from './types'
@@ -9,12 +8,10 @@ type node = ObjectiveTree & {
     returnToParent?: boolean
 }
 
-const childBranchGoals = () => {}
-
 const branchGoals = (component: component, tree?: ObjectiveTree): node[] => {
     return (
         tree?.type === 'goal' && tree?.component === component
-            ? [tree, ...(branchChildrenGoals(component, tree) || [])]
+            ? [{ ...tree }, ...(branchChildrenGoals(component, tree) || [])]
             : [
                   //   ...(tree.children
                   //       ?.map((child) => brGoals(component, child))
@@ -26,28 +23,55 @@ const branchGoals = (component: component, tree?: ObjectiveTree): node[] => {
 // extract element from a tree branch
 export const branchChildrenGoals = (
     component: string,
-    tree: ObjectiveTree
+    tree: ObjectiveTree,
+    level = 0
 ): node[] =>
     tree.children
         ?.filter((child) => child.type === 'goal')
         .flatMap((child) => {
             if (child.component === component) {
-                const childGoals = branchChildrenGoals(component, child)
+                const childGoals = branchChildrenGoals(
+                    component,
+                    child,
+                    level + 1
+                )
                 if (!childGoals.length) {
                     return [{ ...child, returnToParent: true }]
                 } else {
-                    return uniqBy([child, ...childGoals], 'identifier')
+                    // verify if any of the children is from a different component
+                    const direction = child.children?.reduce(
+                        (prev, curr) => prev || curr.component !== component,
+                        false
+                    )
+                        ? 'out'
+                        : undefined
+                    return [{ ...child, direction }, ...childGoals] as node[]
                 }
             } else {
-                return [
-                    { ...tree, direction: 'out' },
-                    {
-                        ...child,
-                        text: nameGoalContinuation(child.text),
-                        originalName: child.text,
-                        direction: 'in' as const
-                    }
-                ] as node[]
+                return (
+                    [
+                        {
+                            ...child,
+                            text: nameGoalContinuation(child.text),
+                            originalName: child.text,
+                            direction: 'in' as 'in' | 'out'
+                        }
+                    ]
+                        // when the root level contains only different components
+                        // we add the child's out port to the returned array
+                        .concat(
+                            !level
+                                ? [
+                                      {
+                                          ...child,
+                                          originalName: child.text,
+                                          direction: 'out'
+                                      }
+                                  ]
+                                : []
+                        )
+                        .reverse() as node[]
+                )
             }
         })
         .reduce((prev, curr) => [...prev, curr], new Array<node>()) || []

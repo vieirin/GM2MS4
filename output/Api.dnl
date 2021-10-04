@@ -63,11 +63,9 @@ internal event for Rejeitar_a_transacao
 %>!
 
 hold in Enviar_transacao_assinada_para_o_orderer for time 5!
-from Enviar_transacao_assinada_para_o_orderer go to Validar_assinaturas_do_bloco_continue!
-internal event for Enviar_transacao_assinada_para_o_orderer
-<%
-    api_transition.enviar_transacao_assinada_para_o_orderer_runner();
-%>!
+from Enviar_transacao_assinada_para_o_orderer go to waitForInput!
+after Enviar_transacao_assinada_para_o_orderer output From_G10_to_G11!
+
 
 hold in Validar_assinaturas_do_bloco_continue for time 5!
 from Validar_assinaturas_do_bloco_continue go to waitForInput!

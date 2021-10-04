@@ -21,11 +21,9 @@ internal event for Calcular_resultado_da_transacao
 %>!
 
 hold in Invocar_o_chaincode for time 5!
-from Invocar_o_chaincode go to Executar_logica_de_negocio_continue!
-internal event for Invocar_o_chaincode
-<%
-    peer_transition.invocar_o_chaincode_runner();
-%>!
+from Invocar_o_chaincode go to waitForInput!
+after Invocar_o_chaincode output From_G5_to_G13!
+
 
 hold in Executar_logica_de_negocio_continue for time 5!
 from Executar_logica_de_negocio_continue go to Enviar_resultado_para_api!
