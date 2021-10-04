@@ -1,20 +1,25 @@
 use api_transition with type  components.ApiTransitionsClass and default "new ApiTransitionsClass()"!
 
 To start passivate in waitForInput!
+Passivate in StopState!
+
 
 when in waitForInput and receive From_G0_to_G1 go to Processar_entrada_na_api!
 when in waitForInput and receive From_G0_to_G7 go to Receber_pool_de_resultados!
 
 when in waitForInput and receive From_G11_to_G10 go to Validar_assinaturas_do_bloco_continue!
 
+when in waitForInput and receive Stop go to StopState!
 
 generates output on From_G1_to_G0 with type String!
 generates output on From_G10_to_G11 with type String!
 generates output on From_G7_to_G0 with type String!
+generates output on stop !
 
-accepts input on From_G0_to_G1 with type String!
-accepts input on From_G11_to_G10 with type String!
-accepts input on From_G0_to_G7 with type String!
+accepts input on From_G0_to_G1 with type String !
+accepts input on From_G11_to_G10 with type String !
+accepts input on From_G0_to_G7 with type String !
+accepts input on StartUp  !
 
 hold in Processar_entrada_na_api for time 5!
 from Processar_entrada_na_api go to Propor_transacao_a_rede!

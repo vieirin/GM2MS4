@@ -11,7 +11,7 @@
     "scripts": {
         "clear": "rm -rf dist/",
         "clear:all": "rm -rf node_modules/ && npm run clear",
-        "build:live": "nodemon  -L  -e ts -w ./src --exec \"node --inspect=0.0.0.0:9229 --require ts-node/register src/index.ts\"",
+        "build:live": "nodemon  -L  -e ts -w ./src --exec \"node  --require ts-node/register src/index.ts\"",
         "run:live": "nodemon  -L  -e ts -w ./src --exec \"node --require ts-node/register src/index.ts\"",
         "test": "jest",
         "lint": "eslint src --max-warnings=0",
@@ -85,5 +85,10 @@
         "project",
         "seed"
     ],
+    "nodemonConfig": {
+        "execMap": {
+            "ts": "node --inspect=0.0.0.0:9229 --require ts-node/register"
+        }
+    },
     "bin": "./bin/cli.js"
 }

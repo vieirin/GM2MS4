@@ -8,7 +8,6 @@
             "name": "nodemon",
             "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/nodemon",
             "runtimeArgs": ["-L", "-e", "ts", "-w", "./src", "src/index.ts"],
-            "env": { "NODE_OPTIONS": "--inspect" },
             "request": "launch",
             "restart": true,
             "skipFiles": ["<node_internals>/**"],

@@ -1,17 +1,22 @@
 use peer_transition with type  components.PeerTransitionsClass and default "new PeerTransitionsClass()"!
 
 To start passivate in waitForInput!
+Passivate in StopState!
+
 
 when in waitForInput and receive From_G0_to_G4 go to Calcular_resultado_da_transacao!
 
 when in waitForInput and receive From_G13_to_G5 go to Executar_logica_de_negocio_continue!
 
+when in waitForInput and receive Stop go to StopState!
 
 generates output on From_G5_to_G13 with type String!
 generates output on From_G4_to_G0 with type String!
+generates output on stop !
 
-accepts input on From_G13_to_G5 with type String!
-accepts input on From_G0_to_G4 with type String!
+accepts input on From_G13_to_G5 with type String !
+accepts input on From_G0_to_G4 with type String !
+accepts input on StartUp  !
 
 hold in Calcular_resultado_da_transacao for time 5!
 from Calcular_resultado_da_transacao go to Invocar_o_chaincode!

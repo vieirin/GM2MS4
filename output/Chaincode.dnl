@@ -1,14 +1,19 @@
 use chaincode_transition with type  components.ChaincodeTransitionsClass and default "new ChaincodeTransitionsClass()"!
 
 To start passivate in waitForInput!
+Passivate in StopState!
+
 
 when in waitForInput and receive From_G5_to_G13 go to Executar_logica_de_negocio!
 
 
+when in waitForInput and receive Stop go to StopState!
 
 generates output on From_G13_to_G5 with type String!
+generates output on stop !
 
-accepts input on From_G5_to_G13 with type String!
+accepts input on From_G5_to_G13 with type String !
+accepts input on StartUp  !
 
 hold in Executar_logica_de_negocio for time 5!
 from Executar_logica_de_negocio go to waitForInput!

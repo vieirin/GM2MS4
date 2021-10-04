@@ -13,7 +13,9 @@ export const blockseparator = (block: string | string[], repeat = 2) =>
     (Array.isArray(block) ? block.join('\n') : block) + '\n'.repeat(repeat)
 
 export const initialState = (initialState: string) =>
-    blockseparator(`To start passivate in ${initialState}!`)
+    blockseparator(`To start passivate in ${initialState}!
+Passivate in ${MS4Constants.stopState}!
+`)
 
 export const declareVars = (component: string, className: string) =>
     blockseparator(
@@ -76,7 +78,11 @@ export const defaultSignalsReceivement = (
 export const startSignalsReceivement = (
     initialState: string,
     nextState: string
-) => `when in ${initialState} and receive StartUp go to ${nextState}!`
+) =>
+    `when in ${initialState} and receive ${MS4Constants.startSignal} go to ${nextState}!`
+
+export const stopSignalReceivement = (initialState: string) =>
+    `when in ${initialState} and receive ${MS4Constants.stopSignal} go to ${MS4Constants.stopState}!`
 
 export const inputSignalsReceivement = (
     initialState: string,
@@ -87,11 +93,14 @@ export const inputSignalsReceivement = (
         port.inputPortName
     )} go to ${getStateForInput(port, component)}!`
 
-export const openInputPort = (port: string, type = 'String') =>
-    `accepts input on ${nameInput(port)} with type ${type}!`
+type allowedTypes = 'none' | 'String'
+export const openInputPort = (port: string, type: allowedTypes = 'String') =>
+    `accepts input on ${nameInput(port)} ${
+        type === 'none' ? '' : `with type ${type}`
+    } !`
 
-export const exposeOutputPort = (port: string, type = 'String') =>
-    `generates output on ${port} with type ${type}!`
+export const exposeOutputPort = (port: string, type: allowedTypes = 'String') =>
+    `generates output on ${port} ${type === 'none' ? '' : `with type ${type}`}!`
 
 const internalTransition = (
     component: string,

@@ -26,7 +26,7 @@ import {
 import { MS4Constants } from './constants'
 import { dnlFileName, nameTaskMethod, nameText, SeSFileName } from './naming'
 import * as dnlWriter from './writing/dnlWriting'
-import { exposeOutputPort } from './writing/dnlWriting'
+import { exposeOutputPort, openInputPort } from './writing/dnlWriting'
 import { writeConnections, writePerspective } from './writing/sesWriting'
 
 const isTreeRoot = (goal: LeveledGoalComponent[]) =>
@@ -105,19 +105,22 @@ export const generateMS4Model = (
                 ),
             root
                 ? dnlWriter.startSignalsReceivement(initialState, root.text)
-                : ''
+                : '',
+            dnlWriter.stopSignalReceivement(initialState)
         ]) +
-        dnlWriter.blockseparator(
-            outputConnections.map((conn) =>
+        dnlWriter.blockseparator([
+            ...outputConnections.map((conn) =>
                 exposeOutputPort(conn.inputPortName)
-            )
-        ) +
+            ),
+            exposeOutputPort(MS4Constants.stopPort, 'none')
+        ]) +
         // open input ports "accepts on" statements
-        dnlWriter.blockseparator(
-            outputConnections.map((conn) =>
+        dnlWriter.blockseparator([
+            ...outputConnections.map((conn) =>
                 dnlWriter.openInputPort(conn.outputPortName)
-            )
-        ) +
+            ),
+            openInputPort(MS4Constants.startSignal, 'none')
+        ]) +
         // writes the state sequence for a branch (a path that an input follows when received)
 
         inputSequence

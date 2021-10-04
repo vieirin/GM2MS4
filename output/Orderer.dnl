@@ -1,14 +1,19 @@
 use orderer_transition with type  components.OrdererTransitionsClass and default "new OrdererTransitionsClass()"!
 
 To start passivate in waitForInput!
+Passivate in StopState!
+
 
 when in waitForInput and receive From_G10_to_G11 go to Validar_assinaturas_do_bloco!
 
 
+when in waitForInput and receive Stop go to StopState!
 
 generates output on From_G11_to_G10 with type String!
+generates output on stop !
 
-accepts input on From_G10_to_G11 with type String!
+accepts input on From_G10_to_G11 with type String !
+accepts input on StartUp  !
 
 hold in Validar_assinaturas_do_bloco for time 5!
 from Validar_assinaturas_do_bloco go to criar_bloco!
