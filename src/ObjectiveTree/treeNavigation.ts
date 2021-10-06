@@ -6,6 +6,7 @@ type node = ObjectiveTree & {
     originalName?: string
     direction?: 'in' | 'out'
     returnToParent?: boolean
+    parentRelation: 'and' | 'or' | 'none'
 }
 
 const branchGoals = (component: component, tree?: ObjectiveTree): node[] => {
@@ -36,7 +37,13 @@ export const branchChildrenGoals = (
                     level + 1
                 )
                 if (!childGoals.length) {
-                    return [{ ...child, returnToParent: true }]
+                    return [
+                        {
+                            ...child,
+                            parentRelation: tree.relation,
+                            returnToParent: true
+                        }
+                    ]
                 } else {
                     // verify if any of the children is from a different component
                     const direction = child.children?.reduce(
@@ -45,7 +52,10 @@ export const branchChildrenGoals = (
                     )
                         ? 'out'
                         : undefined
-                    return [{ ...child, direction }, ...childGoals] as node[]
+                    return [
+                        { ...child, direction, parentRelation: tree.relation },
+                        ...childGoals
+                    ] as node[]
                 }
             } else {
                 return (
@@ -54,6 +64,7 @@ export const branchChildrenGoals = (
                             ...child,
                             text: nameGoalContinuation(child.text),
                             originalName: child.text,
+                            parentRelation: tree.relation,
                             direction: 'in' as 'in' | 'out'
                         }
                     ]
@@ -65,7 +76,8 @@ export const branchChildrenGoals = (
                                       {
                                           ...child,
                                           originalName: child.text,
-                                          direction: 'out'
+                                          direction: 'out',
+                                          parentRelation: tree.relation
                                       }
                                   ]
                                 : []
