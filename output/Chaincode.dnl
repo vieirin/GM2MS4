@@ -30,7 +30,7 @@ internal event for Executar_logica_de_negocio
 after Executar_logica_de_negocio output From_G13_to_G5!
 output event for Executar_logica_de_negocio
 <%
-output.add(outFrom_G13_to_G5, result);
+    output.add(outFrom_G13_to_G5, result);
 %>!
 
 

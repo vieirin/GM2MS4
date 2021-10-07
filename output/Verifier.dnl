@@ -50,7 +50,7 @@ from Processar_entrada_na_api go to waitForInput!
 after Processar_entrada_na_api output From_G0_to_G1!
 output event for Processar_entrada_na_api
 <%
-output.add(outFrom_G0_to_G1, result);
+    output.add(outFrom_G0_to_G1, result);
 %>!
 
 
@@ -67,7 +67,7 @@ from Calcular_resultado_da_transacao go to waitForInput!
 after Calcular_resultado_da_transacao output From_G0_to_G4!
 output event for Calcular_resultado_da_transacao
 <%
-output.add(outFrom_G0_to_G4, result);
+    output.add(outFrom_G0_to_G4, result);
 %>!
 
 
@@ -84,20 +84,21 @@ from Receber_pool_de_resultados go to waitForInput!
 after Receber_pool_de_resultados output From_G0_to_G7!
 output event for Receber_pool_de_resultados
 <%
-output.add(outFrom_G0_to_G7, result);
+    output.add(outFrom_G0_to_G7, result);
 %>!
 
 
 hold in Receber_pool_de_resultados_continue for time 5!
-from Receber_pool_de_resultados_continue go to waitForInput!
+from Receber_pool_de_resultados_continue go to StopState!
 internal event for Receber_pool_de_resultados_continue
 <%
     verifier_transition.receber_pool_de_resultados_continue_runner(result);
+    System.out.println(!result.isSuccess() ? "Simulation has failed"  : "Simulation passed");
 %>!
 after Receber_pool_de_resultados_continue output From_G7_to_G0!
 output event for Receber_pool_de_resultados_continue
 <%
-output.add(outFrom_G7_to_G0, result);
+    output.add(outFrom_G7_to_G0, result);
 %>!
 
 

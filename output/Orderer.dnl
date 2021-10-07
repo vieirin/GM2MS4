@@ -38,7 +38,7 @@ internal event for criar_bloco
 after criar_bloco output From_G11_to_G10!
 output event for criar_bloco
 <%
-output.add(outFrom_G11_to_G10, result);
+    output.add(outFrom_G11_to_G10, result);
 %>!
 
 

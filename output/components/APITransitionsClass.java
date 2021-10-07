@@ -40,7 +40,8 @@ public class ApiTransitionsClass {
         }
         
         TaskRunner[] runners = new TaskRunner[] { 
-           new TaskRunner() {public Result run(Result res) {return ApiRunner.Abort__input__task(res);}}
+           new TaskRunner() {public Result run(Result res) {return ApiRunner.Outra_task_task(res);}},
+		   new TaskRunner() {public Result run(Result res) {return ApiRunner.Validar_entrada_task(res);}}
         };
         return tasksRunner(runners, "or", result);
 

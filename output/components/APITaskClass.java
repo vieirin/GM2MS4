@@ -3,7 +3,11 @@ package components;
 public class apiTaskClass {
     
 
-	public Result Abort__input__task (Result result) { 
+	public Result Validar_entrada_task (Result result) { 
+
+            return result;
+        }
+	public Result Outra_task_task (Result result) { 
 
             return result;
         }

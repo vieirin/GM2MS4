@@ -31,6 +31,7 @@ export const declareVars = (
 export const holdState = (
     state: linkedNode,
     nextstate?: linkedNode,
+    stop?: boolean,
     newLines = 2
 ) =>
     blockseparator(
@@ -39,6 +40,8 @@ export const holdState = (
             `from ${state.text} ` +
                 (nextstate && !nextstate.text.includes('_continue')
                     ? `go to ${nextstate?.text || ''}!`
+                    : stop
+                    ? `go to ${MS4Constants.stopState}!`
                     : `go to ${MS4Constants.initialPassiveState}!`)
         ].join('\n'),
         newLines
@@ -120,10 +123,18 @@ export const exposeOutputPort = (port: string, type: allowedTypes = 'Result') =>
 
 const internalTransition = (
     component: string,
-    state: string
+    state: string,
+    printResult: boolean
 ) => `internal event for ${state}
 <%
-    ${transitionClassVarName(component)}.${transitionMethodName(state)}(result);
+    ${`${transitionClassVarName(component)}.${transitionMethodName(
+        state
+    )}(result);
+    ${
+        printResult
+            ? 'System.out.println(!result.isSuccess() ? "Simulation has failed"  : "Simulation passed");'
+            : ''
+    }`.trim()}
 %>!
 `
 
@@ -136,7 +147,7 @@ const externalTransition = (
 }!
 output event for ${overrideStateSource || state.text}
 <%
-output.add(out${conn.get(state.originalName || state.text)?.out}, result);
+    output.add(out${conn.get(state.originalName || state.text)?.out}, result);
 %>!
 `
 
@@ -154,12 +165,8 @@ export const stateSequence = (
             seq
                 .map((state, index, arr) => {
                     let returnEvent = ''
-
-                    if (
-                        isLast(seqArr, seqIndex) &&
-                        isLast(arr, index) &&
-                        state.direction !== 'out'
-                    ) {
+                    const last = isLast(seqArr, seqIndex) && isLast(arr, index)
+                    if (last && state.direction !== 'out') {
                         returnEvent = externalTransition(
                             seqArr[0][0],
                             connections,
@@ -167,11 +174,15 @@ export const stateSequence = (
                         )
                     }
                     return blockseparator(
-                        holdState(state, arr[index + 1], 1) +
+                        holdState(state, arr[index + 1], last && root, 1) +
                             (state.direction === 'out'
                                 ? externalTransition(state, connections)
                                 : state.type === 'goal'
-                                ? internalTransition(component, state.text)
+                                ? internalTransition(
+                                      component,
+                                      state.text,
+                                      last && root
+                                  )
                                 : '') +
                             returnEvent
                     )

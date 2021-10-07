@@ -62,7 +62,7 @@ internal event for Enviar_proposta_para_os_Peers
 after Enviar_proposta_para_os_Peers output From_G1_to_G0!
 output event for Enviar_proposta_para_os_Peers
 <%
-output.add(outFrom_G1_to_G0, result);
+    output.add(outFrom_G1_to_G0, result);
 %>!
 
 
@@ -97,7 +97,7 @@ from Enviar_transacao_assinada_para_o_orderer go to waitForInput!
 after Enviar_transacao_assinada_para_o_orderer output From_G10_to_G11!
 output event for Enviar_transacao_assinada_para_o_orderer
 <%
-output.add(outFrom_G10_to_G11, result);
+    output.add(outFrom_G10_to_G11, result);
 %>!
 
 
@@ -110,7 +110,7 @@ internal event for Validar_assinaturas_do_bloco_continue
 after Validar_assinaturas_do_bloco_continue output From_G7_to_G0!
 output event for Validar_assinaturas_do_bloco_continue
 <%
-output.add(outFrom_G7_to_G0, result);
+    output.add(outFrom_G7_to_G0, result);
 %>!
 
 

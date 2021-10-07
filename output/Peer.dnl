@@ -42,7 +42,7 @@ from Invocar_o_chaincode go to waitForInput!
 after Invocar_o_chaincode output From_G5_to_G13!
 output event for Invocar_o_chaincode
 <%
-output.add(outFrom_G5_to_G13, result);
+    output.add(outFrom_G5_to_G13, result);
 %>!
 
 
@@ -63,7 +63,7 @@ internal event for Enviar_resultado_para_api
 after Enviar_resultado_para_api output From_G4_to_G0!
 output event for Enviar_resultado_para_api
 <%
-output.add(outFrom_G4_to_G0, result);
+    output.add(outFrom_G4_to_G0, result);
 %>!
 
 
