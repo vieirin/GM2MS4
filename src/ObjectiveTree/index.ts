@@ -241,7 +241,7 @@ export const getNodes = (
             if (type !== node.type || nodeComponent !== component) {
                 return []
             } else {
-                return [{ ...node, level }]
+                return [{ ...node, level, parentRelation: tree.relation }]
             }
         }
     } else {

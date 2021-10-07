@@ -1,6 +1,11 @@
 package components;
 
-public class Result {
+import java.io.Serializable;
+
+public class Result implements Serializable {
+
+	private static final long serialVersionUID = 5018535970263352859L;
+
 	private ErrorSignal error = null;
 	private String component = "";
 	private boolean success = false;
@@ -25,6 +30,10 @@ public class Result {
 	public void lock() { 
 		this.isLocked = true;
 	}
+
+    public boolean locked() { 
+		return this.isLocked;
+	}
 	
     public boolean isSuccess() {
 		return success;
@@ -40,17 +49,24 @@ public class Result {
 		return result;
 	}
 
-
-	protected Result (String  component) { 
-		this.component = component;
+	public void reset () { 
+		this.error = null;
+		this.success = false;
+		this.isLocked = false;
+		this.result = "";
 	}
 
-	
-	public Result (Result result) { 
-		this.isLocked = result.isLocked;
-		this.component = result.component;
-		this.error = result.error;
-		this.result = result.result;
-		this.success = result.success;
+	public Result update(Result res) { 
+		if (!this.isLocked) { 
+			this.error = res.error;
+			this.success = res.success;
+			this.isLocked = res.isLocked;
+			this.result = res.result;
+		}
+		return this;
+	}
+
+	public Result (String  component) { 
+		this.component = component;
 	}
 }

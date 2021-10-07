@@ -11,14 +11,15 @@ const methodIdent = (methodName: string) => ident([methodName], 1)
 
 export const fileStart = (
     className: string,
-    extendClass?: string
+    extendClass?: string,
+    superArg?: string[]
 ) => `package ${MS4Constants.packageName};
 
 public class ${className}${extendClass ? ' extends ' + extendClass : ''} {
     ${
         extendClass
             ? `public ${className}() { 
-        super();
+        super(${superArg?.map((arg) => `"${arg}"`).join(',') || ''});
     }`
             : ''
     }
@@ -43,10 +44,10 @@ export const writeRunnerStructure = (
     functions: string[],
     relation: relationship,
     tasksVar?: string
-) => ` ${Java.RUNNER_ITF}[] runners = new ${Java.RUNNER_ITF}[] { 
+) => `${Java.RUNNER_ITF}[] runners = new ${Java.RUNNER_ITF}[] { 
         ${functions
             .map(
-                (fn, index) =>
+                (fn) =>
                     `   new ${
                         Java.RUNNER_ITF
                     }() {public Result run(Result res) {return ${
@@ -56,11 +57,7 @@ export const writeRunnerStructure = (
             .reverse()
             .join(',\n\t\t')}
         };
-        this.result = ${
-            Java.RUNNER_METHOD
-        }(runners, "${relation}", this.result);
-        return this.result;
-
+        return tasksRunner(runners, "${relation}", result);
 `
 
 export const writeRefinedTask = (
@@ -70,7 +67,7 @@ export const writeRefinedTask = (
     taskVar: string
 ) => `public ${Java.RESULT_CLASS} ${transitionMethodName(method)}(${
     Java.RESULT_CLASS
-} res) {\n
+} result) {\n
         ${writeRunnerStructure(
             childrenTasks.map((task) =>
                 task.refiner ? task.name : `${taskVar}.${task.name}`
@@ -82,13 +79,30 @@ export const writeRefinedTask = (
 export const writeRunner = (
     method: string,
     functions: string[],
+    parentRelation: relationship,
     relation: relationship,
     nextGoal: string,
     tasksVar?: string
 ) =>
     methodIdent(
-        `public ${Java.RESULT_CLASS} ${transitionMethodName(method)}() {\n
-        ${writeRunnerStructure(functions, relation, tasksVar)}
+        `public ${Java.RESULT_CLASS} ${transitionMethodName(
+            method
+        )}(Result result) {
+
+       ${
+           parentRelation !== 'none'
+               ? `result = ${Java.VERIFY_CONTINUATION_METHOD}(result, "${parentRelation}" );`
+               : ''
+       }
+        if (result.locked()) { 
+            return result;
+        }
+        
+        ${
+            functions?.length
+                ? writeRunnerStructure(functions, relation, tasksVar)
+                : 'return result;'
+        }
        
         //Goes to state: ${nextGoal || MS4Constants.outputState}
     }
@@ -99,15 +113,25 @@ export const writeTaskRunner = () =>
     methodIdent(`private ${Java.RESULT_CLASS} ${Java.RUNNER_METHOD} (${Java.RUNNER_ITF}[] tasks, String relation, ${Java.RESULT_CLASS} result){ 
         ${Java.RESULT_CLASS} lastRes = result;
         for (${Java.RUNNER_ITF} run : tasks) { 
-            lastRes = run.run(lastRes);
-
-            if ((lastRes.isSuccess() && relation == "or") || (!lastRes.isSuccess() && relation == "and")) { 
-                return lastRes;
-            } 
-
-            if ((lastRes.isSuccess() && relation == "and") || (!lastRes.isSuccess() && relation == "or")) { 
-                continue;
+            ${Java.RESULT_CLASS} res = run.run(lastRes);
+            
+            res = ${Java.VERIFY_CONTINUATION_METHOD}(res, relation);
+            
+            lastRes.update(res);
+            if (res.locked()) { 
+                break;
             }
+            
         }
         return lastRes;
     }`)
+
+export const writeResultVerifier = () =>
+    methodIdent(`private ${Java.RESULT_CLASS} ${Java.VERIFY_CONTINUATION_METHOD}(${Java.RESULT_CLASS} result, String relation) { 
+        if ((result.isSuccess() && relation == "or") || (!result.isSuccess() && relation == "and")) { 
+            result.lock();
+        }
+
+    return result;
+}
+`)

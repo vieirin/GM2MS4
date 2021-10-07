@@ -24,7 +24,13 @@ import {
     LeveledGoalComponent
 } from '../ObjectiveTree/types'
 import { MS4Constants } from './constants'
-import { dnlFileName, nameTaskMethod, nameText, SeSFileName } from './naming'
+import {
+    dnlFileName,
+    nameTaskMethod,
+    nameText,
+    SeSFileName,
+    transitionClassVarName
+} from './naming'
 import * as dnlWriter from './writing/dnlWriting'
 import { exposeOutputPort, openInputPort } from './writing/dnlWriting'
 import { writeConnections, writePerspective } from './writing/sesWriting'
@@ -78,7 +84,13 @@ export const generateMS4Model = (
     const initialState = MS4Constants.initialPassiveState
     const dnl =
         // var defs
-        dnlWriter.declareVars(moduleName, transitionClassName) +
+        dnlWriter.blockseparator([
+            dnlWriter.declareVars(
+                transitionClassVarName(moduleName),
+                transitionClassName
+            ),
+            dnlWriter.declareVars('result', 'Result', `\\"${moduleName}\\"`)
+        ]) +
         // initial state
         dnlWriter.initialState(initialState) +
         // input signals
@@ -117,14 +129,15 @@ export const generateMS4Model = (
         // open input ports "accepts on" statements
         dnlWriter.blockseparator([
             ...outputConnections.map((conn) =>
-                dnlWriter.openInputPort(conn.outputPortName)
+                dnlWriter.openInputPort(conn.outputPortName, 'Result')
             ),
             openInputPort(MS4Constants.startSignal, 'none')
         ]) +
         // writes the state sequence for a branch (a path that an input follows when received)
-
         inputSequence
-            .map((seq) => dnlWriter.stateSequence(moduleName, seq, connIndex))
+            .map((seq) =>
+                dnlWriter.stateSequence(moduleName, seq, connIndex, !!root)
+            )
             .join('')
 
     writeFileSync(`output/${dnlFileName(moduleName)}`, dnl.trim())

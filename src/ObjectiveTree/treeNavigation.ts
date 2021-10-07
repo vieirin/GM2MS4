@@ -151,6 +151,7 @@ export type RunnerDecomposition = {
     component: string
     nodeType: leafType | 'refiner'
     functions: func[]
+    parentRelation: relationship
     nextLevel: RunnerDecomposition[]
 }
 
@@ -173,10 +174,12 @@ export const hasChildren = (node: ObjectiveTree) =>
 
 export const runnerDecomposition = (
     tree: ObjectiveTree,
-    component: string
+    component: string,
+    parentRelation: relationship = 'none'
 ): RunnerDecomposition => ({
     fromState: tree.text,
     relation: tree.relation,
+    parentRelation,
     component: tree.component,
     nodeType: hasChildren(tree) && tree.type === 'task' ? 'refiner' : tree.type,
     functions:
@@ -194,7 +197,9 @@ export const runnerDecomposition = (
     nextLevel:
         tree.children
             ?.filter(hasChildren)
-            .map((child) => runnerDecomposition(child, component)) || []
+            .map((child) =>
+                runnerDecomposition(child, component, tree.relation)
+            ) || []
 })
 
 export const removeLeafNodes = (tree: ObjectiveTree): ObjectiveTree => {

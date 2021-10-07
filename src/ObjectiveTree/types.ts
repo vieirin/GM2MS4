@@ -21,6 +21,7 @@ export interface ObjectiveTree extends annotatedNode {
 }
 
 export interface LeveledGoalComponent extends ObjectiveTree {
+    parentRelation: string
     level: number
 }
 

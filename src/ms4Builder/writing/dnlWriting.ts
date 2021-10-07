@@ -17,12 +17,16 @@ export const initialState = (initialState: string) =>
 Passivate in ${MS4Constants.stopState}!
 `)
 
-export const declareVars = (component: string, className: string) =>
-    blockseparator(
-        `use ${transitionClassVarName(component)} with type  ${
-            MS4Constants.packageName
-        }.${className} and default "new ${className}()"!`
-    )
+export const declareVars = (
+    variable: string,
+    className: string,
+    constructor?: string
+) =>
+    `use ${variable} with type  ${
+        MS4Constants.packageName
+    }.${className} and default "new ${MS4Constants.packageName}.${className}(${
+        constructor || ''
+    })"!`
 
 export const holdState = (
     state: linkedNode,
@@ -66,6 +70,14 @@ const getStateForInput = (port: port, component: string, isInput?: boolean) => {
     return entryState
 }
 
+const externalEventWith = (
+    initialState: string,
+    port: port
+) => `external event for ${initialState} with ${nameInput(port.inputPortName)}
+<%
+    result = result.update(messageList.get(0).getData());
+%>!`
+
 export const defaultSignalsReceivement = (
     initialState: string,
     port: port,
@@ -73,7 +85,9 @@ export const defaultSignalsReceivement = (
 ) =>
     `when in ${initialState} and receive ${nameInput(
         port.inputPortName
-    )} go to ${getStateForInput(port, component, true)}!`
+    )} go to ${getStateForInput(port, component, true)}!
+${externalEventWith(initialState, port)}
+`
 
 export const startSignalsReceivement = (
     initialState: string,
@@ -91,15 +105,17 @@ export const inputSignalsReceivement = (
 ) =>
     `when in ${initialState} and receive ${nameInput(
         port.inputPortName
-    )} go to ${getStateForInput(port, component)}!`
+    )} go to ${getStateForInput(port, component)}!
+${externalEventWith(initialState, port)}
+`
 
-type allowedTypes = 'none' | 'String'
+type allowedTypes = 'none' | 'String' | 'Result'
 export const openInputPort = (port: string, type: allowedTypes = 'String') =>
     `accepts input on ${nameInput(port)} ${
         type === 'none' ? '' : `with type ${type}`
     } !`
 
-export const exposeOutputPort = (port: string, type: allowedTypes = 'String') =>
+export const exposeOutputPort = (port: string, type: allowedTypes = 'Result') =>
     `generates output on ${port} ${type === 'none' ? '' : `with type ${type}`}!`
 
 const internalTransition = (
@@ -107,7 +123,7 @@ const internalTransition = (
     state: string
 ) => `internal event for ${state}
 <%
-    ${transitionClassVarName(component)}.${transitionMethodName(state)}();
+    ${transitionClassVarName(component)}.${transitionMethodName(state)}(result);
 %>!
 `
 
@@ -116,9 +132,12 @@ const externalTransition = (
     conn: StatePortIndex,
     overrideStateSource?: string
 ) => `after ${overrideStateSource || state.text} output ${
-    conn.get(state.originalName || state.text)?.out
+    conn.get(state.originalName || state.text)!.out
 }!
-
+output event for ${overrideStateSource || state.text}
+<%
+output.add(out${conn.get(state.originalName || state.text)?.out}, result);
+%>!
 `
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -127,17 +146,19 @@ const isLast = (arr: Array<any>, idx: number) => arr.length - 1 === idx
 export const stateSequence = (
     component: string,
     sequence: SequenceState,
-    connections: StatePortIndex
+    connections: StatePortIndex,
+    root: boolean
 ) =>
     sequence
         .map((seq, seqIndex, seqArr) =>
             seq
                 .map((state, index, arr) => {
                     let returnEvent = ''
+
                     if (
                         isLast(seqArr, seqIndex) &&
                         isLast(arr, index) &&
-                        state.direction != 'out'
+                        state.direction !== 'out'
                     ) {
                         returnEvent = externalTransition(
                             seqArr[0][0],
@@ -149,14 +170,10 @@ export const stateSequence = (
                         holdState(state, arr[index + 1], 1) +
                             (state.direction === 'out'
                                 ? externalTransition(state, connections)
-                                : (state.component === component
-                                      ? internalTransition(
-                                            component,
-                                            state.text
-                                        )
-                                      : '') + returnEvent),
-
-                        1
+                                : state.type === 'goal'
+                                ? internalTransition(component, state.text)
+                                : '') +
+                            returnEvent
                     )
                 })
                 .join('')

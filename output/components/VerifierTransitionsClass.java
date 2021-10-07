@@ -1,9 +1,7 @@
 package components;
 
-public class VerifierTransitionsClass extends Result {
-    public VerifierTransitionsClass() { 
-        super();
-    }
+public class VerifierTransitionsClass {
+    
 
 	interface TaskRunner { 
         Result run(Result res);
@@ -11,49 +9,78 @@ public class VerifierTransitionsClass extends Result {
 
 	private verifierTaskClass VerifierRunner = new verifierTaskClass();
 
-	private Result result = new Result();
-
 	private Result tasksRunner (TaskRunner[] tasks, String relation, Result result){ 
         Result lastRes = result;
         for (TaskRunner run : tasks) { 
-            lastRes = run.run(lastRes);
-
-            if ((lastRes.isSuccess() && relation == "or") || (!lastRes.isSuccess() && relation == "and")) { 
-                return lastRes;
-            } 
-
-            if ((lastRes.isSuccess() && relation == "and") || (!lastRes.isSuccess() && relation == "or")) { 
-                continue;
+            Result res = run.run(lastRes);
+            
+            res = verifyContinuation(res, relation);
+            
+            lastRes.update(res);
+            if (res.locked()) { 
+                break;
             }
+            
         }
         return lastRes;
     }
-	public Result registrar_uma_transacao_runner() {
+	private Result verifyContinuation(Result result, String relation) { 
+        if ((result.isSuccess() && relation == "or") || (!result.isSuccess() && relation == "and")) { 
+            result.lock();
+        }
 
-         TaskRunner[] runners = new TaskRunner[] { 
+    return result;
+}
+
+	public Result registrar_uma_transacao_runner(Result result) {
+
+       
+        if (result.locked()) { 
+            return result;
+        }
         
-        };
-        this.result = tasksRunner(runners, "and", this.result);
-        return this.result;
-
-
+        return result;
        
         //Goes to state: Processar_entrada_na_api
     }
 
+	public Result processar_entrada_na_api_continue_runner(Result result) {
 
-
-
-
-public Result rejeitar_a_transacao_runner(Result res) {
-
-         TaskRunner[] runners = new TaskRunner[] { 
+       result = verifyContinuation(result, "and" );
+        if (result.locked()) { 
+            return result;
+        }
         
-        };
-        this.result = tasksRunner(runners, "and", this.result);
-        return this.result;
-
-
+        return result;
+       
+        //Goes to state: output_state
     }
+
+
+	public Result calcular_resultado_da_transacao_continue_runner(Result result) {
+
+       result = verifyContinuation(result, "and" );
+        if (result.locked()) { 
+            return result;
+        }
+        
+        return result;
+       
+        //Goes to state: output_state
+    }
+
+
+	public Result receber_pool_de_resultados_continue_runner(Result result) {
+
+       result = verifyContinuation(result, "and" );
+        if (result.locked()) { 
+            return result;
+        }
+        
+        return result;
+       
+        //Goes to state: output_state
+    }
+
 
 }

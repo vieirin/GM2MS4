@@ -1,5 +1,6 @@
 import { writeFileSync } from 'fs'
 import { MS4Constants } from '../ms4Builder/constants'
+import { component } from '../ObjectiveTree/types'
 import { fileStart, writeProperty } from './helpers'
 import { methodAccess } from './types'
 
@@ -9,15 +10,19 @@ export class Class {
     /**
      *
      */
-    constructor(className = '', extendsClass?: string) {
+    constructor(className = '', extendsClass?: string, component?: component) {
         this.className = className
-        this.fileContent = fileStart(this.className, extendsClass)
+        this.fileContent = fileStart(
+            this.className,
+            extendsClass,
+            component ? [component] : undefined
+        )
     }
 
     protected writeMethodToClass = (access: methodAccess, name: string) => {
         this.fileContent += `\t${access} Result ${name} (Result result) { 
 
-            return new Result();
+            return result;
         }
 `
     }

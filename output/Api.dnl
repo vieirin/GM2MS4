@@ -1,47 +1,69 @@
-use api_transition with type  components.ApiTransitionsClass and default "new ApiTransitionsClass()"!
+use api_transition with type  components.ApiTransitionsClass and default "new components.ApiTransitionsClass()"!
+use result with type  components.Result and default "new components.Result(\"api\")"!
 
 To start passivate in waitForInput!
 Passivate in StopState!
 
 
 when in waitForInput and receive From_G0_to_G1 go to Processar_entrada_na_api!
+external event for waitForInput with From_G0_to_G1
+<%
+    result = result.update(messageList.get(0).getData());
+%>!
+
 when in waitForInput and receive From_G0_to_G7 go to Receber_pool_de_resultados!
+external event for waitForInput with From_G0_to_G7
+<%
+    result = result.update(messageList.get(0).getData());
+%>!
+
 
 when in waitForInput and receive From_G11_to_G10 go to Validar_assinaturas_do_bloco_continue!
+external event for waitForInput with From_G11_to_G10
+<%
+    result = result.update(messageList.get(0).getData());
+%>!
+
 
 when in waitForInput and receive Stop go to StopState!
 
-generates output on From_G1_to_G0 with type String!
-generates output on From_G10_to_G11 with type String!
-generates output on From_G7_to_G0 with type String!
+generates output on From_G1_to_G0 with type Result!
+generates output on From_G10_to_G11 with type Result!
+generates output on From_G7_to_G0 with type Result!
 generates output on stop !
 
-accepts input on From_G0_to_G1 with type String !
-accepts input on From_G11_to_G10 with type String !
-accepts input on From_G0_to_G7 with type String !
+accepts input on From_G0_to_G1 with type Result !
+accepts input on From_G11_to_G10 with type Result !
+accepts input on From_G0_to_G7 with type Result !
 accepts input on StartUp  !
 
 hold in Processar_entrada_na_api for time 5!
 from Processar_entrada_na_api go to Propor_transacao_a_rede!
 internal event for Processar_entrada_na_api
 <%
-    api_transition.processar_entrada_na_api_runner();
+    api_transition.processar_entrada_na_api_runner(result);
 %>!
+
 
 hold in Propor_transacao_a_rede for time 5!
 from Propor_transacao_a_rede go to Enviar_proposta_para_os_Peers!
 internal event for Propor_transacao_a_rede
 <%
-    api_transition.propor_transacao_a_rede_runner();
+    api_transition.propor_transacao_a_rede_runner(result);
 %>!
+
 
 hold in Enviar_proposta_para_os_Peers for time 5!
 from Enviar_proposta_para_os_Peers go to waitForInput!
 internal event for Enviar_proposta_para_os_Peers
 <%
-    api_transition.enviar_proposta_para_os_peers_runner();
+    api_transition.enviar_proposta_para_os_peers_runner(result);
 %>!
 after Enviar_proposta_para_os_Peers output From_G1_to_G0!
+output event for Enviar_proposta_para_os_Peers
+<%
+output.add(outFrom_G1_to_G0, result);
+%>!
 
 
 // EndSequence for sequence starting at Processar_entrada_na_api
@@ -50,31 +72,46 @@ hold in Receber_pool_de_resultados for time 5!
 from Receber_pool_de_resultados go to Verificar_a_pool_de_resultados!
 internal event for Receber_pool_de_resultados
 <%
-    api_transition.receber_pool_de_resultados_runner();
+    api_transition.receber_pool_de_resultados_runner(result);
 %>!
+
 
 hold in Verificar_a_pool_de_resultados for time 5!
 from Verificar_a_pool_de_resultados go to Rejeitar_a_transacao!
 internal event for Verificar_a_pool_de_resultados
 <%
-    api_transition.verificar_a_pool_de_resultados_runner();
+    api_transition.verificar_a_pool_de_resultados_runner(result);
 %>!
+
 
 hold in Rejeitar_a_transacao for time 5!
 from Rejeitar_a_transacao go to Enviar_transacao_assinada_para_o_orderer!
 internal event for Rejeitar_a_transacao
 <%
-    api_transition.rejeitar_a_transacao_runner();
+    api_transition.rejeitar_a_transacao_runner(result);
 %>!
+
 
 hold in Enviar_transacao_assinada_para_o_orderer for time 5!
 from Enviar_transacao_assinada_para_o_orderer go to waitForInput!
 after Enviar_transacao_assinada_para_o_orderer output From_G10_to_G11!
+output event for Enviar_transacao_assinada_para_o_orderer
+<%
+output.add(outFrom_G10_to_G11, result);
+%>!
 
 
 hold in Validar_assinaturas_do_bloco_continue for time 5!
 from Validar_assinaturas_do_bloco_continue go to waitForInput!
+internal event for Validar_assinaturas_do_bloco_continue
+<%
+    api_transition.validar_assinaturas_do_bloco_continue_runner(result);
+%>!
 after Validar_assinaturas_do_bloco_continue output From_G7_to_G0!
+output event for Validar_assinaturas_do_bloco_continue
+<%
+output.add(outFrom_G7_to_G0, result);
+%>!
 
 
 // EndSequence for sequence starting at Receber_pool_de_resultados
