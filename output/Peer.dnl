@@ -8,18 +8,19 @@ Passivate in StopState!
 when in waitForInput and receive From_G0_to_G4 go to Calcular_resultado_da_transacao!
 external event for waitForInput with From_G0_to_G4
 <%
-    result = result.update(messageList.get(0).getData());
+    result.reset();
+    
 %>!
-
 
 when in waitForInput and receive From_G13_to_G5 go to Executar_logica_de_negocio_continue!
 external event for waitForInput with From_G13_to_G5
 <%
     result = result.update(messageList.get(0).getData());
+    
 %>!
 
 
-when in waitForInput and receive Stop go to StopState!
+when in waitForInput and receive stop go to StopState!
 
 generates output on From_G5_to_G13 with type Result!
 generates output on From_G4_to_G0 with type Result!
@@ -27,7 +28,7 @@ generates output on stop !
 
 accepts input on From_G13_to_G5 with type Result !
 accepts input on From_G0_to_G4 with type Result !
-accepts input on StartUp  !
+
 
 hold in Calcular_resultado_da_transacao for time 5!
 from Calcular_resultado_da_transacao go to Invocar_o_chaincode!
@@ -39,11 +40,17 @@ internal event for Calcular_resultado_da_transacao
 
 hold in Invocar_o_chaincode for time 5!
 from Invocar_o_chaincode go to waitForInput!
+internal event for Invocar_o_chaincode
+<%
+    peer_transition.invocar_o_chaincode_runner(result);
+%>!
+
 after Invocar_o_chaincode output From_G5_to_G13!
 output event for Invocar_o_chaincode
 <%
     output.add(outFrom_G5_to_G13, result);
 %>!
+          
 
 
 hold in Executar_logica_de_negocio_continue for time 5!
@@ -60,11 +67,13 @@ internal event for Enviar_resultado_para_api
 <%
     peer_transition.enviar_resultado_para_api_runner(result);
 %>!
+
 after Enviar_resultado_para_api output From_G4_to_G0!
 output event for Enviar_resultado_para_api
 <%
     output.add(outFrom_G4_to_G0, result);
 %>!
+          
 
 
 // EndSequence for sequence starting at Calcular_resultado_da_transacao

@@ -13,17 +13,20 @@ public class Result implements Serializable {
     private String result = "";
 	
     public void setError(String error) {
+    	System.out.println(error);
 		this.error = new ErrorSignal(error, this.component);
+		this.success = false;
 	}
 	
     public ErrorSignal getError() {
 		return error;
 	}
 	
-    public void setSuccess(boolean success) {
+    public void setSuccess() {
 		if (!this.isLocked) { 
-			this.success = success;
-
+			this.error = null;
+			this.success = true;
+	    	System.out.println("done with success");
 		}
 	}
 
@@ -60,7 +63,6 @@ public class Result implements Serializable {
 		if (!this.isLocked) { 
 			this.error = res.error;
 			this.success = res.success;
-			this.isLocked = res.isLocked;
 			this.result = res.result;
 		}
 		return this;
@@ -68,5 +70,15 @@ public class Result implements Serializable {
 
 	public Result (String  component) { 
 		this.component = component;
+	}
+	
+	public void print() { 
+		System.out.print("Succes: ");
+		System.out.print(success);
+		System.out.print(" Locked: ");
+		System.out.print(isLocked);
+		System.out.print(" Error: ");
+
+		System.out.print(error != null ? error.error : "null" );
 	}
 }

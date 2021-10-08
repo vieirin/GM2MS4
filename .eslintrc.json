@@ -11,6 +11,7 @@
         "plugin:@typescript-eslint/recommended",
         "plugin:prettier/recommended"
     ],
+    "ignorePatterns": "src/assets/**",
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "ecmaVersion": 11,

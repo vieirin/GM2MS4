@@ -11,7 +11,6 @@ import {
     componentConnections,
     Connections,
     indexPortsByGoal,
-    invertPort,
     port
 } from '../ObjectiveTree/connections'
 import {
@@ -19,12 +18,14 @@ import {
     hasChildren
 } from '../ObjectiveTree/treeNavigation'
 import {
+    component,
     ComponentData,
     ComponentGoals,
     LeveledGoalComponent
 } from '../ObjectiveTree/types'
 import { MS4Constants } from './constants'
 import {
+    capitalize,
     dnlFileName,
     nameTaskMethod,
     nameText,
@@ -33,7 +34,11 @@ import {
 } from './naming'
 import * as dnlWriter from './writing/dnlWriting'
 import { exposeOutputPort, openInputPort } from './writing/dnlWriting'
-import { writeConnections, writePerspective } from './writing/sesWriting'
+import {
+    writeConnections,
+    writePerspective,
+    writeStopRelation
+} from './writing/sesWriting'
 
 const isTreeRoot = (goal: LeveledGoalComponent[]) =>
     goal.length == 1 && goal[0].isRoot
@@ -42,7 +47,7 @@ export const generateMS4Model = (
     moduleName: string,
     component: ComponentData,
     connections: port[]
-) => {
+): [string, string] => {
     const waitForInputGoals = component.goals.filter(
         (node) => node.level === component.lowestLevel
     ) as LeveledGoalComponent[]
@@ -70,12 +75,12 @@ export const generateMS4Model = (
     const connIndex = indexPortsByGoal(moduleName, connections)
 
     // the root-level must have its ports inverted for connections
-    const outputConnections = connections
-        .filter((conn) => conn.from.component.toLowerCase() !== moduleName)
-        .map((out) => (isTreeRoot(waitForInputGoals) ? invertPort(out) : out))
-    const inputConnections = connections
-        .filter((conn) => conn.from.component.toLowerCase() === moduleName)
-        .map((out) => (isTreeRoot(waitForInputGoals) ? invertPort(out) : out))
+    const outputConnections = connections.filter(
+        (conn) => conn.from.component.toLowerCase() !== moduleName
+    )
+    const inputConnections = connections.filter(
+        (conn) => conn.from.component.toLowerCase() === moduleName
+    )
 
     const inputNames = waitForInputGoals.map((input) => input.text)
     const inputSequence = waitForInputGoals.map((input) =>
@@ -118,7 +123,7 @@ export const generateMS4Model = (
             root
                 ? dnlWriter.startSignalsReceivement(initialState, root.text)
                 : '',
-            dnlWriter.stopSignalReceivement(initialState)
+            root ? '' : dnlWriter.stopSignalReceivement(initialState)
         ]) +
         dnlWriter.blockseparator([
             ...outputConnections.map((conn) =>
@@ -131,7 +136,7 @@ export const generateMS4Model = (
             ...outputConnections.map((conn) =>
                 dnlWriter.openInputPort(conn.outputPortName, 'Result')
             ),
-            openInputPort(MS4Constants.startSignal, 'none')
+            root ? openInputPort(MS4Constants.startSignal, 'none') : ''
         ]) +
         // writes the state sequence for a branch (a path that an input follows when received)
         inputSequence
@@ -141,36 +146,48 @@ export const generateMS4Model = (
             .join('')
 
     writeFileSync(`output/${dnlFileName(moduleName)}`, dnl.trim())
+    return [dnlFileName(moduleName), dnl.trim()]
 }
 
 const generateSES = (
     actorName: string,
     connections: Connections,
-    componentGoals: ComponentGoals[]
-) => {
+    componentGoals: ComponentGoals[],
+    rootComponent: component
+): [string, string] => {
     const allPorts = Object.entries(connections).reduce(
         (prev, [_, ports]) => [...prev, ...ports],
         [] as port[]
     )
+
     const ses =
         writePerspective(
             actorName,
             componentGoals.map(([component]) => component)
-        ) + writeConnections(uniqBy(allPorts, 'outputPortName'))
+        ) +
+        writeConnections(uniqBy(allPorts, 'outputPortName')) +
+        writeStopRelation(
+            capitalize(rootComponent),
+            componentGoals
+                .filter(([component]) => component !== rootComponent)
+                .map(([component]) => capitalize(component))
+        )
 
     writeFileSync(`output/Models.ses/${SeSFileName}`, ses.trim())
+    return [SeSFileName, ses.trim()]
 }
 
 export const generateGoalModelDNLs = (model: Model) => {
     const tree = convertToTree(model)[0]!
     const connections = componentConnections(tree)
     const goalsPerComponent = getTreeNodeByComponent('goal', tree)
-    goalsPerComponent.forEach(([component, data]) =>
+    const dnlData = goalsPerComponent.map(([component, data]) =>
         generateMS4Model(component, data, connections[component])
     )
-    generateSES(
+    const sesData = generateSES(
         nameText(model.actors[0].text || ''),
         connections,
-        goalsPerComponent
+        goalsPerComponent,
+        tree.component
     )
 }

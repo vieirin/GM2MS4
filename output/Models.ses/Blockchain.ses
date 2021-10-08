@@ -9,7 +9,12 @@ from the blockchain perspective, Api sends From_G10_to_G11 to Orderer!
 from the blockchain perspective, Orderer sends From_G11_to_G10 to Api!
 from the blockchain perspective, Verifier sends From_G0_to_G7 to Api!
 from the blockchain perspective, Api sends From_G7_to_G0 to Verifier!
-from the blockchain perspective, Verifier sends From_G4_to_G0 to Peer!
-from the blockchain perspective, Peer sends From_G0_to_G4 to Verifier!
+from the blockchain perspective, Verifier sends From_G0_to_G4 to Peer!
+from the blockchain perspective, Peer sends From_G4_to_G0 to Verifier!
 from the blockchain perspective, Peer sends From_G5_to_G13 to Chaincode!
 from the blockchain perspective, Chaincode sends From_G13_to_G5 to Peer!
+
+from the blockchain perspective, Verifier sends stop to Api!
+from the blockchain perspective, Verifier sends stop to Peer!
+from the blockchain perspective, Verifier sends stop to Chaincode!
+from the blockchain perspective, Verifier sends stop to Orderer!

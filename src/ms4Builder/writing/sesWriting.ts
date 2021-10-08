@@ -31,3 +31,10 @@ export const writeConnections = (connections: port[]) =>
             `${perspectiveString}, ${from.component} sends ${outputPortName} to ${to.component}!`.trim()
         )
     )
+
+export const writeStopRelation = (rootNode: string, components: component[]) =>
+    blockseparator(
+        components.map((component) =>
+            `${perspectiveString}, ${rootNode} sends ${MS4Constants.stopPort} to ${component}!`.trim()
+        )
+    )

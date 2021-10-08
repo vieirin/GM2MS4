@@ -75,10 +75,16 @@ const getStateForInput = (port: port, component: string, isInput?: boolean) => {
 
 const externalEventWith = (
     initialState: string,
-    port: port
+    port: port,
+    reset: boolean
 ) => `external event for ${initialState} with ${nameInput(port.inputPortName)}
 <%
-    result = result.update(messageList.get(0).getData());
+    ${
+        reset
+            ? 'result.reset();'
+            : 'result = result.update(messageList.get(0).getData());'
+    }
+    
 %>!`
 
 export const defaultSignalsReceivement = (
@@ -89,8 +95,11 @@ export const defaultSignalsReceivement = (
     `when in ${initialState} and receive ${nameInput(
         port.inputPortName
     )} go to ${getStateForInput(port, component, true)}!
-${externalEventWith(initialState, port)}
-`
+${externalEventWith(
+    initialState,
+    port,
+    !getStateForInput(port, component, true).endsWith('_continue')
+)}`
 
 export const startSignalsReceivement = (
     initialState: string,
@@ -99,7 +108,7 @@ export const startSignalsReceivement = (
     `when in ${initialState} and receive ${MS4Constants.startSignal} go to ${nextState}!`
 
 export const stopSignalReceivement = (initialState: string) =>
-    `when in ${initialState} and receive ${MS4Constants.stopSignal} go to ${MS4Constants.stopState}!`
+    `when in ${initialState} and receive ${MS4Constants.stopPort} go to ${MS4Constants.stopState}!`
 
 export const inputSignalsReceivement = (
     initialState: string,
@@ -109,7 +118,11 @@ export const inputSignalsReceivement = (
     `when in ${initialState} and receive ${nameInput(
         port.inputPortName
     )} go to ${getStateForInput(port, component)}!
-${externalEventWith(initialState, port)}
+${externalEventWith(
+    initialState,
+    port,
+    !getStateForInput(port, component).endsWith('_continue')
+)}
 `
 
 type allowedTypes = 'none' | 'String' | 'Result'
@@ -141,14 +154,26 @@ const internalTransition = (
 const externalTransition = (
     state: linkedNode,
     conn: StatePortIndex,
+    stop: boolean,
+    root: boolean,
     overrideStateSource?: string
-) => `after ${overrideStateSource || state.text} output ${
-    conn.get(state.originalName || state.text)!.out
-}!
+) => `
+${
+    stop
+        ? `after ${overrideStateSource || state.text} output ${
+              MS4Constants.stopPort
+          }!`
+        : `after ${overrideStateSource || state.text} output ${
+              conn.get(state.originalName || state.text)![root ? 'in' : 'out']
+          }!
 output event for ${overrideStateSource || state.text}
 <%
-    output.add(out${conn.get(state.originalName || state.text)?.out}, result);
+    output.add(out${
+        conn.get(state.originalName || state.text)![root ? 'in' : 'out']
+    }, result);
 %>!
+          `
+}
 `
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -166,22 +191,36 @@ export const stateSequence = (
                 .map((state, index, arr) => {
                     let returnEvent = ''
                     const last = isLast(seqArr, seqIndex) && isLast(arr, index)
+
+                    // rootLast move the verifier and the system to stop state
+                    // it also prints the simulation result based on the "result" var
+                    const rootLast = last && root
+
                     if (last && state.direction !== 'out') {
                         returnEvent = externalTransition(
                             seqArr[0][0],
                             connections,
+                            rootLast,
+                            root,
                             state.text
                         )
                     }
+
                     return blockseparator(
-                        holdState(state, arr[index + 1], last && root, 1) +
-                            (state.direction === 'out'
-                                ? externalTransition(state, connections)
-                                : state.type === 'goal'
+                        holdState(state, arr[index + 1], rootLast, 1) +
+                            ((state.type === 'goal' && !root) || rootLast
                                 ? internalTransition(
                                       component,
                                       state.text,
-                                      last && root
+                                      rootLast
+                                  )
+                                : '') +
+                            (state.direction === 'out'
+                                ? externalTransition(
+                                      state,
+                                      connections,
+                                      rootLast,
+                                      root
                                   )
                                 : '') +
                             returnEvent

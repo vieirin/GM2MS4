@@ -9,12 +9,12 @@ public class ChaincodeTransitionsClass {
 
 	private chaincodeTaskClass ChaincodeRunner = new chaincodeTaskClass();
 
-	private Result tasksRunner (TaskRunner[] tasks, String relation, Result result){ 
+	private Result tasksRunner (TaskRunner[] tasks, String relation,  String parentRelation,Result result){ 
         Result lastRes = result;
         for (TaskRunner run : tasks) { 
             Result res = run.run(lastRes);
             
-            res = verifyContinuation(res, relation);
+            res = verifyContinuation(res, relation, parentRelation == "and");
             
             lastRes.update(res);
             if (res.locked()) { 
@@ -24,9 +24,11 @@ public class ChaincodeTransitionsClass {
         }
         return lastRes;
     }
-	private Result verifyContinuation(Result result, String relation) { 
-        if ((result.isSuccess() && relation == "or") || (!result.isSuccess() && relation == "and")) { 
-            result.lock();
+	private Result verifyContinuation(Result result, String relation, boolean canLock) { 
+        if (((result.getError() == null && result.isSuccess())&& relation == "or") || ((result.getError() != null && !result.isSuccess())&& relation == "and")) { 
+            if (canLock) { 
+                result.lock();
+            }
         }
 
     return result;
@@ -42,7 +44,7 @@ public class ChaincodeTransitionsClass {
         TaskRunner[] runners = new TaskRunner[] { 
            new TaskRunner() {public Result run(Result res) {return ChaincodeRunner.Executar_funcao_solicitada_task(res);}}
         };
-        return tasksRunner(runners, "and", result);
+        return tasksRunner(runners, "and", "and", result);
 
        
         //Goes to state: output_state

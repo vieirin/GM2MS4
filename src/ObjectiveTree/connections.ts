@@ -72,9 +72,7 @@ export const componentConnections = (tree: ObjectiveTree): Connections =>
                     [tree.component]: [
                         createPort(tree, child),
                         createPort(child, tree)
-                    ].map((port) =>
-                        isRootLink(tree) ? invertPort(port) : port
-                    )
+                    ]
                 },
                 mergeConcat
             )

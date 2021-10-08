@@ -8,18 +8,18 @@ Passivate in StopState!
 when in waitForInput and receive From_G10_to_G11 go to Validar_assinaturas_do_bloco!
 external event for waitForInput with From_G10_to_G11
 <%
-    result = result.update(messageList.get(0).getData());
+    result.reset();
+    
 %>!
 
 
-
-when in waitForInput and receive Stop go to StopState!
+when in waitForInput and receive stop go to StopState!
 
 generates output on From_G11_to_G10 with type Result!
 generates output on stop !
 
 accepts input on From_G10_to_G11 with type Result !
-accepts input on StartUp  !
+
 
 hold in Validar_assinaturas_do_bloco for time 5!
 from Validar_assinaturas_do_bloco go to criar_bloco!
@@ -35,11 +35,13 @@ internal event for criar_bloco
 <%
     orderer_transition.criar_bloco_runner(result);
 %>!
+
 after criar_bloco output From_G11_to_G10!
 output event for criar_bloco
 <%
     output.add(outFrom_G11_to_G10, result);
 %>!
+          
 
 
 // EndSequence for sequence starting at Validar_assinaturas_do_bloco

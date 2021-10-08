@@ -26,7 +26,7 @@
           "id": "8de7a901-398e-4d37-a22d-3f954bb81601",
           "text": "G1: Processar entrada na api [T0;T1;G2]",
           "type": "istar.Goal",
-          "x": 341,
+          "x": 342,
           "y": 279,
           "customProperties": {
             "Description": "",
@@ -130,8 +130,8 @@
           "id": "a219eddf-f170-454f-b20b-7568228307e0",
           "text": "T9: Rejeitar a transação",
           "type": "istar.Task",
-          "x": 1002,
-          "y": 525,
+          "x": 1005,
+          "y": 527,
           "customProperties": {
             "Description": "",
             "component": "orderer"
@@ -292,8 +292,8 @@
           "id": "12d045a6-1aee-46fa-9d00-15b0ba6c5555",
           "text": "T10: Task",
           "type": "istar.Task",
-          "x": 1004,
-          "y": 612,
+          "x": 943,
+          "y": 604,
           "customProperties": {
             "Description": "",
             "component": "orderer"
@@ -575,7 +575,7 @@
   },
   "tool": "pistar.2.0.0",
   "istar": "2.0",
-  "saveDate": "Thu, 07 Oct 2021 07:09:56 GMT",
+  "saveDate": "Fri, 08 Oct 2021 00:50:51 GMT",
   "diagram": {
     "width": 2135,
     "height": 1300,

@@ -131,19 +131,26 @@ export const convertToTree = (model: Model) => {
                     return undefined
                 }
 
-                const [id, text] = nodeName(
+                const [id, text, sequence] = nodeName(
                     node.text,
                     convertIstarType(node.type)
                 )
 
                 const [granChildren, relation] = nodeChildren(actor, node?.id)
+                const childrenIndex =
+                    granChildren?.reduce(
+                        (prev, curr) => ({ ...prev, [curr.identifier]: curr }),
+                        {} as Record<string, ObjectiveTree>
+                    ) || {}
+                const arrangedSequence =
+                    sequence?.map((item) => childrenIndex[item]) || granChildren
                 return {
                     ...node,
                     identifier: id,
                     text: text,
                     component: node.customProperties.component || 'verifier',
                     isRoot: node.customProperties.selected || false,
-                    children: granChildren,
+                    children: arrangedSequence,
                     relation,
                     type: convertIstarType(node.type)
                 }

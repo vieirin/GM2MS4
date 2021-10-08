@@ -8,24 +8,25 @@ Passivate in StopState!
 when in waitForInput and receive From_G0_to_G1 go to Processar_entrada_na_api!
 external event for waitForInput with From_G0_to_G1
 <%
-    result = result.update(messageList.get(0).getData());
+    result.reset();
+    
 %>!
-
 when in waitForInput and receive From_G0_to_G7 go to Receber_pool_de_resultados!
 external event for waitForInput with From_G0_to_G7
 <%
-    result = result.update(messageList.get(0).getData());
+    result.reset();
+    
 %>!
-
 
 when in waitForInput and receive From_G11_to_G10 go to Validar_assinaturas_do_bloco_continue!
 external event for waitForInput with From_G11_to_G10
 <%
     result = result.update(messageList.get(0).getData());
+    
 %>!
 
 
-when in waitForInput and receive Stop go to StopState!
+when in waitForInput and receive stop go to StopState!
 
 generates output on From_G1_to_G0 with type Result!
 generates output on From_G10_to_G11 with type Result!
@@ -35,7 +36,7 @@ generates output on stop !
 accepts input on From_G0_to_G1 with type Result !
 accepts input on From_G11_to_G10 with type Result !
 accepts input on From_G0_to_G7 with type Result !
-accepts input on StartUp  !
+
 
 hold in Processar_entrada_na_api for time 5!
 from Processar_entrada_na_api go to Propor_transacao_a_rede!
@@ -59,11 +60,13 @@ internal event for Enviar_proposta_para_os_Peers
 <%
     api_transition.enviar_proposta_para_os_peers_runner(result);
 %>!
+
 after Enviar_proposta_para_os_Peers output From_G1_to_G0!
 output event for Enviar_proposta_para_os_Peers
 <%
     output.add(outFrom_G1_to_G0, result);
 %>!
+          
 
 
 // EndSequence for sequence starting at Processar_entrada_na_api
@@ -94,11 +97,17 @@ internal event for Rejeitar_a_transacao
 
 hold in Enviar_transacao_assinada_para_o_orderer for time 5!
 from Enviar_transacao_assinada_para_o_orderer go to waitForInput!
+internal event for Enviar_transacao_assinada_para_o_orderer
+<%
+    api_transition.enviar_transacao_assinada_para_o_orderer_runner(result);
+%>!
+
 after Enviar_transacao_assinada_para_o_orderer output From_G10_to_G11!
 output event for Enviar_transacao_assinada_para_o_orderer
 <%
     output.add(outFrom_G10_to_G11, result);
 %>!
+          
 
 
 hold in Validar_assinaturas_do_bloco_continue for time 5!
@@ -107,11 +116,13 @@ internal event for Validar_assinaturas_do_bloco_continue
 <%
     api_transition.validar_assinaturas_do_bloco_continue_runner(result);
 %>!
+
 after Validar_assinaturas_do_bloco_continue output From_G7_to_G0!
 output event for Validar_assinaturas_do_bloco_continue
 <%
     output.add(outFrom_G7_to_G0, result);
 %>!
+          
 
 
 // EndSequence for sequence starting at Receber_pool_de_resultados

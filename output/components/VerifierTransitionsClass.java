@@ -9,12 +9,12 @@ public class VerifierTransitionsClass {
 
 	private verifierTaskClass VerifierRunner = new verifierTaskClass();
 
-	private Result tasksRunner (TaskRunner[] tasks, String relation, Result result){ 
+	private Result tasksRunner (TaskRunner[] tasks, String relation,  String parentRelation,Result result){ 
         Result lastRes = result;
         for (TaskRunner run : tasks) { 
             Result res = run.run(lastRes);
             
-            res = verifyContinuation(res, relation);
+            res = verifyContinuation(res, relation, parentRelation == "and");
             
             lastRes.update(res);
             if (res.locked()) { 
@@ -24,9 +24,11 @@ public class VerifierTransitionsClass {
         }
         return lastRes;
     }
-	private Result verifyContinuation(Result result, String relation) { 
-        if ((result.isSuccess() && relation == "or") || (!result.isSuccess() && relation == "and")) { 
-            result.lock();
+	private Result verifyContinuation(Result result, String relation, boolean canLock) { 
+        if (((result.getError() == null && result.isSuccess())&& relation == "or") || ((result.getError() != null && !result.isSuccess())&& relation == "and")) { 
+            if (canLock) { 
+                result.lock();
+            }
         }
 
     return result;
@@ -46,7 +48,7 @@ public class VerifierTransitionsClass {
 
 	public Result processar_entrada_na_api_continue_runner(Result result) {
 
-       result = verifyContinuation(result, "and" );
+       result = verifyContinuation(result, "and" , true);
         if (result.locked()) { 
             return result;
         }
@@ -59,7 +61,7 @@ public class VerifierTransitionsClass {
 
 	public Result calcular_resultado_da_transacao_continue_runner(Result result) {
 
-       result = verifyContinuation(result, "and" );
+       result = verifyContinuation(result, "and" , true);
         if (result.locked()) { 
             return result;
         }
@@ -72,7 +74,7 @@ public class VerifierTransitionsClass {
 
 	public Result receber_pool_de_resultados_continue_runner(Result result) {
 
-       result = verifyContinuation(result, "and" );
+       result = verifyContinuation(result, "and" , true);
         if (result.locked()) { 
             return result;
         }

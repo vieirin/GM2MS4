@@ -43,6 +43,7 @@ export const writeProperty = (
 export const writeRunnerStructure = (
     functions: string[],
     relation: relationship,
+    parentRelation: relationship,
     tasksVar?: string
 ) => `${Java.RUNNER_ITF}[] runners = new ${Java.RUNNER_ITF}[] { 
         ${functions
@@ -54,16 +55,18 @@ export const writeRunnerStructure = (
                         tasksVar ? tasksVar + '.' : ''
                     }${fn}(res);}}`
             )
-            .reverse()
             .join(',\n\t\t')}
         };
-        return tasksRunner(runners, "${relation}", result);
+        return tasksRunner(runners, "${relation}", "${
+    parentRelation === 'none' ? relation : parentRelation
+}", result);
 `
 
 export const writeRefinedTask = (
     method: string,
     childrenTasks: func[],
     relation: relationship,
+    parentRelation: relationship,
     taskVar: string
 ) => `public ${Java.RESULT_CLASS} ${transitionMethodName(method)}(${
     Java.RESULT_CLASS
@@ -72,7 +75,8 @@ export const writeRefinedTask = (
             childrenTasks.map((task) =>
                 task.refiner ? task.name : `${taskVar}.${task.name}`
             ),
-            relation
+            relation,
+            parentRelation
         )}
     }`
 
@@ -91,7 +95,7 @@ export const writeRunner = (
 
        ${
            parentRelation !== 'none'
-               ? `result = ${Java.VERIFY_CONTINUATION_METHOD}(result, "${parentRelation}" );`
+               ? `result = ${Java.VERIFY_CONTINUATION_METHOD}(result, "${parentRelation}" , true);`
                : ''
        }
         if (result.locked()) { 
@@ -100,7 +104,12 @@ export const writeRunner = (
         
         ${
             functions?.length
-                ? writeRunnerStructure(functions, relation, tasksVar)
+                ? writeRunnerStructure(
+                      functions,
+                      relation,
+                      parentRelation,
+                      tasksVar
+                  )
                 : 'return result;'
         }
        
@@ -110,12 +119,12 @@ export const writeRunner = (
     )
 
 export const writeTaskRunner = () =>
-    methodIdent(`private ${Java.RESULT_CLASS} ${Java.RUNNER_METHOD} (${Java.RUNNER_ITF}[] tasks, String relation, ${Java.RESULT_CLASS} result){ 
+    methodIdent(`private ${Java.RESULT_CLASS} ${Java.RUNNER_METHOD} (${Java.RUNNER_ITF}[] tasks, String relation,  String parentRelation,${Java.RESULT_CLASS} result){ 
         ${Java.RESULT_CLASS} lastRes = result;
         for (${Java.RUNNER_ITF} run : tasks) { 
             ${Java.RESULT_CLASS} res = run.run(lastRes);
             
-            res = ${Java.VERIFY_CONTINUATION_METHOD}(res, relation);
+            res = ${Java.VERIFY_CONTINUATION_METHOD}(res, relation, parentRelation == "and");
             
             lastRes.update(res);
             if (res.locked()) { 
@@ -127,9 +136,11 @@ export const writeTaskRunner = () =>
     }`)
 
 export const writeResultVerifier = () =>
-    methodIdent(`private ${Java.RESULT_CLASS} ${Java.VERIFY_CONTINUATION_METHOD}(${Java.RESULT_CLASS} result, String relation) { 
-        if ((result.isSuccess() && relation == "or") || (!result.isSuccess() && relation == "and")) { 
-            result.lock();
+    methodIdent(`private ${Java.RESULT_CLASS} ${Java.VERIFY_CONTINUATION_METHOD}(${Java.RESULT_CLASS} result, String relation, boolean canLock) { 
+        if (((result.getError() == null && result.isSuccess())&& relation == "or") || ((result.getError() != null && !result.isSuccess())&& relation == "and")) { 
+            if (canLock) { 
+                result.lock();
+            }
         }
 
     return result;

@@ -9,12 +9,12 @@ public class PeerTransitionsClass {
 
 	private peerTaskClass PeerRunner = new peerTaskClass();
 
-	private Result tasksRunner (TaskRunner[] tasks, String relation, Result result){ 
+	private Result tasksRunner (TaskRunner[] tasks, String relation,  String parentRelation,Result result){ 
         Result lastRes = result;
         for (TaskRunner run : tasks) { 
             Result res = run.run(lastRes);
             
-            res = verifyContinuation(res, relation);
+            res = verifyContinuation(res, relation, parentRelation == "and");
             
             lastRes.update(res);
             if (res.locked()) { 
@@ -24,9 +24,11 @@ public class PeerTransitionsClass {
         }
         return lastRes;
     }
-	private Result verifyContinuation(Result result, String relation) { 
-        if ((result.isSuccess() && relation == "or") || (!result.isSuccess() && relation == "and")) { 
-            result.lock();
+	private Result verifyContinuation(Result result, String relation, boolean canLock) { 
+        if (((result.getError() == null && result.isSuccess())&& relation == "or") || ((result.getError() != null && !result.isSuccess())&& relation == "and")) { 
+            if (canLock) { 
+                result.lock();
+            }
         }
 
     return result;
@@ -46,7 +48,7 @@ public class PeerTransitionsClass {
 
 	public Result invocar_o_chaincode_runner(Result result) {
 
-       result = verifyContinuation(result, "and" );
+       result = verifyContinuation(result, "and" , true);
         if (result.locked()) { 
             return result;
         }
@@ -58,7 +60,7 @@ public class PeerTransitionsClass {
 
 	public Result executar_logica_de_negocio_continue_runner(Result result) {
 
-       result = verifyContinuation(result, "and" );
+       result = verifyContinuation(result, "and" , true);
         if (result.locked()) { 
             return result;
         }
@@ -71,7 +73,7 @@ public class PeerTransitionsClass {
 
 	public Result enviar_resultado_para_api_runner(Result result) {
 
-       result = verifyContinuation(result, "and" );
+       result = verifyContinuation(result, "and" , true);
         if (result.locked()) { 
             return result;
         }
@@ -79,7 +81,7 @@ public class PeerTransitionsClass {
         TaskRunner[] runners = new TaskRunner[] { 
            new TaskRunner() {public Result run(Result res) {return PeerRunner.Enviar_resultado_para_api_task(res);}}
         };
-        return tasksRunner(runners, "and", result);
+        return tasksRunner(runners, "and", "and", result);
 
        
         //Goes to state: output_state

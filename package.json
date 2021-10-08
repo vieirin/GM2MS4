@@ -22,6 +22,7 @@
     },
     "dependencies": {
         "@types/node": "^12.11.5",
+        "jszip": "^3.7.1",
         "lodash.intersectionby": "^4.7.0",
         "lodash.merge": "^4.6.2",
         "lodash.mergewith": "^4.6.2",

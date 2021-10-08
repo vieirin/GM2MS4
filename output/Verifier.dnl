@@ -9,23 +9,23 @@ when in waitForInput and receive From_G1_to_G0 go to Processar_entrada_na_api_co
 external event for waitForInput with From_G1_to_G0
 <%
     result = result.update(messageList.get(0).getData());
+    
 %>!
-
 when in waitForInput and receive From_G4_to_G0 go to Calcular_resultado_da_transacao_continue!
 external event for waitForInput with From_G4_to_G0
 <%
     result = result.update(messageList.get(0).getData());
+    
 %>!
-
 when in waitForInput and receive From_G7_to_G0 go to Receber_pool_de_resultados_continue!
 external event for waitForInput with From_G7_to_G0
 <%
     result = result.update(messageList.get(0).getData());
+    
 %>!
 
-
 when in waitForInput and receive StartUp go to Registrar_uma_transacao!
-when in waitForInput and receive Stop go to StopState!
+
 
 generates output on From_G0_to_G1 with type Result!
 generates output on From_G0_to_G4 with type Result!
@@ -39,53 +39,47 @@ accepts input on StartUp  !
 
 hold in Registrar_uma_transacao for time 5!
 from Registrar_uma_transacao go to Processar_entrada_na_api!
-internal event for Registrar_uma_transacao
-<%
-    verifier_transition.registrar_uma_transacao_runner(result);
-%>!
 
 
 hold in Processar_entrada_na_api for time 5!
 from Processar_entrada_na_api go to waitForInput!
+
 after Processar_entrada_na_api output From_G0_to_G1!
 output event for Processar_entrada_na_api
 <%
     output.add(outFrom_G0_to_G1, result);
 %>!
+          
 
 
 hold in Processar_entrada_na_api_continue for time 5!
 from Processar_entrada_na_api_continue go to Calcular_resultado_da_transacao!
-internal event for Processar_entrada_na_api_continue
-<%
-    verifier_transition.processar_entrada_na_api_continue_runner(result);
-%>!
 
 
 hold in Calcular_resultado_da_transacao for time 5!
 from Calcular_resultado_da_transacao go to waitForInput!
+
 after Calcular_resultado_da_transacao output From_G0_to_G4!
 output event for Calcular_resultado_da_transacao
 <%
     output.add(outFrom_G0_to_G4, result);
 %>!
+          
 
 
 hold in Calcular_resultado_da_transacao_continue for time 5!
 from Calcular_resultado_da_transacao_continue go to Receber_pool_de_resultados!
-internal event for Calcular_resultado_da_transacao_continue
-<%
-    verifier_transition.calcular_resultado_da_transacao_continue_runner(result);
-%>!
 
 
 hold in Receber_pool_de_resultados for time 5!
 from Receber_pool_de_resultados go to waitForInput!
+
 after Receber_pool_de_resultados output From_G0_to_G7!
 output event for Receber_pool_de_resultados
 <%
     output.add(outFrom_G0_to_G7, result);
 %>!
+          
 
 
 hold in Receber_pool_de_resultados_continue for time 5!
@@ -95,11 +89,8 @@ internal event for Receber_pool_de_resultados_continue
     verifier_transition.receber_pool_de_resultados_continue_runner(result);
     System.out.println(!result.isSuccess() ? "Simulation has failed"  : "Simulation passed");
 %>!
-after Receber_pool_de_resultados_continue output From_G7_to_G0!
-output event for Receber_pool_de_resultados_continue
-<%
-    output.add(outFrom_G7_to_G0, result);
-%>!
+
+after Receber_pool_de_resultados_continue output stop!
 
 
 // EndSequence for sequence starting at Registrar_uma_transacao

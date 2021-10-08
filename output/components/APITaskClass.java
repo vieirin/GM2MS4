@@ -15,11 +15,11 @@ public class apiTaskClass {
 
             return result;
         }
-	public Result Enviar_proposta_para_os_peers_alvo_task (Result result) { 
+	public Result Calcular_peers_alvo_task (Result result) { 
 
             return result;
         }
-	public Result Calcular_peers_alvo_task (Result result) { 
+	public Result Enviar_proposta_para_os_peers_alvo_task (Result result) { 
 
             return result;
         }

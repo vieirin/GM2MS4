@@ -59,6 +59,7 @@ export class Transitions extends Class {
                       fromState,
                       functions,
                       relation,
+                      parentRelation,
                       this.taskClassVarName
                   )
                 : sameComponent(component)

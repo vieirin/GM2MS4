@@ -20,8 +20,17 @@ const sanitizeText = (text: string) =>
 export const nameText = (text: string) =>
     sanitizeText(text).trim().replace(/ /g, '_')
 
-export const nodeName = (text: string, type: 'goal' | 'task') => {
+export const nodeName = (
+    text: string,
+    type: 'goal' | 'task'
+): [string, string, string[] | undefined] => {
     const goalText = text.split(':')
+    if (goalText.length < 2) {
+        throw new Error('Missing element identifier: TX or GX')
+    }
+    const [goalName, goalSeq] = goalText[1].split('[')
+    const cleanSeq = goalSeq?.slice(0, -1)?.split(';')
+
     switch (type) {
         case 'goal':
             if (!goalText[0].match(/G\d*/)) {
@@ -31,9 +40,13 @@ export const nodeName = (text: string, type: 'goal' | 'task') => {
             }
             break
         case 'task':
-            return ['', nameText(goalText[0])]
+            if (!goalText[0].match(/T\d*/)) {
+                throw new Error(
+                    'Task text must start with `T%d:` string, got: ' + goalText
+                )
+            }
     }
-    return [goalText[0], nameText(goalText[1])]
+    return [goalText[0], nameText(goalName), cleanSeq]
 }
 
 export const nameInput = (stateName: string) => nameText(stateName)

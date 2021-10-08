@@ -8,18 +8,18 @@ Passivate in StopState!
 when in waitForInput and receive From_G5_to_G13 go to Executar_logica_de_negocio!
 external event for waitForInput with From_G5_to_G13
 <%
-    result = result.update(messageList.get(0).getData());
+    result.reset();
+    
 %>!
 
 
-
-when in waitForInput and receive Stop go to StopState!
+when in waitForInput and receive stop go to StopState!
 
 generates output on From_G13_to_G5 with type Result!
 generates output on stop !
 
 accepts input on From_G5_to_G13 with type Result !
-accepts input on StartUp  !
+
 
 hold in Executar_logica_de_negocio for time 5!
 from Executar_logica_de_negocio go to waitForInput!
@@ -27,11 +27,13 @@ internal event for Executar_logica_de_negocio
 <%
     chaincode_transition.executar_logica_de_negocio_runner(result);
 %>!
+
 after Executar_logica_de_negocio output From_G13_to_G5!
 output event for Executar_logica_de_negocio
 <%
     output.add(outFrom_G13_to_G5, result);
 %>!
+          
 
 
 // EndSequence for sequence starting at Executar_logica_de_negocio
