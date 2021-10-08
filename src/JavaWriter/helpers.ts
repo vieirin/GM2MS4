@@ -137,12 +137,15 @@ export const writeTaskRunner = () =>
 
 export const writeResultVerifier = () =>
     methodIdent(`private ${Java.RESULT_CLASS} ${Java.VERIFY_CONTINUATION_METHOD}(${Java.RESULT_CLASS} result, String relation, boolean canLock) { 
-        if (((result.getError() == null && result.isSuccess())&& relation == "or") || ((result.getError() != null && !result.isSuccess())&& relation == "and")) { 
-            if (canLock) { 
-                result.lock();
-            }
+    if (((result.getError() == null && result.isSuccess())&& relation == "or") || ((result.getError() != null && !result.isSuccess())&& relation == "and")) { 
+        if (canLock) { 
+            result.lock();
         }
-
+    }
+    // before continuing to next functions  
+    if (!result.locked()) { 
+        result.resetError();
+    }
     return result;
 }
 `)

@@ -29,4 +29,5 @@ Require-Bundle: com.ibm.icu,
  com.ms4systems.thirdparty.jsonsimple;visibility:=reexport
 Import-Package: org.apache.log4j,
  org.apache.commons.logging
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6`
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+`

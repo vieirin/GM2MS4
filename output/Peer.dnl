@@ -8,7 +8,8 @@ Passivate in StopState!
 when in waitForInput and receive From_G0_to_G4 go to Calcular_resultado_da_transacao!
 external event for waitForInput with From_G0_to_G4
 <%
-    result.reset();
+    Result incomingResult = result.update(messageList.get(0).getData());
+    result.reset(incomingResult);
     
 %>!
 
@@ -18,7 +19,6 @@ external event for waitForInput with From_G13_to_G5
     result = result.update(messageList.get(0).getData());
     
 %>!
-
 
 when in waitForInput and receive stop go to StopState!
 

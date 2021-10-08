@@ -25,7 +25,11 @@ external event for waitForInput with From_G7_to_G0
 %>!
 
 when in waitForInput and receive StartUp go to Registrar_uma_transacao!
-
+external event for waitForInput with StartUp
+<%
+    String in = messageList.get(0).getData();
+    result = new Result("verifier", in);
+%>!
 
 generates output on From_G0_to_G1 with type Result!
 generates output on From_G0_to_G4 with type Result!
@@ -35,7 +39,7 @@ generates output on stop !
 accepts input on From_G1_to_G0 with type Result !
 accepts input on From_G4_to_G0 with type Result !
 accepts input on From_G7_to_G0 with type Result !
-accepts input on StartUp  !
+accepts input on StartUp with type String !
 
 hold in Registrar_uma_transacao for time 5!
 from Registrar_uma_transacao go to Processar_entrada_na_api!

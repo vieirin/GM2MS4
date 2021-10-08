@@ -8,10 +8,10 @@ Passivate in StopState!
 when in waitForInput and receive From_G10_to_G11 go to Validar_assinaturas_do_bloco!
 external event for waitForInput with From_G10_to_G11
 <%
-    result.reset();
+    Result incomingResult = result.update(messageList.get(0).getData());
+    result.reset(incomingResult);
     
 %>!
-
 
 when in waitForInput and receive stop go to StopState!
 

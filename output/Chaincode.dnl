@@ -8,10 +8,10 @@ Passivate in StopState!
 when in waitForInput and receive From_G5_to_G13 go to Executar_logica_de_negocio!
 external event for waitForInput with From_G5_to_G13
 <%
-    result.reset();
+    Result incomingResult = result.update(messageList.get(0).getData());
+    result.reset(incomingResult);
     
 %>!
-
 
 when in waitForInput and receive stop go to StopState!
 

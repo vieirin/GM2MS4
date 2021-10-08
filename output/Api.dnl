@@ -8,13 +8,15 @@ Passivate in StopState!
 when in waitForInput and receive From_G0_to_G1 go to Processar_entrada_na_api!
 external event for waitForInput with From_G0_to_G1
 <%
-    result.reset();
+    Result incomingResult = result.update(messageList.get(0).getData());
+    result.reset(incomingResult);
     
 %>!
 when in waitForInput and receive From_G0_to_G7 go to Receber_pool_de_resultados!
 external event for waitForInput with From_G0_to_G7
 <%
-    result.reset();
+    Result incomingResult = result.update(messageList.get(0).getData());
+    result.reset(incomingResult);
     
 %>!
 
@@ -24,7 +26,6 @@ external event for waitForInput with From_G11_to_G10
     result = result.update(messageList.get(0).getData());
     
 %>!
-
 
 when in waitForInput and receive stop go to StopState!
 

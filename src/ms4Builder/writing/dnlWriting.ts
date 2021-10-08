@@ -81,7 +81,8 @@ const externalEventWith = (
 <%
     ${
         reset
-            ? 'result.reset();'
+            ? `Result incomingResult = result.update(messageList.get(0).getData());
+    result.reset(incomingResult);`
             : 'result = result.update(messageList.get(0).getData());'
     }
     
@@ -103,9 +104,15 @@ ${externalEventWith(
 
 export const startSignalsReceivement = (
     initialState: string,
-    nextState: string
+    nextState: string,
+    component: string
 ) =>
-    `when in ${initialState} and receive ${MS4Constants.startSignal} go to ${nextState}!`
+    `when in ${initialState} and receive ${MS4Constants.startSignal} go to ${nextState}!
+external event for ${initialState} with ${MS4Constants.startSignal}
+<%
+    String in = messageList.get(0).getData();
+    result = new Result("${component}", in);
+%>!`
 
 export const stopSignalReceivement = (initialState: string) =>
     `when in ${initialState} and receive ${MS4Constants.stopPort} go to ${MS4Constants.stopState}!`

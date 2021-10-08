@@ -9,13 +9,14 @@ public class Result implements Serializable {
 	private ErrorSignal error = null;
 	private String component = "";
 	private boolean success = false;
-	private boolean isLocked = false;
+	private boolean isLocked = false;;
     private String result = "";
 	
     public void setError(String error) {
     	System.out.println(error);
 		this.error = new ErrorSignal(error, this.component);
 		this.success = false;
+		this.result = error;
 	}
 	
     public ErrorSignal getError() {
@@ -23,11 +24,19 @@ public class Result implements Serializable {
 	}
 	
     public void setSuccess() {
-		if (!this.isLocked) { 
-			this.error = null;
-			this.success = true;
+		if (!isLocked) { 
+			error = null;
+			success = true;
 	    	System.out.println("done with success");
 		}
+	}
+
+	public void setSuccess(String result) { 
+		if (!isLocked) { 
+			success = true;
+			this.result = result;
+		}
+		setSuccess();
 	}
 
 	public void lock() { 
@@ -42,6 +51,11 @@ public class Result implements Serializable {
 		return success;
 	}
 	
+	public void resetError() { 
+		this.error = null;
+		
+	}
+
     public void setResult(String result) {
 		if (!this.isLocked) { 
 			this.result = result;
@@ -52,11 +66,11 @@ public class Result implements Serializable {
 		return result;
 	}
 
-	public void reset () { 
+	public void reset (Result res) { 
 		this.error = null;
 		this.success = false;
 		this.isLocked = false;
-		this.result = "";
+		this.result = res.result;
 	}
 
 	public Result update(Result res) { 
@@ -71,6 +85,12 @@ public class Result implements Serializable {
 	public Result (String  component) { 
 		this.component = component;
 	}
+
+	public Result (String  component, String initialState) { 
+		result = initialState;
+		this.component = component;
+	}
+	
 	
 	public void print() { 
 		System.out.print("Succes: ");

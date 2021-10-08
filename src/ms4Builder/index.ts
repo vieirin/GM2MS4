@@ -122,9 +122,12 @@ export const generateMS4Model = (
                     )
                 ),
             root
-                ? dnlWriter.startSignalsReceivement(initialState, root.text)
-                : '',
-            root ? '' : dnlWriter.stopSignalReceivement(initialState)
+                ? dnlWriter.startSignalsReceivement(
+                      initialState,
+                      root.text,
+                      moduleName
+                  )
+                : dnlWriter.stopSignalReceivement(initialState)
         ]) +
         dnlWriter.blockseparator([
             ...outputConnections.map((conn) =>
@@ -137,7 +140,7 @@ export const generateMS4Model = (
             ...outputConnections.map((conn) =>
                 dnlWriter.openInputPort(conn.outputPortName, 'Result')
             ),
-            root ? openInputPort(MS4Constants.startSignal, 'none') : ''
+            root ? openInputPort(MS4Constants.startSignal, 'String') : ''
         ]) +
         // writes the state sequence for a branch (a path that an input follows when received)
         inputSequence
