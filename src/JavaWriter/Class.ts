@@ -1,5 +1,4 @@
-import { writeFileSync } from 'fs'
-import { MS4Constants } from '../ms4Builder/constants'
+import { inputFiles } from '../ms4Builder/createMS4Project'
 import { component } from '../ObjectiveTree/types'
 import { fileStart, writeProperty } from './helpers'
 import { methodAccess } from './types'
@@ -42,12 +41,9 @@ export class Class {
 
     public getClassName = () => this.className
 
-    public close = () => {
+    public close = (): inputFiles => {
         this.fileContent += '}\n'
-        writeFileSync(
-            `output/${MS4Constants.packageName}/${this.className}.java`,
-            this.fileContent.trim()
-        )
+        return [`${this.className}.java`, this.fileContent.trim()]
     }
 
     print() {

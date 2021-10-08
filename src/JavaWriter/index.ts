@@ -1,3 +1,4 @@
+import { inputFiles } from '../ms4Builder/createMS4Project'
 import { runnerDecomposition } from '../ObjectiveTree/treeNavigation'
 import { ObjectiveTree } from '../ObjectiveTree/types'
 import { APITask } from './ApiTask'
@@ -29,10 +30,10 @@ export class JavaWriter {
 
     getTransitionClassName = () => this.transitions.getClassName()
 
-    close = () => {
-        this.transitions.close()
+    close = (): [inputFiles, inputFiles] => [
+        this.transitions.close(),
         this.tasks.close()
-    }
+    ]
 
     print() {
         console.log(this.tasks.print(), this.transitions.print())

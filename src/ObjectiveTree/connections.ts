@@ -42,7 +42,7 @@ const createPort = (from: treeNode, to: treeNode): port => {
 
 // merge reducing result concating arrays\
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const mergeConcat = (arrValue: any, srcValue: any) => {
+export const mergeConcat = (arrValue: any, srcValue: any) => {
     if (Array.isArray(arrValue)) {
         return arrValue.concat(srcValue)
     }

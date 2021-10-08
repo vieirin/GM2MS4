@@ -24,6 +24,7 @@ import {
     LeveledGoalComponent
 } from '../ObjectiveTree/types'
 import { MS4Constants } from './constants'
+import { createMS4Project, inputFiles } from './createMS4Project'
 import {
     capitalize,
     dnlFileName,
@@ -47,7 +48,7 @@ export const generateMS4Model = (
     moduleName: string,
     component: ComponentData,
     connections: port[]
-): [string, string] => {
+): { dnl: inputFiles[]; java: inputFiles[] } => {
     const waitForInputGoals = component.goals.filter(
         (node) => node.level === component.lowestLevel
     ) as LeveledGoalComponent[]
@@ -68,7 +69,7 @@ export const generateMS4Model = (
         )
         javaWriter.writeTransitionsMethods(inputNode)
     })
-    javaWriter.close()
+    const javaComponents = javaWriter.close()
 
     const transitionClassName = javaWriter.getTransitionClassName()
 
@@ -146,7 +147,10 @@ export const generateMS4Model = (
             .join('')
 
     writeFileSync(`output/${dnlFileName(moduleName)}`, dnl.trim())
-    return [dnlFileName(moduleName), dnl.trim()]
+    return {
+        dnl: [[dnlFileName(moduleName), dnl.trim()]],
+        java: javaComponents
+    }
 }
 
 const generateSES = (
@@ -181,13 +185,24 @@ export const generateGoalModelDNLs = (model: Model) => {
     const tree = convertToTree(model)[0]!
     const connections = componentConnections(tree)
     const goalsPerComponent = getTreeNodeByComponent('goal', tree)
-    const dnlData = goalsPerComponent.map(([component, data]) =>
-        generateMS4Model(component, data, connections[component])
-    )
+
+    const dnlData = goalsPerComponent
+        .map(([component, data]) =>
+            generateMS4Model(component, data, connections[component])
+        )
+        .reduce(
+            (prev, curr) => ({
+                dnl: [...prev.dnl, ...curr.dnl],
+                java: [...prev.java, ...curr.java]
+            }),
+            { dnl: [], java: [] } as Record<'dnl' | 'java', inputFiles[]>
+        )
     const sesData = generateSES(
         nameText(model.actors[0].text || ''),
         connections,
         goalsPerComponent,
         tree.component
     )
+
+    createMS4Project('Blockchain_mode_auto', sesData, dnlData.dnl, dnlData.java)
 }
