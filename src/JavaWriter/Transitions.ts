@@ -3,17 +3,17 @@ import {
     taskVarName,
     transitionClassName,
     transitionMethodName
-} from '../ms4Builder/naming'
-import { func, RunnerDecomposition } from '../ObjectiveTree/treeNavigation'
-import { component } from '../ObjectiveTree/types'
-import { Class } from './Class'
+} from '../ms4Builder/naming.js'
+import { func, RunnerDecomposition } from '../ObjectiveTree/treeNavigation.js'
+import { component } from '../ObjectiveTree/types.js'
+import { Class } from './Class.js'
 import {
     adapterRunnerInterface,
     writeRefinedTask,
     writeResultVerifier,
     writeRunner,
     writeTaskRunner
-} from './helpers'
+} from './helpers.js'
 
 export class Transitions extends Class {
     taskClassVarName: string

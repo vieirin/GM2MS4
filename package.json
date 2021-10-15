@@ -1,34 +1,44 @@
 {
-    "name": "gm2ms4",
+    "name": "gm2ms4-dev",
     "description": "",
-    "version": "1.0.4",
+    "version": "0.1.0",
     "license": "MIT",
     "author": {
-        "name": "Piotr Kowalski",
-        "email": "piecioshka@gmail.com",
-        "url": "https://piecioshka.pl/"
+        "name": "Vieira Neto",
+        "email": "vieiranetoc@gmail.com",
+        "url": "https://vieirinha.dev/"
     },
     "scripts": {
         "clear": "rm -rf dist/",
         "clear:all": "rm -rf node_modules/ && npm run clear",
         "build:live": "nodemon  -L  -e ts -w ./src --exec \"node  --require ts-node/register src/index.ts\"",
         "run:live": "nodemon  -L  -e ts -w ./src --exec \"node --require ts-node/register src/index.ts\"",
+        "bundle": "tsc -p tsconfig.json && tsc -p tsconfig-cjs.json",
+        "postbundle": "copyfiles -u 1 classAssets/**/*.java lib/esm/classAssets; copyfiles -u 1 classAssets/**/*.java lib/cjs/classAssets",
         "test": "jest",
         "lint": "eslint src --max-warnings=0",
         "start": "tsc && node dist/src/index.js",
         "dev": "ts-node src/index.ts",
         "postversion": "git push --tags",
-        "prepare": "husky install"
+        "prepare": "husky install",
+        "prepublish": "npm run bundle"
     },
     "dependencies": {
         "@types/node": "^12.11.5",
+        "Blob": "^0.10.0",
+        "arg": "^5.0.1",
         "jszip": "^3.7.1",
         "lodash.intersectionby": "^4.7.0",
         "lodash.merge": "^4.6.2",
         "lodash.mergewith": "^4.6.2",
         "lodash.uniqby": "^4.7.0",
+        "markdown-js": "^0.0.4",
+        "marked": "^3.0.7",
+        "marked-terminal": "^4.2.0",
         "ora": "^4.0.2",
         "replace-in-files": "^2.0.3",
+        "systemjs": "^6.10.3",
+        "systemjs-babel": "^0.3.1",
         "typescript": "^4.3.5",
         "yargs": "^14.2.0"
     },
@@ -39,16 +49,22 @@
         "@babel/core": "^7.15.0",
         "@babel/preset-env": "^7.15.0",
         "@babel/preset-typescript": "^7.15.0",
+        "@swc/core": "^1.2.96",
+        "@swc/helpers": "^0.2.13",
         "@types/jest": "^27.0.1",
         "@types/lodash.isarray": "^4.0.6",
         "@types/lodash.merge": "^4.6.6",
         "@types/lodash.mergewith": "^4.6.6",
         "@types/lodash.uniqby": "^4.7.6",
+        "@types/marked": "^3.0.1",
+        "@types/marked-terminal": "^3.1.2",
         "@typescript-eslint/eslint-plugin": "^4.29.2",
         "@typescript-eslint/parser": "^4.29.3",
         "babel-jest": "^27.0.6",
+        "copyfiles": "^2.4.1",
         "eslint": "^7.32.0",
         "eslint-config-prettier": "^8.3.0",
+        "eslint-plugin-import": "^2.25.2",
         "eslint-plugin-prettier": "^3.4.1",
         "husky": "^7.0.0",
         "jest": "^27.0.6",
@@ -70,26 +86,31 @@
         "type": "git",
         "url": "git@github.com:vieirin/GM2MS4.git"
     },
+    "main": "./lib/cjs/index.js",
+    "module": "./lib/esm/index.js",
     "files": [
-        "bin",
-        "src",
         "LICENSE",
+        "lib/",
         "package.json",
-        "README.md",
-        "tsconfig.json"
+        "README.md"
     ],
     "keywords": [
         "typescript",
-        "playground",
-        "create",
-        "simple",
-        "project",
-        "seed"
+        "goal modeling",
+        "ms4",
+        "conversor",
+        "converter",
+        "piStar",
+        "GODA"
     ],
+    "types": "dist/index.d.ts",
     "nodemonConfig": {
         "execMap": {
-            "ts": "node --inspect=0.0.0.0:9229 --require ts-node/register"
+            "ts": "TS_NODE_PROJECT=tsconfig-cjs.json node --inspect=0.0.0.0:9229 --require ts-node/register"
         }
     },
-    "bin": "./bin/cli.js"
+    "engines": {
+        "node": "^12.20.0 || ^14.13.1 || >=16.0.0"
+    },
+    "bin": "./lib/cjs/index.js"
 }

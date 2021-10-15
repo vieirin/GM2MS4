@@ -7,7 +7,15 @@
         {
             "name": "nodemon",
             "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/nodemon",
-            "runtimeArgs": ["-L", "-e", "ts", "-w", "./src", "src/index.ts"],
+            "runtimeArgs": [
+                "-L",
+                "-e",
+                "ts",
+                "-w",
+                "./src",
+                "src/index.ts",
+                "models/txregister_component5.txt"
+            ],
             "request": "launch",
             "restart": true,
             "skipFiles": ["<node_internals>/**"],

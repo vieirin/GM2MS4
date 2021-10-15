@@ -1,0 +1,11 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "module": "CommonJS",
+        "outDir": "./lib/cjs"
+    },
+    "ts-node": {
+        "transpileOnly": true,
+        "transpiler": "ts-node/transpilers/swc-experimental"
+    }
+}

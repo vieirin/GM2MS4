@@ -1,6 +1,7 @@
 import mergeWith from 'lodash.mergewith'
-import { sanitizeComponent } from '../ms4Builder/naming'
-import { component, ObjectiveTree, treeNode } from './types'
+import { sanitizeComponent } from '../ms4Builder/naming.js'
+import { component, ObjectiveTree, treeNode } from './types.js'
+
 interface connectionNode {
     state: string
     component: string

@@ -4,6 +4,8 @@ npm-debug.log
 coverage/
 dist/
 
+lib/
+
 !.vscode/
 
 # use yarn!

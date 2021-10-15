@@ -1,4 +1,4 @@
-import { MS4Constants } from './constants'
+import { MS4Constants } from './constants.js'
 const latinChars = `ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐ
 ÑÒÓÔÕÖØÙÚÛÜ
 ÝŔÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿŕ()-` as const

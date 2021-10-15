@@ -1,9 +1,9 @@
-import { MS4Constants } from '../ms4Builder/constants'
-import { transitionMethodName } from '../ms4Builder/naming'
-import { func } from '../ObjectiveTree/treeNavigation'
-import { relationship } from '../ObjectiveTree/types'
-import { Java } from './constants'
-import { methodAccess } from './types'
+import { MS4Constants } from '../ms4Builder/constants.js'
+import { transitionMethodName } from '../ms4Builder/naming.js'
+import { func } from '../ObjectiveTree/treeNavigation.js'
+import { relationship } from '../ObjectiveTree/types.js'
+import { Java } from './constants.js'
+import { methodAccess } from './types.js'
 
 const ident = (s: string[], repeat: number) =>
     s.map((text) => '\t'.repeat(repeat) + text).join('\n')

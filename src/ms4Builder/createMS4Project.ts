@@ -1,9 +1,9 @@
 import { createWriteStream, readFileSync } from 'fs'
 import JSZip from 'jszip'
 import path from 'path'
-import { buildProperties, classPath } from './projectConfigFiles/classPath'
-import { Manifest } from './projectConfigFiles/manifest'
-import { project } from './projectConfigFiles/project'
+import { buildProperties, classPath } from './projectConfigFiles/classPath.js'
+import { Manifest } from './projectConfigFiles/manifest.js'
+import { project } from './projectConfigFiles/project.js'
 
 export type inputFiles = [string, string]
 
@@ -36,15 +36,21 @@ export const createMS4Project = (
     jzip.file('.project', project(projectName))
     jzip.file('build.properties', buildProperties)
 
-    const classesFolder = path.resolve('classAssets')
+    const classesFolder = path.join(__dirname, '..', 'classAssets')
     const errorJava = readFileSync(path.join(classesFolder, 'ErrorSignal.java'))
     const resultJava = readFileSync(path.join(classesFolder, 'Result.java'))
 
     componentsDir?.file('ErrorSignal.java', errorJava)
     componentsDir?.file('Result.java', resultJava)
-    jzip.generateNodeStream({ type: 'nodebuffer', streamFiles: true })
-        .pipe(createWriteStream('output/project.zip'))
-        .on('finish', function () {
-            console.log('output/project.zip written.')
-        })
+    return new Promise<string>((resolve) => {
+        jzip.generateNodeStream({ type: 'nodebuffer', streamFiles: true })
+            .pipe(
+                createWriteStream(
+                    path.join(process.cwd(), projectName + '.zip')
+                )
+            )
+            .on('finish', function () {
+                resolve(projectName + '.zip written.')
+            })
+    })
 }

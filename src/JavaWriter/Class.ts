@@ -1,7 +1,7 @@
-import { inputFiles } from '../ms4Builder/createMS4Project'
-import { component } from '../ObjectiveTree/types'
-import { fileStart, writeProperty } from './helpers'
-import { methodAccess } from './types'
+import { inputFiles } from '../ms4Builder/createMS4Project.js'
+import { component } from '../ObjectiveTree/types.js'
+import { fileStart, writeProperty } from './helpers.js'
+import { methodAccess } from './types.js'
 
 export class Class {
     private className = ''

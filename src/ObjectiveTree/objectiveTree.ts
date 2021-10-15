@@ -1,6 +1,6 @@
 import { readFileSync } from 'fs'
-import { Actor, Model, Node, NodeType } from '../GoalModel'
-import { nodeName } from '../ms4Builder/naming'
+import { Actor, Model, Node, NodeType } from '../GoalModel/goalModel.js'
+import { nodeName } from '../ms4Builder/naming.js'
 import {
     component,
     ComponentGoals,
@@ -8,7 +8,7 @@ import {
     LeveledGoalComponent,
     ObjectiveTree,
     relationship
-} from './types'
+} from './types.js'
 
 export const validateModel = (model: Model) => {
     const root = model.actors

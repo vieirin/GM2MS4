@@ -17,7 +17,7 @@
         "ecmaVersion": 11,
         "sourceType": "module"
     },
-    "plugins": ["@typescript-eslint"],
+    "plugins": ["@typescript-eslint", "import"],
     "rules": {
         "@typescript-eslint/explicit-module-boundary-types": "off",
         "@typescript-eslint/no-non-null-assertion": "off",
@@ -28,6 +28,7 @@
             {
                 "endOfLine": "auto"
             }
-        ]
+        ],
+        "import/export": "always"
     }
 }

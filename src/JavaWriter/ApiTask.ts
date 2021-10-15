@@ -1,4 +1,4 @@
-import { Class } from './Class'
+import { Class } from './Class.js'
 
 export class APITask extends Class {
     /**

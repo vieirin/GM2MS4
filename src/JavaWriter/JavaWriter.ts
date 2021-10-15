@@ -1,8 +1,8 @@
-import { inputFiles } from '../ms4Builder/createMS4Project'
-import { runnerDecomposition } from '../ObjectiveTree/treeNavigation'
-import { ObjectiveTree } from '../ObjectiveTree/types'
-import { APITask } from './ApiTask'
-import { Transitions } from './Transitions'
+import { inputFiles } from '../ms4Builder/createMS4Project.js'
+import { runnerDecomposition } from '../ObjectiveTree/treeNavigation.js'
+import { ObjectiveTree } from '../ObjectiveTree/types.js'
+import { APITask } from './ApiTask.js'
+import { Transitions } from './Transitions.js'
 
 export class JavaWriter {
     protected transitions: Transitions

@@ -1,4 +1,4 @@
-import { Node } from '../GoalModel'
+import { Node } from '../GoalModel/goalModel.js'
 
 export type relationship = 'and' | 'or' | 'none'
 export type component = string

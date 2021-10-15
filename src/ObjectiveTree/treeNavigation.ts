@@ -1,6 +1,6 @@
-import { nameGoalContinuation, nameTaskMethod } from '../ms4Builder/naming'
-import { StatePortIndex } from './connections'
-import { component, leafType, ObjectiveTree, relationship } from './types'
+import { nameGoalContinuation, nameTaskMethod } from '../ms4Builder/naming.js'
+import { StatePortIndex } from './connections.js'
+import { component, leafType, ObjectiveTree, relationship } from './types.js'
 
 type node = ObjectiveTree & {
     originalName?: string

@@ -1,13 +1,13 @@
-import { port, StatePortIndex } from '../../ObjectiveTree/connections'
-import { linkedNode } from '../../ObjectiveTree/treeNavigation'
-import { MS4Constants } from '../constants'
+import { port, StatePortIndex } from '../../ObjectiveTree/connections.js'
+import { linkedNode } from '../../ObjectiveTree/treeNavigation.js'
+import { MS4Constants } from '../constants.js'
 import {
     nameGoalContinuation,
     nameInput,
     transitionClassVarName,
     transitionMethodName
-} from '../naming'
-import { SequenceState } from '../types'
+} from '../naming.js'
+import { SequenceState } from '../types.js'
 
 export const blockseparator = (block: string | string[], repeat = 2) =>
     (Array.isArray(block) ? block.join('\n') : block) + '\n'.repeat(repeat)

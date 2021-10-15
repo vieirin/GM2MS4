@@ -1,30 +1,29 @@
-import { writeFileSync } from 'fs'
 import { uniqBy } from 'lodash'
-import { Model } from '../GoalModel'
-import { JavaWriter } from '../JavaWriter/index'
-import {
-    convertToTree,
-    getNodes,
-    getTreeNodeByComponent
-} from '../ObjectiveTree'
+import { Model } from '../GoalModel/goalModel.js'
+import { JavaWriter } from '../JavaWriter/JavaWriter.js'
 import {
     componentConnections,
     Connections,
     indexPortsByGoal,
     port
-} from '../ObjectiveTree/connections'
+} from '../ObjectiveTree/connections.js'
+import {
+    convertToTree,
+    getNodes,
+    getTreeNodeByComponent
+} from '../ObjectiveTree/objectiveTree.js'
 import {
     branchGoalsWithOutput,
     hasChildren
-} from '../ObjectiveTree/treeNavigation'
+} from '../ObjectiveTree/treeNavigation.js'
 import {
     component,
     ComponentData,
     ComponentGoals,
     LeveledGoalComponent
-} from '../ObjectiveTree/types'
-import { MS4Constants } from './constants'
-import { createMS4Project, inputFiles } from './createMS4Project'
+} from '../ObjectiveTree/types.js'
+import { MS4Constants } from './constants.js'
+import { createMS4Project, inputFiles } from './createMS4Project.js'
 import {
     capitalize,
     dnlFileName,
@@ -32,17 +31,14 @@ import {
     nameText,
     SeSFileName,
     transitionClassVarName
-} from './naming'
-import * as dnlWriter from './writing/dnlWriting'
-import { exposeOutputPort, openInputPort } from './writing/dnlWriting'
+} from './naming.js'
+import * as dnlWriter from './writing/dnlWriting.js'
+import { exposeOutputPort, openInputPort } from './writing/dnlWriting.js'
 import {
     writeConnections,
     writePerspective,
     writeStopRelation
-} from './writing/sesWriting'
-
-const isTreeRoot = (goal: LeveledGoalComponent[]) =>
-    goal.length == 1 && goal[0].isRoot
+} from './writing/sesWriting.js'
 
 export const generateMS4Model = (
     moduleName: string,
@@ -149,7 +145,6 @@ export const generateMS4Model = (
             )
             .join('')
 
-    writeFileSync(`output/${dnlFileName(moduleName)}`, dnl.trim())
     return {
         dnl: [[dnlFileName(moduleName), dnl.trim()]],
         java: javaComponents
@@ -180,11 +175,13 @@ const generateSES = (
                 .map(([component]) => capitalize(component))
         )
 
-    writeFileSync(`output/Models.ses/${SeSFileName}`, ses.trim())
     return [SeSFileName, ses.trim()]
 }
 
-export const generateGoalModelDNLs = (model: Model) => {
+export const generateGoalModelDNLs = async (
+    model: Model,
+    projectName: string
+) => {
     const tree = convertToTree(model)[0]!
     const connections = componentConnections(tree)
     const goalsPerComponent = getTreeNodeByComponent('goal', tree)
@@ -207,5 +204,10 @@ export const generateGoalModelDNLs = (model: Model) => {
         tree.component
     )
 
-    createMS4Project('Blockchain_mode_auto', sesData, dnlData.dnl, dnlData.java)
+    return await createMS4Project(
+        projectName,
+        sesData,
+        dnlData.dnl,
+        dnlData.java
+    )
 }

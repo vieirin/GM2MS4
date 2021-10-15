@@ -1,5 +1,5 @@
-import { linkedNode } from '../ObjectiveTree/treeNavigation'
-import { leafType } from '../ObjectiveTree/types'
+import { linkedNode } from '../ObjectiveTree/treeNavigation.js'
+import { leafType } from '../ObjectiveTree/types.js'
 
 export type allowedTypes = 'string' | 'float' | 'int'
 

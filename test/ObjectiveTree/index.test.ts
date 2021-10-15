@@ -1,4 +1,4 @@
-import { convertToTree, loadModel } from '../../src/ObjectiveTree'
+import { convertToTree, loadModel } from '../../src/ObjectiveTree/objectiveTree'
 import { getGoals } from '../../src/ObjectiveTree/treeNavigation'
 import { TraverseTree } from '../../src/ObjectiveTree/types'
 

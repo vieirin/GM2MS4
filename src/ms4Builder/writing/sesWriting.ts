@@ -1,8 +1,8 @@
-import { port } from '../../ObjectiveTree/connections'
-import { component } from '../../ObjectiveTree/types'
-import { MS4Constants } from '../constants'
-import { sanitizeComponent } from '../naming'
-import { blockseparator } from './dnlWriting'
+import { port } from '../../ObjectiveTree/connections.js'
+import { component } from '../../ObjectiveTree/types.js'
+import { MS4Constants } from '../constants.js'
+import { sanitizeComponent } from '../naming.js'
+import { blockseparator } from './dnlWriting.js'
 
 const perspectiveString = `
 from the ${MS4Constants.MODEL_PERSPECTIVE} perspective`
