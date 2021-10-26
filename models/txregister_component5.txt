@@ -2,7 +2,7 @@
   "actors": [
     {
       "id": "309c8d4d-f7a1-4ca3-83a8-a93e9240716b",
-      "text": "Registrando uma transação",
+      "text": "Registering a transaction",
       "type": "istar.Actor",
       "x": 82,
       "y": 198,
@@ -12,7 +12,7 @@
       "nodes": [
         {
           "id": "f0406552-00af-4442-b03d-a78e27457929",
-          "text": "G0: Registrar uma transação [G1;G4;G7]",
+          "text": "G0: Register a transaction [G1;G4;G7]",
           "type": "istar.Goal",
           "x": 516,
           "y": 213,
@@ -24,7 +24,7 @@
         },
         {
           "id": "8de7a901-398e-4d37-a22d-3f954bb81601",
-          "text": "G1: Processar entrada na api [T0;T1;G2]",
+          "text": "G1: Process input [T0;T1;G2]",
           "type": "istar.Goal",
           "x": 342,
           "y": 279,
@@ -37,7 +37,7 @@
         },
         {
           "id": "2bb58c75-9a35-4b6f-8e8c-85f4cb604c84",
-          "text": "G4: Calcular resultado da transação [G5;G6]",
+          "text": "G4: Calculate transaction result [G5;G6]",
           "type": "istar.Goal",
           "x": 576,
           "y": 301,
@@ -48,7 +48,7 @@
         },
         {
           "id": "51e1a122-2abe-4153-a42e-3e0c7a3bbd8e",
-          "text": "G5: Invocar o chaincode",
+          "text": "G5: Invoke chaincode",
           "type": "istar.Goal",
           "x": 571,
           "y": 393,
@@ -59,7 +59,7 @@
         },
         {
           "id": "52781a22-2ed1-4281-9c73-e6a9d314e240",
-          "text": "G6: Enviar resultado para api",
+          "text": "G6: Send result to api",
           "type": "istar.Goal",
           "x": 688,
           "y": 396,
@@ -71,7 +71,7 @@
         },
         {
           "id": "7c79330d-f564-4134-b810-47370afd7308",
-          "text": "G8: Verificar a pool de resultados [G9;G10]",
+          "text": "G8: Verify result pool [G9;G10]",
           "type": "istar.Goal",
           "x": 882,
           "y": 276,
@@ -82,7 +82,7 @@
         },
         {
           "id": "0d5629f0-4d07-46e9-a452-cac4d322e234",
-          "text": "G9: Rejeitar a transação",
+          "text": "G9: Reject transaction",
           "type": "istar.Goal",
           "x": 850,
           "y": 371,
@@ -94,7 +94,7 @@
         },
         {
           "id": "30fdd731-24c7-424d-b77c-6b9683a76bca",
-          "text": "G10: Enviar transação assinada para o orderer",
+          "text": "G10: Send signed transaction to Orderer",
           "type": "istar.Goal",
           "x": 991,
           "y": 357,
@@ -105,7 +105,7 @@
         },
         {
           "id": "fc1c1d20-d10d-48d0-a717-59094a59d944",
-          "text": "G11: Validar assinaturas do bloco [T9;G12]",
+          "text": "G11: Validate block signatures [T9;G12]",
           "type": "istar.Goal",
           "x": 1091,
           "y": 465,
@@ -116,7 +116,7 @@
         },
         {
           "id": "0973aeef-286f-47b0-a6cf-640e43d7671f",
-          "text": "G12: criar bloco",
+          "text": "G12: Create block",
           "type": "istar.Goal",
           "x": 1207,
           "y": 523,
@@ -128,7 +128,7 @@
         },
         {
           "id": "a219eddf-f170-454f-b20b-7568228307e0",
-          "text": "T9: Rejeitar a transação",
+          "text": "T9: Accept transaction",
           "type": "istar.Task",
           "x": 1005,
           "y": 527,
@@ -139,7 +139,7 @@
         },
         {
           "id": "c4146a67-384f-48f8-b48a-65fbdb31c7d0",
-          "text": "T11: Adicionar bloco à cadeia",
+          "text": "T11: Add block to chain",
           "type": "istar.Task",
           "x": 1161,
           "y": 614,
@@ -150,7 +150,7 @@
         },
         {
           "id": "637bd788-65ab-4223-81cd-ceab64eef5fb",
-          "text": "T12: Notificar a rede ",
+          "text": "T12:  Notify the network",
           "type": "istar.Task",
           "x": 1262,
           "y": 610,
@@ -161,7 +161,7 @@
         },
         {
           "id": "f6f3d933-8b3d-4c61-893c-cca36d2972c8",
-          "text": "G2: Propor transação à rede [T3;G3]",
+          "text": "G2: Propose transaction to network [T3;G3]",
           "type": "istar.Goal",
           "x": 345,
           "y": 348,
@@ -174,7 +174,7 @@
         },
         {
           "id": "c4963052-bad5-46ef-b79e-031266546f11",
-          "text": "T3: Montar proposta de transação",
+          "text": "T3: Create transaction proposal",
           "type": "istar.Task",
           "x": 244,
           "y": 423,
@@ -185,7 +185,7 @@
         },
         {
           "id": "9c1403b9-53f3-4036-8690-3af589e5c536",
-          "text": "T0: Validar entrada",
+          "text": "T0: Validate input",
           "type": "istar.Task",
           "x": 184,
           "y": 275,
@@ -198,7 +198,7 @@
         },
         {
           "id": "3867e9d3-349c-4829-8c9b-61de16ac60c2",
-          "text": "G13: Executar lógica de negócio",
+          "text": "G13: Execute bussiness logic",
           "type": "istar.Goal",
           "x": 573,
           "y": 495,
@@ -209,7 +209,7 @@
         },
         {
           "id": "ba3fd6ff-acbc-4a10-911a-55c4b655ed8c",
-          "text": "T6: Executar função solicitada",
+          "text": "T6: Execute requested contract function",
           "type": "istar.Task",
           "x": 605,
           "y": 634,
@@ -220,7 +220,7 @@
         },
         {
           "id": "e3ea007b-e9df-4651-9260-8566a86c52d8",
-          "text": "G3: Enviar proposta para os Peers [T4;T5]",
+          "text": "G3: Send proposal to peers [T4;T5]",
           "type": "istar.Goal",
           "x": 391,
           "y": 432,
@@ -234,7 +234,7 @@
         },
         {
           "id": "bbfc14b1-9da7-4112-82cf-3ec369887261",
-          "text": "T5: Enviar proposta para os peers-alvo",
+          "text": "T5: Send proposal to targeted peers",
           "type": "istar.Task",
           "x": 481,
           "y": 555,
@@ -245,7 +245,7 @@
         },
         {
           "id": "b96e97cd-d783-4f76-b006-b4c0ef93f4c9",
-          "text": "T4: Calcular peers-alvo",
+          "text": "T4: Calculate target peer",
           "type": "istar.Task",
           "x": 347,
           "y": 553,
@@ -256,7 +256,7 @@
         },
         {
           "id": "bdacda33-50aa-4850-9ce5-ad6a47368972",
-          "text": "T7: Enviar resultado para api",
+          "text": "T7: Send transaction result pool to api",
           "type": "istar.Task",
           "x": 750,
           "y": 536,
@@ -267,7 +267,7 @@
         },
         {
           "id": "0c59d725-3739-47ad-8ce9-d49b65004a52",
-          "text": "G7: Receber pool de resultados",
+          "text": "G7: Receive result pool",
           "type": "istar.Goal",
           "x": 732,
           "y": 220,
@@ -279,7 +279,7 @@
         },
         {
           "id": "72f6d345-7050-4382-8593-10719959349b",
-          "text": "T8: Enviar erro",
+          "text": "T8: Send Error",
           "type": "istar.Task",
           "x": 850,
           "y": 454,
@@ -301,7 +301,7 @@
         },
         {
           "id": "17bfab94-d413-4929-ac6f-a232c921625b",
-          "text": "T1: Outra task",
+          "text": "T1: Another task",
           "type": "istar.Task",
           "x": 199,
           "y": 344,
