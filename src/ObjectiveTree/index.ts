@@ -4,9 +4,9 @@ import { nodeName } from '../ms4Builder/naming'
 import {
     component,
     ComponentGoals,
+    GoalTree,
     leafType,
     LeveledGoalComponent,
-    ObjectiveTree,
     relationship
 } from './types'
 
@@ -28,7 +28,7 @@ export const validateModel = (model: Model) => {
     }
 }
 
-export const validateTree = (tree: ObjectiveTree, level = 0) => {
+export const validateTree = (tree: GoalTree, level = 0) => {
     if (!tree.children?.length) {
         return
     }
@@ -88,11 +88,27 @@ export const convertIstarType = (type: NodeType) => {
 
 export const convertToTree = (model: Model) => {
     validateModel(model)
+    const arrangeChildren = (children: GoalTree[], sequence?: string[]) => {
+        if (children.length === 0) {
+            return []
+        }
+
+        if (!sequence || sequence.length === 0) {
+            return children
+        }
+
+        const childrenIndex =
+            children.reduce(
+                (prev, curr) => ({ ...prev, [curr.identifier]: curr }),
+                {} as Record<string, GoalTree>
+            ) || {}
+        return sequence.map((item) => childrenIndex[item])
+    }
 
     const nodeChildren = (
         actor: Actor,
         id?: string
-    ): [ObjectiveTree[] | undefined, relationship] => {
+    ): [GoalTree[] | undefined, relationship] => {
         if (!id) {
             return [undefined, 'none']
         }
@@ -123,7 +139,7 @@ export const convertToTree = (model: Model) => {
         }
 
         // recursively find children nodes' children
-        const children: ObjectiveTree[] = links
+        const children: GoalTree[] = links
             .map((link) => {
                 // from links find linked the linked nodes
                 const node = actor.nodes.find((item) => item.id === link.source)
@@ -137,33 +153,30 @@ export const convertToTree = (model: Model) => {
                 )
 
                 const [granChildren, relation] = nodeChildren(actor, node?.id)
-                const childrenIndex =
-                    granChildren?.reduce(
-                        (prev, curr) => ({ ...prev, [curr.identifier]: curr }),
-                        {} as Record<string, ObjectiveTree>
-                    ) || {}
-                const arrangedSequence =
-                    sequence?.map((item) => childrenIndex[item]) || granChildren
+
                 return {
                     ...node,
                     identifier: id,
                     text: text,
                     component: node.customProperties.component || 'verifier',
                     isRoot: node.customProperties.selected || false,
-                    children: arrangedSequence,
+                    children: arrangeChildren(granChildren || [], sequence),
                     relation,
                     type: convertIstarType(node.type)
                 }
             })
             // clean undefined children from the tree
-            .filter((child) => child !== undefined) as ObjectiveTree[]
+            .filter((child) => child !== undefined) as GoalTree[]
 
         return [[...children], relations[0]]
     }
 
-    const nodeToTree = (actor: Actor, node: Node): ObjectiveTree => {
+    const nodeToTree = (actor: Actor, node: Node): GoalTree => {
         const [children, relation] = nodeChildren(actor, node?.id)
-        const [id, text] = nodeName(node.text, convertIstarType(node.type))
+        const [id, text, sequence] = nodeName(
+            node.text,
+            convertIstarType(node.type)
+        )
         return {
             ...node,
             relation,
@@ -171,7 +184,7 @@ export const convertToTree = (model: Model) => {
             text,
             isRoot: node.customProperties.selected || false,
             component: node.customProperties.component || 'undefined',
-            children: children,
+            children: arrangeChildren(children || [], sequence),
             type: convertIstarType(node.type)
         }
     }
@@ -190,7 +203,7 @@ export const convertToTree = (model: Model) => {
             return nodeToTree(actor, rootNode)
         })
         // filter undefined trees (those without a root node)
-        .filter((tree) => tree) as ObjectiveTree[]
+        .filter((tree) => tree) as GoalTree[]
     trees.forEach((tree) => {
         validateTree(tree)
     })
@@ -198,7 +211,7 @@ export const convertToTree = (model: Model) => {
     return trees
 }
 
-const findComponents = (tree: ObjectiveTree): component[] => {
+const findComponents = (tree: GoalTree): component[] => {
     if (!tree.children || tree.children.length === 0) {
         return []
     }
@@ -209,12 +222,12 @@ const findComponents = (tree: ObjectiveTree): component[] => {
     ].filter((item) => item)
 }
 
-const getComponents = (tree: ObjectiveTree) => {
+const getComponents = (tree: GoalTree) => {
     return [...new Set(findComponents(tree))]
 }
 
 export const getNodes = (
-    tree: ObjectiveTree,
+    tree: GoalTree,
     component: string,
     type: leafType,
     level = 0
@@ -267,7 +280,7 @@ const lowestGoalLevel = (goals: LeveledGoalComponent[]) => {
     return Math.min(...goals.map((item) => item.level))
 }
 
-export const getTreeNodeByComponent = (type: leafType, tree: ObjectiveTree) => {
+export const getTreeNodeByComponent = (type: leafType, tree: GoalTree) => {
     type keyedComponent = [string, LeveledGoalComponent[]]
 
     const componentsGoals = getComponents(tree)

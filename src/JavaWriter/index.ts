@@ -1,6 +1,6 @@
 import { inputFiles } from '../ms4Builder/createMS4Project'
 import { runnerDecomposition } from '../ObjectiveTree/treeNavigation'
-import { ObjectiveTree } from '../ObjectiveTree/types'
+import { GoalTree, relationship } from '../ObjectiveTree/types'
 import { APITask } from './ApiTask'
 import { Transitions } from './Transitions'
 
@@ -23,8 +23,12 @@ export class JavaWriter {
         })
     }
 
-    writeTransitionsMethods = (tree: ObjectiveTree) => {
-        const decomposition = runnerDecomposition(tree, this.component)
+    writeTransitionsMethods = (tree: GoalTree, rootRelation: relationship) => {
+        const decomposition = runnerDecomposition(
+            tree,
+            this.component,
+            rootRelation
+        )
         this.transitions.writeTransitionMethods(decomposition)
     }
 

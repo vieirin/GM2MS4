@@ -24,7 +24,7 @@ import {
     LeveledGoalComponent
 } from '../ObjectiveTree/types'
 import { MS4Constants } from './constants'
-import { createMS4Project, inputFiles } from './createMS4Project'
+import { createMS4Project, inputFiles as outputFiles } from './createMS4Project'
 import {
     capitalize,
     dnlFileName,
@@ -48,7 +48,7 @@ export const generateMS4Model = (
     moduleName: string,
     component: ComponentData,
     connections: port[]
-): { dnl: inputFiles[]; java: inputFiles[] } => {
+): { dnl: outputFiles[]; java: outputFiles[] } => {
     const waitForInputGoals = component.goals.filter(
         (node) => node.level === component.lowestLevel
     ) as LeveledGoalComponent[]
@@ -67,7 +67,7 @@ export const generateMS4Model = (
                 // return the tasks methods name
                 .map((item) => nameTaskMethod(item.text))
         )
-        javaWriter.writeTransitionsMethods(inputNode)
+        javaWriter.writeTransitionsMethods(inputNode, inputNode.parentRelation)
     })
     const javaComponents = javaWriter.close()
 
@@ -147,7 +147,8 @@ export const generateMS4Model = (
             .map((seq) =>
                 dnlWriter.stateSequence(moduleName, seq, connIndex, !!root)
             )
-            .join('')
+            .join('') +
+        dnlWriter.blockseparator(root ? dnlWriter.addLibs() : '')
 
     writeFileSync(`output/${dnlFileName(moduleName)}`, dnl.trim())
     return {
@@ -198,7 +199,7 @@ export const generateGoalModelDNLs = (model: Model) => {
                 dnl: [...prev.dnl, ...curr.dnl],
                 java: [...prev.java, ...curr.java]
             }),
-            { dnl: [], java: [] } as Record<'dnl' | 'java', inputFiles[]>
+            { dnl: [], java: [] } as Record<'dnl' | 'java', outputFiles[]>
         )
     const sesData = generateSES(
         nameText(model.actors[0].text || ''),

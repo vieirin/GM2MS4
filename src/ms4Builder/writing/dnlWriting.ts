@@ -152,7 +152,11 @@ const internalTransition = (
     )}(result);
     ${
         printResult
-            ? 'System.out.println(!result.isSuccess() ? "Simulation has failed"  : "Simulation passed");'
+            ? `Display.getDefault().asyncExec(new Runnable() {
+	            public void run() {
+		   	        MessageDialog.openInformation(new Shell(), "Simulation result", result.isSuccess() ? "Simulation has passed" : "Simulation has failed");
+	            }
+        });`
             : ''
     }`.trim()}
 %>!
@@ -181,6 +185,16 @@ output event for ${overrideStateSource || state.text}
 %>!
           `
 }
+`
+
+export const addLibs = () => `
+add library
+<%
+	import components.Result;
+	import org.eclipse.jface.dialogs.MessageDialog;
+    import org.eclipse.swt.widgets.Shell;
+    import org.eclipse.swt.widgets.Display;
+%>!
 `
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -5,7 +5,7 @@ To start passivate in waitForInput!
 Passivate in StopState!
 
 
-when in waitForInput and receive From_G0_to_G4 go to Calcular_resultado_da_transacao!
+when in waitForInput and receive From_G0_to_G4 go to Calculate_transaction_result!
 external event for waitForInput with From_G0_to_G4
 <%
     Result incomingResult = result.update(messageList.get(0).getData());
@@ -13,7 +13,7 @@ external event for waitForInput with From_G0_to_G4
     
 %>!
 
-when in waitForInput and receive From_G13_to_G5 go to Executar_logica_de_negocio_continue!
+when in waitForInput and receive From_G13_to_G5 go to Execute_bussiness_logic_continue!
 external event for waitForInput with From_G13_to_G5
 <%
     result = result.update(messageList.get(0).getData());
@@ -30,50 +30,50 @@ accepts input on From_G13_to_G5 with type Result !
 accepts input on From_G0_to_G4 with type Result !
 
 
-hold in Calcular_resultado_da_transacao for time 5!
-from Calcular_resultado_da_transacao go to Invocar_o_chaincode!
-internal event for Calcular_resultado_da_transacao
+hold in Calculate_transaction_result for time 5!
+from Calculate_transaction_result go to Invoke_chaincode!
+internal event for Calculate_transaction_result
 <%
-    peer_transition.calcular_resultado_da_transacao_runner(result);
+    peer_transition.calculate_transaction_result_runner(result);
 %>!
 
 
-hold in Invocar_o_chaincode for time 5!
-from Invocar_o_chaincode go to waitForInput!
-internal event for Invocar_o_chaincode
+hold in Invoke_chaincode for time 5!
+from Invoke_chaincode go to waitForInput!
+internal event for Invoke_chaincode
 <%
-    peer_transition.invocar_o_chaincode_runner(result);
+    peer_transition.invoke_chaincode_runner(result);
 %>!
 
-after Invocar_o_chaincode output From_G5_to_G13!
-output event for Invocar_o_chaincode
+after Invoke_chaincode output From_G5_to_G13!
+output event for Invoke_chaincode
 <%
     output.add(outFrom_G5_to_G13, result);
 %>!
           
 
 
-hold in Executar_logica_de_negocio_continue for time 5!
-from Executar_logica_de_negocio_continue go to Enviar_resultado_para_api!
-internal event for Executar_logica_de_negocio_continue
+hold in Execute_bussiness_logic_continue for time 5!
+from Execute_bussiness_logic_continue go to Return_contract_execution_result!
+internal event for Execute_bussiness_logic_continue
 <%
-    peer_transition.executar_logica_de_negocio_continue_runner(result);
+    peer_transition.execute_bussiness_logic_continue_runner(result);
 %>!
 
 
-hold in Enviar_resultado_para_api for time 5!
-from Enviar_resultado_para_api go to waitForInput!
-internal event for Enviar_resultado_para_api
+hold in Return_contract_execution_result for time 5!
+from Return_contract_execution_result go to waitForInput!
+internal event for Return_contract_execution_result
 <%
-    peer_transition.enviar_resultado_para_api_runner(result);
+    peer_transition.return_contract_execution_result_runner(result);
 %>!
 
-after Enviar_resultado_para_api output From_G4_to_G0!
-output event for Enviar_resultado_para_api
+after Return_contract_execution_result output From_G4_to_G0!
+output event for Return_contract_execution_result
 <%
     output.add(outFrom_G4_to_G0, result);
 %>!
           
 
 
-// EndSequence for sequence starting at Calcular_resultado_da_transacao
+// EndSequence for sequence starting at Calculate_transaction_result

@@ -1,0 +1,131 @@
+use sdk_transition with type  components.SdkTransitionsClass and default "new components.SdkTransitionsClass()"!
+use result with type  components.Result and default "new components.Result(\"sdk\")"!
+
+To start passivate in waitForInput!
+Passivate in StopState!
+
+
+when in waitForInput and receive From_G0_to_G1 go to Find_the_target_peers!
+external event for waitForInput with From_G0_to_G1
+<%
+    Result incomingResult = result.update(messageList.get(0).getData());
+    result.reset(incomingResult);
+    
+%>!
+when in waitForInput and receive From_G0_to_G2 go to Send_trasaction_request_to_peers!
+external event for waitForInput with From_G0_to_G2
+<%
+    Result incomingResult = result.update(messageList.get(0).getData());
+    result.reset(incomingResult);
+    
+%>!
+when in waitForInput and receive From_G0_to_G7 go to Receive_result_pool!
+external event for waitForInput with From_G0_to_G7
+<%
+    Result incomingResult = result.update(messageList.get(0).getData());
+    result.reset(incomingResult);
+    
+%>!
+
+when in waitForInput and receive From_G11_to_G10 go to Validate_block_signatures_continue!
+external event for waitForInput with From_G11_to_G10
+<%
+    result = result.update(messageList.get(0).getData());
+    
+%>!
+
+when in waitForInput and receive stop go to StopState!
+
+generates output on From_G1_to_G0 with type Result!
+generates output on From_G2_to_G0 with type Result!
+generates output on From_G10_to_G11 with type Result!
+generates output on From_G7_to_G0 with type Result!
+generates output on stop !
+
+accepts input on From_G0_to_G1 with type Result !
+accepts input on From_G0_to_G2 with type Result !
+accepts input on From_G11_to_G10 with type Result !
+accepts input on From_G0_to_G7 with type Result !
+
+
+hold in Find_the_target_peers for time 5!
+from Find_the_target_peers go to waitForInput!
+internal event for Find_the_target_peers
+<%
+    sdk_transition.find_the_target_peers_runner(result);
+%>!
+
+after Find_the_target_peers output From_G1_to_G0!
+output event for Find_the_target_peers
+<%
+    output.add(outFrom_G1_to_G0, result);
+%>!
+          
+
+
+// EndSequence for sequence starting at Find_the_target_peers
+
+hold in Send_trasaction_request_to_peers for time 5!
+from Send_trasaction_request_to_peers go to waitForInput!
+internal event for Send_trasaction_request_to_peers
+<%
+    sdk_transition.send_trasaction_request_to_peers_runner(result);
+%>!
+
+after Send_trasaction_request_to_peers output From_G2_to_G0!
+output event for Send_trasaction_request_to_peers
+<%
+    output.add(outFrom_G2_to_G0, result);
+%>!
+          
+
+
+// EndSequence for sequence starting at Send_trasaction_request_to_peers
+
+hold in Receive_result_pool for time 5!
+from Receive_result_pool go to Verify_result_pool!
+internal event for Receive_result_pool
+<%
+    sdk_transition.receive_result_pool_runner(result);
+%>!
+
+
+hold in Verify_result_pool for time 5!
+from Verify_result_pool go to Send_signed_transaction_to_Orderer!
+internal event for Verify_result_pool
+<%
+    sdk_transition.verify_result_pool_runner(result);
+%>!
+
+
+hold in Send_signed_transaction_to_Orderer for time 5!
+from Send_signed_transaction_to_Orderer go to waitForInput!
+internal event for Send_signed_transaction_to_Orderer
+<%
+    sdk_transition.send_signed_transaction_to_orderer_runner(result);
+%>!
+
+after Send_signed_transaction_to_Orderer output From_G10_to_G11!
+output event for Send_signed_transaction_to_Orderer
+<%
+    output.add(outFrom_G10_to_G11, result);
+%>!
+          
+
+
+hold in Validate_block_signatures_continue for time 5!
+from Validate_block_signatures_continue go to waitForInput!
+internal event for Validate_block_signatures_continue
+<%
+    sdk_transition.validate_block_signatures_continue_runner(result);
+%>!
+
+after Validate_block_signatures_continue output From_G7_to_G0!
+output event for Validate_block_signatures_continue
+<%
+    output.add(outFrom_G7_to_G0, result);
+%>!
+          
+
+
+// EndSequence for sequence starting at Receive_result_pool

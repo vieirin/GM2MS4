@@ -4,8 +4,8 @@ export type relationship = 'and' | 'or' | 'none'
 export type component = string
 export type leafType = 'task' | 'goal' | 'resource'
 
-export type child = ObjectiveTree
-export type treeNode = ObjectiveTree
+export type child = GoalTree
+export type treeNode = GoalTree
 
 export interface annotatedNode extends Omit<Node, 'type' | 'customProperties'> {
     type: leafType
@@ -14,14 +14,14 @@ export interface annotatedNode extends Omit<Node, 'type' | 'customProperties'> {
     identifier: string
 }
 
-export interface ObjectiveTree extends annotatedNode {
+export interface GoalTree extends annotatedNode {
     component: string
     children?: child[]
     relation: relationship
 }
 
-export interface LeveledGoalComponent extends ObjectiveTree {
-    parentRelation: string
+export interface LeveledGoalComponent extends GoalTree {
+    parentRelation: relationship
     level: number
 }
 
@@ -31,11 +31,7 @@ export type ComponentData = {
 }
 export type ComponentGoals = [component, ComponentData]
 
-export const TraverseTree = (
-    tree: ObjectiveTree,
-    print?: boolean,
-    tabs = 0
-) => {
+export const TraverseTree = (tree: GoalTree, print?: boolean, tabs = 0) => {
     if (print) {
         console.log(`\n${'\t'.repeat(tabs)}id:`, tree.id)
         console.log(`${'\t'.repeat(tabs)}title:`, tree.text)

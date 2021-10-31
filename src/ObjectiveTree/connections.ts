@@ -1,6 +1,6 @@
 import mergeWith from 'lodash.mergewith'
 import { sanitizeComponent } from '../ms4Builder/naming'
-import { component, ObjectiveTree, treeNode } from './types'
+import { component, GoalTree, treeNode } from './types'
 interface connectionNode {
     state: string
     component: string
@@ -57,7 +57,7 @@ export const invertPort = (p: port): port => ({
 
 // this will find connections over the tree between distincts components and describing them on the
 // Connections structure form
-export const componentConnections = (tree: ObjectiveTree): Connections =>
+export const componentConnections = (tree: GoalTree): Connections =>
     tree.children?.reduce((memo, child) => {
         const otherPortsOnBranch = componentConnections(child)
         if (child.component !== tree.component) {

@@ -1,15 +1,15 @@
 import { nameGoalContinuation, nameTaskMethod } from '../ms4Builder/naming'
 import { StatePortIndex } from './connections'
-import { component, leafType, ObjectiveTree, relationship } from './types'
+import { component, GoalTree, leafType, relationship } from './types'
 
-type node = ObjectiveTree & {
+type node = GoalTree & {
     originalName?: string
     direction?: 'in' | 'out'
     returnToParent?: boolean
     parentRelation: 'and' | 'or' | 'none'
 }
 
-const branchGoals = (component: component, tree?: ObjectiveTree): node[] => {
+const branchGoals = (component: component, tree?: GoalTree): node[] => {
     return (
         tree?.type === 'goal' && tree?.component === component
             ? [{ ...tree }, ...(branchChildrenGoals(component, tree) || [])]
@@ -24,7 +24,7 @@ const branchGoals = (component: component, tree?: ObjectiveTree): node[] => {
 // extract element from a tree branch
 export const branchChildrenGoals = (
     component: string,
-    tree: ObjectiveTree,
+    tree: GoalTree,
     level = 0
 ): node[] =>
     tree.children
@@ -105,7 +105,7 @@ const splitSequece = (component: component, nodes: node[]): node[][] => {
 
 export const branchGoalsWithOutput = (
     component: component,
-    tree: ObjectiveTree,
+    tree: GoalTree,
     goalOutput: StatePortIndex
 ): linkedNode[][] => {
     const branch = branchGoals(component, tree)
@@ -131,14 +131,14 @@ export const branchGoalsWithOutput = (
     return seq
 }
 
-export const getGoals = (tree: ObjectiveTree): ObjectiveTree[] => {
+export const getGoals = (tree: GoalTree): GoalTree[] => {
     return (
         tree.children
             ?.filter((child) => child.type === 'goal')
             .map((child) => [child, ...getGoals(child).flat()])
             .reduce(
                 (prev, curr) => [...prev, ...curr],
-                new Array<ObjectiveTree>()
+                new Array<GoalTree>()
             ) || []
     )
 }
@@ -169,11 +169,10 @@ export const printDecomposition = (
     })
 }
 
-export const hasChildren = (node: ObjectiveTree) =>
-    (node.children?.length || 0) > 0
+export const hasChildren = (node: GoalTree) => (node.children?.length || 0) > 0
 
 export const runnerDecomposition = (
-    tree: ObjectiveTree,
+    tree: GoalTree,
     component: string,
     parentRelation: relationship = 'none'
 ): RunnerDecomposition => ({
@@ -202,7 +201,7 @@ export const runnerDecomposition = (
             ) || []
 })
 
-export const removeLeafNodes = (tree: ObjectiveTree): ObjectiveTree => {
+export const removeLeafNodes = (tree: GoalTree): GoalTree => {
     const { children, ...rest } = tree
     return {
         ...rest,

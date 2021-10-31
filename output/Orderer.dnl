@@ -5,7 +5,7 @@ To start passivate in waitForInput!
 Passivate in StopState!
 
 
-when in waitForInput and receive From_G10_to_G11 go to Validar_assinaturas_do_bloco!
+when in waitForInput and receive From_G10_to_G11 go to Validate_block_signatures!
 external event for waitForInput with From_G10_to_G11
 <%
     Result incomingResult = result.update(messageList.get(0).getData());
@@ -21,27 +21,27 @@ generates output on stop !
 accepts input on From_G10_to_G11 with type Result !
 
 
-hold in Validar_assinaturas_do_bloco for time 5!
-from Validar_assinaturas_do_bloco go to criar_bloco!
-internal event for Validar_assinaturas_do_bloco
+hold in Validate_block_signatures for time 5!
+from Validate_block_signatures go to Create_block!
+internal event for Validate_block_signatures
 <%
-    orderer_transition.validar_assinaturas_do_bloco_runner(result);
+    orderer_transition.validate_block_signatures_runner(result);
 %>!
 
 
-hold in criar_bloco for time 5!
-from criar_bloco go to waitForInput!
-internal event for criar_bloco
+hold in Create_block for time 5!
+from Create_block go to waitForInput!
+internal event for Create_block
 <%
-    orderer_transition.criar_bloco_runner(result);
+    orderer_transition.create_block_runner(result);
 %>!
 
-after criar_bloco output From_G11_to_G10!
-output event for criar_bloco
+after Create_block output From_G11_to_G10!
+output event for Create_block
 <%
     output.add(outFrom_G11_to_G10, result);
 %>!
           
 
 
-// EndSequence for sequence starting at Validar_assinaturas_do_bloco
+// EndSequence for sequence starting at Validate_block_signatures
