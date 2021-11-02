@@ -1,0 +1,9 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: Vieira
+    given-names: Manoel
+    orcid: https://orcid.org/0000-0001-5499-9719
+title: "GM2MS4 (Goal Model to MS4)"
+version: 0.1
+date-released: 2021-10-10

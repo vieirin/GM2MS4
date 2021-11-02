@@ -227,9 +227,18 @@ export const stateSequence = (
                         )
                     }
 
+                    const shouldHasInternalTrasition = () => {
+                        if (!root) {
+                            return true
+                        }
+                        return state.text.endsWith('_continue')
+                    }
+
                     return blockseparator(
                         holdState(state, arr[index + 1], rootLast, 1) +
-                            ((state.type === 'goal' && !root) || rootLast
+                            ((state.type === 'goal' &&
+                                shouldHasInternalTrasition()) ||
+                            rootLast
                                 ? internalTransition(
                                       component,
                                       state.text,

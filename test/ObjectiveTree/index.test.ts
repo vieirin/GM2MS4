@@ -14,7 +14,7 @@ describe('On load model', () => {
 
 describe('Test tree creation', () => {
     describe('given a valid loaded model', () => {
-        const validModel = loadModel('models/txregister_component5.txt')
+        const validModel = loadModel('models/newModel.txt')
         it('should create a new objectivetree', () => {
             expect(convertToTree(validModel)).toEqual(expect.anything())
         })

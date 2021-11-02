@@ -45,6 +45,6 @@ export const createMS4Project = (
     jzip.generateNodeStream({ type: 'nodebuffer', streamFiles: true })
         .pipe(createWriteStream('output/project.zip'))
         .on('finish', function () {
-            console.log('output/project.zip written.')
+            // console.log('output/project.zip written.')
         })
 }

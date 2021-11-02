@@ -142,10 +142,7 @@ export const writeResultVerifier = () =>
             result.lock();
         }
     }
-    // before continuing to next functions  
-    if (!result.locked()) { 
-        result.resetError();
-    }
+    
     return result;
 }
 `)

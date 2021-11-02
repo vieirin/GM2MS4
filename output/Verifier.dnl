@@ -66,6 +66,10 @@ output event for Find_the_target_peers
 
 hold in Find_the_target_peers_continue for time 5!
 from Find_the_target_peers_continue go to Send_trasaction_request_to_peers!
+internal event for Find_the_target_peers_continue
+<%
+    verifier_transition.find_the_target_peers_continue_runner(result);
+%>!
 
 
 hold in Send_trasaction_request_to_peers for time 5!
@@ -81,6 +85,10 @@ output event for Send_trasaction_request_to_peers
 
 hold in Send_trasaction_request_to_peers_continue for time 5!
 from Send_trasaction_request_to_peers_continue go to Calculate_transaction_result!
+internal event for Send_trasaction_request_to_peers_continue
+<%
+    verifier_transition.send_trasaction_request_to_peers_continue_runner(result);
+%>!
 
 
 hold in Calculate_transaction_result for time 5!
@@ -96,6 +104,10 @@ output event for Calculate_transaction_result
 
 hold in Calculate_transaction_result_continue for time 5!
 from Calculate_transaction_result_continue go to Receive_result_pool!
+internal event for Calculate_transaction_result_continue
+<%
+    verifier_transition.calculate_transaction_result_continue_runner(result);
+%>!
 
 
 hold in Receive_result_pool for time 5!

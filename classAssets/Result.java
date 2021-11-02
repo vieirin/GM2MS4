@@ -67,8 +67,8 @@ public class Result implements Serializable {
 	}
 
 	public void reset (Result res) { 
-		this.error = null;
-		this.success = false;
+		this.error = res.error;
+		this.success = res.success;
 		this.isLocked = false;
 		this.result = res.result;
 	}

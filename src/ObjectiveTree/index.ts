@@ -269,6 +269,10 @@ export const getNodes = (
         // of this type on other components children
         return [
             ...(children
+                ?.map<Omit<LeveledGoalComponent, 'level'>>((child) => ({
+                    ...child,
+                    parentRelation: node.relation
+                }))
                 ?.map((child) => getNodes(child, component, type, level))
                 .flat()
                 .filter((item) => item.type === type) || [])
