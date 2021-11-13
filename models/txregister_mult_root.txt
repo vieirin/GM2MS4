@@ -265,8 +265,6 @@
       ]
     }
   ],
-  "orphans": [],
-  "dependencies": [],
   "links": [
     {
       "id": "69723206-a23d-49da-960e-4a9c4d569598",
@@ -413,102 +411,4 @@
       "target": "0d5629f0-4d07-46e9-a452-cac4d322e234"
     }
   ],
-  "display": {
-    "8de7a901-398e-4d37-a22d-3f954bb81601": {
-      "backgroundColor": "#38FA8E",
-      "width": 106.28125,
-      "height": 39.142051696777344
-    },
-    "2bb58c75-9a35-4b6f-8e8c-85f4cb604c84": {
-      "backgroundColor": "#1512FA",
-      "width": 123.28125,
-      "height": 39.642051696777344
-    },
-    "51e1a122-2abe-4153-a42e-3e0c7a3bbd8e": {
-      "backgroundColor": "#1733FA"
-    },
-    "52781a22-2ed1-4281-9c73-e6a9d314e240": {
-      "backgroundColor": "#1733FA",
-      "width": 107.73957824707031,
-      "height": 39.99999237060547
-    },
-    "7c79330d-f564-4134-b810-47370afd7308": {
-      "backgroundColor": "#38FA8E",
-      "width": 116.28125,
-      "height": 38.642051696777344
-    },
-    "0d5629f0-4d07-46e9-a452-cac4d322e234": {
-      "backgroundColor": "#38FA8E"
-    },
-    "30fdd731-24c7-424d-b77c-6b9683a76bca": {
-      "backgroundColor": "#38FA8E",
-      "width": 118.40625,
-      "height": 43.666664123535156
-    },
-    "fc1c1d20-d10d-48d0-a717-59094a59d944": {
-      "backgroundColor": "#FA2950"
-    },
-    "0973aeef-286f-47b0-a6cf-640e43d7671f": {
-      "backgroundColor": "#FA2950",
-      "width": 97.40625,
-      "height": 38.666664123535156
-    },
-    "a219eddf-f170-454f-b20b-7568228307e0": {
-      "backgroundColor": "#FA2950"
-    },
-    "c4146a67-384f-48f8-b48a-65fbdb31c7d0": {
-      "backgroundColor": "#FA2950"
-    },
-    "637bd788-65ab-4223-81cd-ceab64eef5fb": {
-      "backgroundColor": "#FA2950"
-    },
-    "0429a68a-713a-4918-96d9-f3fbff61569d": {
-      "backgroundColor": "#38FA8E"
-    },
-    "f6f3d933-8b3d-4c61-893c-cca36d2972c8": {
-      "backgroundColor": "#38FA8E"
-    },
-    "c4963052-bad5-46ef-b79e-031266546f11": {
-      "backgroundColor": "#38FA8E"
-    },
-    "9c1403b9-53f3-4036-8690-3af589e5c536": {
-      "backgroundColor": "#38FA8E"
-    },
-    "3867e9d3-349c-4829-8c9b-61de16ac60c2": {
-      "backgroundColor": "#8AEAFA"
-    },
-    "ba3fd6ff-acbc-4a10-911a-55c4b655ed8c": {
-      "backgroundColor": "#8AEAFA"
-    },
-    "e3ea007b-e9df-4651-9260-8566a86c52d8": {
-      "backgroundColor": "#38FA8E",
-      "width": 105.73957824707031,
-      "height": 44.99999237060547
-    },
-    "bbfc14b1-9da7-4112-82cf-3ec369887261": {
-      "backgroundColor": "#38FA8E"
-    },
-    "b96e97cd-d783-4f76-b006-b4c0ef93f4c9": {
-      "backgroundColor": "#38FA8E"
-    },
-    "bdacda33-50aa-4850-9ce5-ad6a47368972": {
-      "backgroundColor": "#1733FA"
-    },
-    "0c59d725-3739-47ad-8ce9-d49b65004a52": {
-      "backgroundColor": "#38FA8E"
-    },
-    "72f6d345-7050-4382-8593-10719959349b": {
-      "backgroundColor": "#38FA8E"
-    }
-  },
-  "tool": "pistar.2.0.0",
-  "istar": "2.0",
-  "saveDate": "Sun, 22 Aug 2021 22:54:24 GMT",
-  "diagram": {
-    "width": 2000,
-    "height": 1300,
-    "customProperties": {
-      "Description": ""
-    }
-  }
 }

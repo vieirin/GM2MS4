@@ -41,7 +41,7 @@ export const writeProperty = (
     )
 
 export const writeRunnerStructure = (
-    functions: string[],
+    functions: func[],
     relation: relationship,
     parentRelation: relationship,
     tasksVar?: string
@@ -52,8 +52,8 @@ export const writeRunnerStructure = (
                     `   new ${
                         Java.RUNNER_ITF
                     }() {public Result run(Result res) {return ${
-                        tasksVar ? tasksVar + '.' : ''
-                    }${fn}(res);}}`
+                        !fn.refiner ? tasksVar + '.' : ''
+                    }${fn.name}(res);}}`
             )
             .join(',\n\t\t')}
         };
@@ -72,17 +72,16 @@ export const writeRefinedTask = (
     Java.RESULT_CLASS
 } result) {\n
         ${writeRunnerStructure(
-            childrenTasks.map((task) =>
-                task.refiner ? task.name : `${taskVar}.${task.name}`
-            ),
+            childrenTasks,
             relation,
-            parentRelation
+            parentRelation,
+            taskVar
         )}
     }`
 
 export const writeRunner = (
     method: string,
-    functions: string[],
+    functions: func[],
     parentRelation: relationship,
     relation: relationship,
     nextGoal: string,

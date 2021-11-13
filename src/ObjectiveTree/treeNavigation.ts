@@ -185,9 +185,7 @@ export const runnerDecomposition = (
         tree.children
             ?.filter(
                 (child) =>
-                    child.type === 'task' &&
-                    !hasChildren(child) &&
-                    child.component === component
+                    child.type === 'task' && child.component === component
             )
             .map((child) => ({
                 name: nameTaskMethod(child.text, hasChildren(child)),

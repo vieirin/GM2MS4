@@ -28,7 +28,7 @@ describe('Test tree creation', () => {
 })
 
 describe('Test tree properties', () => {
-    const tree = convertToTree(loadModel('models/txregister_component5.txt'))
+    const tree = convertToTree(loadModel('models/newModel.txt'))
 
     it('should have identifiers on its goals', () => {
         tree.map(getGoals).forEach((goals) => {

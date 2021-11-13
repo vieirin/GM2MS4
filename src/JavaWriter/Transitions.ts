@@ -1,8 +1,7 @@
 import {
     nameGoalContinuation,
     taskVarName,
-    transitionClassName,
-    transitionMethodName
+    transitionClassName
 } from '../ms4Builder/naming'
 import { func, RunnerDecomposition } from '../ObjectiveTree/treeNavigation'
 import { component } from '../ObjectiveTree/types'
@@ -65,21 +64,7 @@ export class Transitions extends Class {
                 : sameComponent(component)
                 ? writeRunner(
                       fromState,
-                      this.hasNodeWithChildren(functions)
-                          ? functions.map((fn) => fn.name)
-                          : nextLevel
-                                // filter only those which are refiner nodes, excluding goals from the list
-                                .filter(
-                                    (level) =>
-                                        (level.nodeType === 'refiner' ||
-                                            level.fromState.endsWith(
-                                                '_continue'
-                                            )) &&
-                                        level.component === classComponent
-                                )
-                                .map((item) =>
-                                    transitionMethodName(item.fromState)
-                                ),
+                      functions,
                       parentRelation,
                       relation,
                       nextLevel?.[0]?.fromState || '',

@@ -51,8 +51,8 @@ export const nodeName = (
 
 export const nameInput = (stateName: string) => nameText(stateName)
 
-export const nameTaskMethod = (taskName: string, hasChildren?: boolean) =>
-    nameText(taskName) + (hasChildren ? '_runner' : '') + '_task'
+export const nameTaskMethod = (taskName: string, refiner?: boolean) =>
+    refiner ? transitionMethodName(taskName) : nameText(taskName) + '_task'
 
 export const transitionClassVarName = (component: string) =>
     nameText(component) + '_transition'
