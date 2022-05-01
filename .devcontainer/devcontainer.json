@@ -13,6 +13,8 @@
     // Set *default* container specific settings.json values on container create.
     "settings": {},
 
+    "mounts": ["source=/tmp/.X11-unix/,target=/tmp/.X11-unix/,type=bind", "source=${localWorkspaceFolder}/.devcontainer/MS4ME,target=${containerWorkspaceFolder}/MS4ME,type=bind"],
+
     // Add the IDs of extensions you want installed when the container is created.
     "extensions": [
 		"dbaeumer.vscode-eslint",

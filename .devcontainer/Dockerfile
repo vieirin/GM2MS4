@@ -2,8 +2,17 @@
 
 # [Choice] Node.js version: 16, 14, 12
 ARG VARIANT="16-buster"
-FROM mcr.microsoft.com/vscode/devcontainers/typescript-node:0-${VARIANT}
+FROM ubuntu:18.04 as builder
 
+RUN apt update && apt -y install wget unzip
+RUN wget http://www.ms4systems.com/files/MS4ME_linux_ubuntu_64.zip
+RUN unzip MS4ME_linux_ubuntu_64.zip
+
+FROM mcr.microsoft.com/vscode/devcontainers/typescript-node:0-${VARIANT}
+RUN apt update && apt -y install libgtk2.0-0 libxtst6
+COPY --from=builder MS4ME /MS4ME
+RUN chmod +x /MS4ME/*
+RUN chmod +x /MS4ME/jre/bin/*
 # [Optional] Uncomment this section to install additional OS packages.
 # RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
 #     && apt-get -y install --no-install-recommends <your-package-list-here>
